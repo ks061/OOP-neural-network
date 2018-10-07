@@ -1,3 +1,1 @@
 Theta: 1; W1: 1; W2: 1
-
-(Essentially, theta, W1, and W2 must be equal to one another in value.)
