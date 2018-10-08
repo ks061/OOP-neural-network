@@ -109,6 +109,8 @@ public class Edge {
      *
      * @return value that this edge will send to the neuron this edge will
      * deliver data to
+     *
+     * @author ks061
      */
     protected double getValue() {
         return weight * from.getValue();
