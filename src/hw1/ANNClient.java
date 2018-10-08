@@ -29,6 +29,11 @@ import java.util.Scanner;
 public class ANNClient {
 
     /**
+     * Neural network generated/used by the ANNClient
+     */
+    private static NeuralNet myNet;
+
+    /**
      * Asks for a file containing input values and prints and writes them to a
      * file
      *
@@ -68,10 +73,9 @@ public class ANNClient {
     /**
      * Imports training data from the CSV file specified by the end user
      *
-     * @param myNet neural network
      * @return training data
      */
-    public static double[][] getTrainingData(NeuralNet myNet) {
+    public static double[][] getTrainingData() {
         Scanner scanner = new Scanner(System.in);
         boolean csvFound = false;
         String filename = null;
@@ -133,11 +137,9 @@ public class ANNClient {
 
     /**
      * Runs the training mode feature of the program.
-     *
-     * @param myNet neural network
      */
-    public static void trainingMode(NeuralNet myNet) {
-        double[][] trainingData = getTrainingData(myNet);
+    public static void trainingMode() {
+        double[][] trainingData = getTrainingData();
         myNet = new NeuralNet(trainingData);
     }
 
@@ -212,6 +214,8 @@ public class ANNClient {
         if (modeOption.equals("classfication")) {
             classificationMode(inputOption, numInputs, numOutputs);
         }
-        //run trainingMode method if modeOption == trainingMode
+        else if (modeOption.equals("training")) {
+            trainingMode();
+        }
     }
 }
