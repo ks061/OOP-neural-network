@@ -29,12 +29,31 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
     private double[] targetOutput;
     private double[] outputErrors;
 
+    private int t;
+
     OutputLayer(int numNeurons) {
         super(numNeurons);
     }
 
     OutputLayer(int numNeurons, String id) {
         super(numNeurons, id);
+    }
+
+    /**
+     * Explicit constructor that creates a particular number of neurons in the
+     * layer, sets an identifier for the layer, and passes in the target output
+     * values from data set.
+     *
+     * @param numNeurons number of neurons to create in the layer
+     * @param id identifier for the layer
+     * @param targetOutput target output values from data set
+     *
+     * @author ks061
+     */
+    OutputLayer(int numNeurons, String id, double[] targetOutput) {
+        super(numNeurons, id);
+        this.targetOutput = targetOutput;
+        this.outputErrors = new double[this.targetOutput.length];
     }
 
     /**
@@ -67,19 +86,23 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
     /**
      * Computes the net input for each neuron in the layer
      *
-     * @author - lts010
+     * @author - lts010, ks061
      */
     @Override
     public void fireNeurons() {
-        for (Neuron neuron : neurons) {
+        for (Neuron neuron : this.neurons) {
             neuron.fire();
-            System.out.println(neuron.getValue());
         }
+        learn();
     }
 
     /**
+     * Throws an UnsupportedOperationException because the output layer should
+     * not be connecting
      *
-     * @param nextLayer
+     * @param nextLayer layer that this layer will forward-propagate to
+     *
+     * @author cld028
      */
     @Override
     public void connectLayer(Layer nextLayer) {
@@ -89,21 +112,59 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
 
     /**
      * Given a set of output, use learn to actually update parameters in NN
+     *
+     * @author ks061
      */
     public void learn() {
+        calculateErrors();
+        double deltaWeight = this.neurons.get(0).getValue()
+                             * (1 - this.neurons.get(0).getValue())
+                             * this.outputErrors[this.t];
+        updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
     }
 
+    /**
+     * Calculates output errors after forward propagation complete
+     *
+     * @author ks061
+     */
     private void calculateErrors() {
+        outputErrors[this.t] = this.neurons.get(0).getValue() - targetOutput[this.t];
     }
 
-    @Override
+    /**
+     * Updates the weights of all of the prior weights
+     *
+     * @param oldEdges edges coming to output neuron in this layer
+     * @param deltaWeight change in weight
+     *
+     * @author ks061
+     */
     protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Edge edge : oldEdges) {
+            edge.changeWeight(edge.getFrom().getAlpha(), deltaWeight);
+        }
+        if (this.prevLayer instanceof HiddenLayer) {
+            this.prevLayer.learn();
+        }
     }
 
     public void fireNeurons(double[] inputVals) {
         throw new UnsupportedOperationException(
                 "Output layers don't fire neurons this way");
+    }
+
+    /**
+     * Sets t, representing that the neural network is currently working through
+     * the t-th row of input
+     *
+     * @param t number that represents that the neural network is currently
+     * working through the t-th row of input
+     *
+     * @author ks061
+     */
+    public void setT(int t) {
+        this.t = t;
     }
 
 }

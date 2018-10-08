@@ -26,6 +26,10 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
 
     private String layerID;
 
+    private double[][] inputs;
+
+    private int t;
+
     /**
      * Explicit constructor that creates the input layer with a particular
      * number of neurons.
@@ -49,6 +53,21 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      */
     InputLayer(int numNeurons, String id) {
         super(numNeurons, id);
+    }
+
+    /**
+     * Explicit constructor that creates the input layer with a particular
+     * number of neurons and an ID, as well as specifying the set of inputs.
+     *
+     * @param numNeurons number of neurons to be generated in this layer
+     * @param id identifier of the layer
+     * @param inputs set of inputs
+     *
+     * @author ks061
+     */
+    InputLayer(int numNeurons, String id, double[][] inputs) {
+        super(numNeurons, id);
+        this.inputs = inputs;
     }
 
     /**
@@ -90,17 +109,17 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      * @author ks061
      */
     @Override
-    public void fireNeurons(double[] inputVals) {
+    public void fireNeurons() {
         // TODO -- integrate with Neuron's fire() method
-        if (inputVals.length != this.neurons.size()) {
+        if (this.inputs[t].length != this.neurons.size()) {
             throw new NeuralNetConstructionException(
                     "The number of input values and number of neurons in the "
                     + "input layer of the neural network do not match.");
         }
 
-        int numInputs = inputVals.length;
+        int numInputs = this.inputs[t].length;
         for (int i = 0; i < numInputs; i++) {
-            this.neurons.get(i).setNetValue(inputVals[i]);
+            this.neurons.get(i).setNetValue(this.inputs[t][i]);
         }
         nextLayer.fireNeurons();
     }
@@ -154,14 +173,34 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
                 "Input layer shouldn't be calculating errors!");
     }
 
+    /**
+     * Throws an UnsupportedOperationException instance because the input layer
+     * can't fire neurons without input values.
+     *
+     * @author cld028, ks061
+     */
+    @Override
     public void fireNeurons() {
         throw new UnsupportedOperationException(
-                "Input layer can't fire neurons this way");
+                "Input layer can't fire neurons without input values");
     }
 
     @Override
     protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Sets t, representing that the neural network is currently working through
+     * the t-th row of input
+     *
+     * @param t number that represents that the neural network is currently
+     * working through the t-th row of input
+     *
+     * @author ks061
+     */
+    public void setT(int t) {
+        this.t = t;
     }
 
 }

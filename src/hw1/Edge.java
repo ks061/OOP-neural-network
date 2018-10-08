@@ -98,6 +98,28 @@ public class Edge {
     }
 
     /**
+     * Gets the neuron that this edge gets data from
+     *
+     * @return neuron that this edge gets data from
+     *
+     * @author ks061
+     */
+    protected Neuron getFrom() {
+        return this.from;
+    }
+
+    /**
+     * Gets the neuron that this edge delivers data to
+     *
+     * @return neuron that this edge delivers data to
+     *
+     * @author ks061
+     */
+    protected Neuron getTo() {
+        return this.to;
+    }
+
+    /**
      * Gets the value that this edge will send to the neuron this edge will
      * deliver data to (after applying the weight to the input received from the
      * neuron that delivers data to the edge)

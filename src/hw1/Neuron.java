@@ -134,6 +134,10 @@ public class Neuron {
         return outEdges;
     }
 
+    /**
+     *
+     * @param weightAssign
+     */
     public void setWeightAssign(WeightAssignment weightAssign) {
         this.weightAssign = weightAssign;
     }
@@ -142,4 +146,14 @@ public class Neuron {
         this.activationFunction = activationFunction;
     }
 
+    /**
+     * Gets alpha value
+     *
+     * @return alpha value
+     *
+     * @author ks061
+     */
+    public double getAlpha() {
+        return this.alpha;
+    }
 }

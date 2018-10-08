@@ -59,9 +59,8 @@ public class NeuralNet {
         this.inputs = inputs;
         this.expectedOutputs = expectedOutputs;
 
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-");
-        OutputLayer outputLayer = new OutputLayer(
-                (expectedOutputs.length) / inputs.length, "O1-");
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-", inputs);
+        OutputLayer outputLayer = new OutputLayer(1, "O1-", expectedOutputs);
         // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
         // System.out.println("Connecting to in-hidden");
         //inputLayer.connectLayer(hiddenLayer);
@@ -69,11 +68,10 @@ public class NeuralNet {
         // hiddenLayer.connectLayer(outputLayer);
         inputLayer.connectLayer(outputLayer);
 
-        for (double[] inputSet : this.inputs) {
-            inputLayer.fireNeurons(inputSet);
-            // Read output layer
-            // Back propogate
-            // etc.
+        for (int t = 0; t < this.inputs.length; t++) {
+            inputLayer.setT(t);
+            outputLayer.setT(t);
+            inputLayer.fireNeurons();
         }
 
         //Test your network here

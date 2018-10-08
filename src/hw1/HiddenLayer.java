@@ -83,17 +83,42 @@ public class HiddenLayer extends Layer {
     }
 
     /**
-     * learn within your layer (dependent on the learning alg)
+     * Given a set of output, use learn to actually update parameters in NN
+     *
+     * @author ks061
      */
     public void learn() {
+        calculateErrors();
+        double deltaWeight = this.neurons.get(0).getValue()
+                             * (1 - this.neurons.get(0).getValue())
+                             * this.outputErrors[this.t];
+        updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
     }
 
+    /**
+     * Calculates output errors after forward propagation complete
+     *
+     * @author ks061
+     */
     private void calculateErrors() {
+        outputErrors[this.t] = this.neurons.get(0).getValue() - targetOutput[this.t];
     }
 
-    @Override
+    /**
+     * Updates the weights of all of the prior weights
+     *
+     * @param oldEdges edges coming to output neuron in this layer
+     * @param deltaWeight change in weight
+     *
+     * @author ks061
+     */
     protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Edge edge : oldEdges) {
+            edge.changeWeight(edge.getFrom().getAlpha(), deltaWeight);
+        }
+        if (this.prevLayer instanceof HiddenLayer) {
+            this.prevLayer.learn();
+        }
     }
 
     /**
