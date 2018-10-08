@@ -15,7 +15,6 @@
  */
 package hw1;
 
-import hw1.sol.Dancy.*;
 import java.util.ArrayList;
 
 /**
@@ -33,6 +32,7 @@ public class Neuron {
     private double alpha;
     private double netInput;
     private double theta;
+    private double value;
     private boolean inputNeuron = false;
 
     /**
@@ -45,15 +45,24 @@ public class Neuron {
      */
     public final static double DEFAULTTHETA = 0.1;
 
-    Neuron(int idNum) {
-
-    }
-
     Neuron(String id) {
-
+        this.id = id;
+        this.alpha = DEFAULTALPHA;
+        this.theta = DEFAULTTHETA;
     }
 
-    Neuron(int numOutEdges, int idNum) {
+    Neuron(int idNum) {
+        this(Integer.toString(idNum));
+    }
+
+    Neuron(int idNum, int numOutEdges) {
+        this(idNum);
+        for (int i = 0; i < numOutEdges; i++) {
+            outEdges.add(new Edge());
+        }
+    }
+
+    public void setInput() {
 
     }
 
@@ -62,5 +71,27 @@ public class Neuron {
      * function)
      */
     public void fire() {
+        double net = 0.0;
+        for (Edge inEdge : this.inEdges) {
+            net += inEdge.getValue();
+        }
+        net -= theta;
+        this.value = net;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public double getValue() {
+        return this.value;
+    }
+
+    public ArrayList<Edge> getInEdges() {
+        return inEdges;
+    }
+
+    public ArrayList<Edge> getOutEdges() {
+        return outEdges;
     }
 }
