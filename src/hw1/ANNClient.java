@@ -17,6 +17,9 @@ package hw1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
@@ -55,11 +58,87 @@ public class ANNClient {
                 }
             }
         }
-        /**
-         * TO DO Read the config file if inputOption == read; Ask for input
-         * data, and read it; Create the neural network; Feed forward the neural
-         * net; Print and write the outputs
-         */
+    }
+
+    /**
+     * TO DO Read the config file if inputOption == read; Ask for input data,
+     * and read it; Create the neural network; Feed forward the neural net;
+     * Print and write the outputs
+     */
+    /**
+     * Imports training data from the CSV file specified by the end user
+     *
+     * @param myNet neural network
+     * @return training data
+     */
+    public static double[][] getTrainingData(NeuralNet myNet) {
+        Scanner scanner = new Scanner(System.in);
+        boolean csvFound = false;
+        String filename = null;
+        while (!csvFound) {
+            // Get CSV filename from user
+            System.out.print("Enter the name of the training data file: ");
+            filename = scanner.nextLine();
+            // Try to access CSV file
+            File csv = new File(filename);
+            try {
+                scanner = new Scanner(csv);
+                csvFound = true;
+            } catch (FileNotFoundException ex) {
+                System.out.println("The training data file has not been found. ");
+            }
+        }
+
+        // Gets number of lines in file
+        String line;
+        String[] entriesInLine;
+        long lineCountDouble = 0;
+        try {
+            lineCountDouble = Files.lines(Paths.get(filename)).count();
+        } catch (IOException ex) {
+            System.out.println(
+                    "An unexpected input-output error occured when trying to "
+                    + "count the number of lines in the training data file.");
+            System.exit(0);
+        }
+        int lineCount = 0;
+        if (-2147483647 <= lineCountDouble && lineCountDouble <= 2147483647) {
+            lineCount = (int) lineCountDouble;
+        }
+        else {
+            // NeuralNet.java has specified double[][], which implies that the
+            // size of the array cannot be outside of the range of values an
+            // int can hold.
+            System.out.println(
+                    "Number of lines in file is outside of the range of values "
+                    + "an int can hold.");
+            System.exit(0);
+        }
+
+        // Initializes an array based on number of lines in CSV file
+        double[][] trainingData = new double[lineCount][];
+        // Reads in input data from scanner
+        for (int row = 0; scanner.hasNextLine(); row++) {
+            line = scanner.nextLine();
+            entriesInLine = line.split(",");
+            trainingData[row] = new double[entriesInLine.length];
+            for (int col = 0; col < trainingData[row].length; col++) {
+                trainingData[row][col] = Double.parseDouble(
+                        entriesInLine[col]);
+            }
+        }
+        return trainingData;
+
+    }
+
+    /**
+     * Runs the training mode feature of the program.
+     *
+     * @param myNet neural network
+     */
+    public static void trainingMode(NeuralNet myNet) {
+        double[][] trainingData = getTrainingData(myNet);
+        myNet = new NeuralNet(trainingData);
     }
 
     /**

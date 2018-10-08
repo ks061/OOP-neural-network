@@ -22,6 +22,7 @@ import java.util.ArrayList;
  * @author cld028
  */
 public class NeuralNet {
+
     private ArrayList<Layer> layers;
     private double[][] inputs;
     private double[] errors;
@@ -37,4 +38,15 @@ public class NeuralNet {
 
         //Test your network here
     }
+
+    /**
+     * Explicit constructor that creates a NeuralNet
+     *
+     * @param inputs training data to be used as inputs in the neural network
+     */
+    NeuralNet(double[][] inputs) {
+        this();
+        this.inputs = inputs;
+    }
+
 }
