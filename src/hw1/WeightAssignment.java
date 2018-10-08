@@ -9,7 +9,7 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: WeightAssignment
-* Description:
+* Description: Interface for assigning weight
 *
 * ****************************************
  */

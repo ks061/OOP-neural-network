@@ -1,15 +1,15 @@
 /* *****************************************
  * CSCI205 - Software Engineering and Design
- * Fall 2016
+ * Fall 2018
  *
- * Name: Chris Dancy
- * Date: Oct 10, 2016
- * Time: 2:58:06 PM
+ * Name: Logan Stiles and Kartikeya Sharma
+ * Date: Oct 10, 2018
+ * Time: 5:00:00 PM
  *
- * Project: 205-FA16Class
+ * Project: 205-FA18Class
  * Package: hw01
  * File: InputActivationFunction
- * Description:
+ * Description: Activation Functions for the Input
  *
  * ****************************************
  */
@@ -17,7 +17,7 @@ package hw1;
 
 /**
  *
- * @author cld028
+ * @author lts010
  */
 public class InputActivationFunction {
 
@@ -27,7 +27,7 @@ public class InputActivationFunction {
      *
      * @param netInput - total input from previous layer
      * @return the output
-     * @author
+     * @author lts010
      */
     public double calcOutput(double netInput) {
         if (netInput >= 0) {

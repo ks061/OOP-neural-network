@@ -2,14 +2,14 @@
  * CSCI205 - Software Engineering and Design
  * Fall 2018
  *
- * Name: Chris Dancy
- * Date: Oct 9, 2016
- * Time: 5:45:12 PM
+ * Name: Logan Stiles and Kartikeya Sharma
+ * Date: Oct 10, 2018
+ * Time: 5:00:00 PM
  *
- * Project: 205-FA16Class
+ * Project: 205-FA18Class
  * Package: hw01
  * File: SimpleBackPropagation
- * Description:
+ * Description: Performs back propagation
  *
  * ****************************************
  */
