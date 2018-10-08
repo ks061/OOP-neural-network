@@ -183,7 +183,7 @@ public class ANNClient {
      *
      * @author ks061
      */
-    public static double[][] getTrainingData() {
+    public static Object[] getTrainingData() {
         Scanner scanner = new Scanner(System.in);
         boolean csvFound = false;
         String filename = null;
@@ -228,19 +228,25 @@ public class ANNClient {
         }
 
         // Initializes an array based on number of lines in CSV file
-        double[][] trainingData = new double[lineCount][];
+        double[][] trainingInputs = new double[lineCount][];
+        double[] trainingExpectedOutputs = new double[lineCount];
         // Reads in input data from scanner
         for (int row = 0; scanner.hasNextLine(); row++) {
             line = scanner.nextLine();
             entriesInLine = line.split(",");
-            trainingData[row] = new double[entriesInLine.length];
-            for (int col = 0; col < trainingData[row].length; col++) {
-                trainingData[row][col] = Double.parseDouble(
-                        entriesInLine[col]);
+            trainingInputs[row] = new double[entriesInLine.length - 1];
+            for (int col = 0; col < trainingInputs[row].length; col++) {
+                if (col == trainingInputs[row].length - 1) {
+                    trainingExpectedOutputs[row] = Double.parseDouble(
+                            entriesInLine[col]);
+                }
+                else {
+                    trainingInputs[row][col] = Double.parseDouble(
+                            entriesInLine[col]);
+                }
             }
         }
-        return trainingData;
-
+        return new Object[]{trainingInputs, trainingExpectedOutputs};
     }
 
     /**
@@ -249,8 +255,9 @@ public class ANNClient {
      * @author ks061
      */
     public static void trainingMode() {
-        double[][] trainingData = getTrainingData();
-        myNet = new NeuralNet(trainingData);
+        Object[] trainingData = getTrainingData();
+        myNet = new NeuralNet((double[][]) trainingData[0],
+                              (double[]) trainingData[1]);
     }
 
     /**
