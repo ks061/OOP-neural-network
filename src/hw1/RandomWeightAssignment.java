@@ -37,9 +37,11 @@ public class RandomWeightAssignment implements WeightAssignment {
         //Get random double 0 < rndNum < 0.5
         double rndNum = rnd.nextDouble();
         rndNum = rndNum / 2;
-        if (pos)
+        if (pos) {
             return (rndNum);
-        else
+        }
+        else {
             return (-rndNum);
+        }
     }
 }
