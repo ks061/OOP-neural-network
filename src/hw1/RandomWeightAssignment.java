@@ -31,7 +31,7 @@ public class RandomWeightAssignment implements WeightAssignment {
      * @return the new weight that is assigned to an initial edge
      */
     @Override
-    public double assignWeight() {
+    public static double assignWeight() {
         Random rnd = new Random();
         boolean pos = rnd.nextBoolean();
         //Get random double 0 < rndNum < 0.5
