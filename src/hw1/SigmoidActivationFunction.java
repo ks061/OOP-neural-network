@@ -17,7 +17,7 @@ package hw1;
 
 /**
  *
- * @author cld028
+ * @author cld028, lts010
  */
 public class SigmoidActivationFunction implements ActivationFunction {
 
@@ -25,6 +25,8 @@ public class SigmoidActivationFunction implements ActivationFunction {
      *
      * @param netInput - total input from previous layer
      * @return
+     *
+     * @author lts010
      */
     @Override
     public double calcOutput(double netInput) {

@@ -28,7 +28,10 @@ public class RandomWeightAssignment implements WeightAssignment {
 
     /**
      *
+     *
      * @return the new weight that is assigned to an initial edge
+     *
+     * @author cld028
      */
     @Override
     public double assignWeight() {

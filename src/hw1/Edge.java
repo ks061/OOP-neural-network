@@ -18,7 +18,7 @@ package hw1;
 /**
  * Class to hold properties associated with edges between nodes
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class Edge {
 
@@ -29,12 +29,31 @@ public class Edge {
     private Neuron to;
     private Neuron from;
 
-    Edge(double weight) {
+    /**
+     * Explicit constructor for creating an edge
+     *
+     * @param to neuron edge delivers data to
+     * @param from neuron edge gets data from
+     * @param weight weight applied to data transferred to neuron
+     *
+     * @author ks061
+     */
+    Edge(Neuron to, Neuron from, double weight) {
+        this.to = to;
+        this.from = from;
         this.weight = weight;
     }
 
-    Edge() {
-        this.weight = 0;
+    /**
+     * Explicit constructor for creating an edge
+     *
+     * @param to neuron edge delivers data to
+     * @param from neuron edge gets data from
+     *
+     * @author ks061
+     */
+    Edge(Neuron to, Neuron from) {
+        this(to, from, RandomWeightAssignment.assignWeight());
     }
 
     /**
@@ -61,14 +80,38 @@ public class Edge {
         return weight * from.getValue();
     }
 
+    /**
+     * Sets the neuron that this edge gets data from
+     *
+     * @param neuron neuron that this edge should get data from
+     *
+     * @author ks061
+     */
     protected void setFrom(Neuron neuron) {
         this.from = neuron;
     }
 
+    /**
+     * Sets the neuron that this edge delivers data to
+     *
+     * @param neuron neuron that this edge should deliver data to
+     *
+     * @author ks061
+     */
     protected void setTo(Neuron neuron) {
         this.to = neuron;
     }
 
+    /**
+     * Gets the value that this edge will send to the neuron this edge will
+     * deliver data to (after applying the weight to the input received from the
+     * neuron that delivers data to the edge)
+     *
+     * @return value that this edge will send to the neuron this edge will
+     * deliver data to
+     *
+     * @author ks061
+     */
     protected double getValue() {
         return weight * from.getValue();
     }

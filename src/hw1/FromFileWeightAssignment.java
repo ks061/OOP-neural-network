@@ -17,13 +17,16 @@ package hw1;
 
 /**
  *
- * @author Logan Stiles and Kartikeya Sharma
+ * @author lts010, ks061
  */
 public class FromFileWeightAssignment {
 
     /**
+     * Assigns weights based on data saved in file
      *
      * @return the new weight that is assigned to an initial edge
+     *
+     * @author ks061
      */
     @Override
     public double assignWeight() {

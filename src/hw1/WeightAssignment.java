@@ -17,7 +17,7 @@ package hw1;
 
 /**
  *
- * @author Logan Stiles and Kartikeya Sharma
+ * @author lts010, ks061
  */
 interface WeightAssignment {
 
