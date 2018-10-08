@@ -32,13 +32,11 @@ public class Edge {
     /**
      * Explicit constructor for creating an edge
      *
-     * @param to neuron edge delivers data to
-     * @param from neuron edge gets data from
      * @param weight weight applied to data transferred to neuron
      *
      * @author ks061
      */
-    Edge(Neuron to, Neuron from, double weight) {
+    Edge(double weight) {
         this.to = to;
         this.from = from;
         this.weight = weight;
@@ -47,13 +45,10 @@ public class Edge {
     /**
      * Explicit constructor for creating an edge
      *
-     * @param to neuron edge delivers data to
-     * @param from neuron edge gets data from
-     *
      * @author ks061
      */
-    Edge(Neuron to, Neuron from) {
-        this(to, from, RandomWeightAssignment.assignWeight());
+    Edge() {
+        this.weight = 1;
     }
 
     /**

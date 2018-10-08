@@ -36,8 +36,8 @@ public abstract class Layer {
      *
      * @author cld028
      */
-    Layer(int numNeurons) {
-        this.neurons = this.createNeurons(numNeurons);
+    Layer(int numNeurons, int numOutEdges) {
+        this.neurons = this.createNeurons(numNeurons, numOutEdges);
     }
 
     /**
@@ -49,31 +49,35 @@ public abstract class Layer {
      *
      * @author cld028
      */
-    Layer(int numNeurons, String layerID) {
-        this.neurons = this.createNeurons(numNeurons, layerID);
+    Layer(int numNeurons, String layerID, int numOutEdges) {
+        this.neurons = this.createNeurons(numNeurons, layerID, numOutEdges);
     }
 
     /**
      * Create neurons that will reside in layer
      *
      * @param numNeurons - total number of neurons to create
+     * @param numOutEdges - number of out edges each neuron should have
      * @return list of neurons in the layer
      *
      * @author cld028
      */
-    public abstract ArrayList<Neuron> createNeurons(int numNeurons);
+    public abstract ArrayList<Neuron> createNeurons(int numNeurons,
+                                                    int numOutEdges);
 
     /**
      * Create neurons that will reside in layer
      *
      * @param numNeurons - total number of neurons to create
      * @param layerID - string identifier for layer
+     * @param numOutEdges - number of out edges each neuron should have
      * @return list of neurons in the layer
      *
      * @author cld028
      */
     public abstract ArrayList<Neuron> createNeurons(int numNeurons,
-                                                    String layerID);
+                                                    String layerID,
+                                                    int numOutEdges);
 
     /**
      * Connect the current layer to another layer (with this layer being on the
@@ -99,4 +103,8 @@ public abstract class Layer {
     void setPrevLayer(InputLayer aThis) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public abstract void fireNeurons(double[] inputVals);
+
+    public abstract void fireNeurons();
 }

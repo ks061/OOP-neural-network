@@ -36,8 +36,8 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      *
      * @author ks061
      */
-    InputLayer(int numNeurons) {
-        super(numNeurons);
+    InputLayer(int numNeurons, int numOutEdges) {
+        super(numNeurons, numOutEdges);
     }
 
     /**
@@ -49,8 +49,8 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      *
      * @author ks061
      */
-    InputLayer(int numNeurons, String id) {
-        super(numNeurons, id);
+    InputLayer(int numNeurons, String id, int numOutEdges) {
+        super(numNeurons, id, numOutEdges);
     }
 
     /**
@@ -61,10 +61,10 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      * @author ks061
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons) {
+    public ArrayList<Neuron> createNeurons(int numNeurons, int numOutEdges) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron("Input " + i));
+            neurons.add(new Neuron(i, numOutEdges));
         }
         return neurons;
     }
@@ -79,9 +79,10 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      * @author ks061
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
+    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
+                                           int numOutEdges) {
         this.layerID = layerID;
-        return createNeurons(numNeurons);
+        return createNeurons(numNeurons, numOutEdges);
     }
 
     /**
@@ -153,6 +154,11 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
     private void calculateErrors() {
         throw new UnsupportedOperationException(
                 "Input layer shouldn't be calculating errors!");
+    }
+
+    public void fireNeurons() {
+        throw new UnsupportedOperationException(
+                "Input layer can't fire neurons this way");
     }
 
     @Override

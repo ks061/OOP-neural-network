@@ -59,9 +59,10 @@ public class NeuralNet {
         this.inputs = inputs;
         this.expectedOutputs = expectedOutputs;
 
-        OutputLayer outputLayer = new OutputLayer(expectedOutputs.length, "O1-");
         InputLayer inputLayer = new InputLayer(numInputs, "I1-",
-                                               outputLayer.neurons.size());
+                                               expectedOutputs.length);
+        OutputLayer outputLayer = new OutputLayer(expectedOutputs.length, "O1-",
+                                                  0);
         // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
         // System.out.println("Connecting to in-hidden");
         //inputLayer.connectLayer(hiddenLayer);

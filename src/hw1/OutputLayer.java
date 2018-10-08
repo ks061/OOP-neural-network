@@ -31,12 +31,14 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
 
     private Layer prevLayer;
 
-    OutputLayer(int numNeurons) {
-        super(numNeurons);
+    private static final int NUM_OUT_EDGES = 0;
+
+    OutputLayer(int numNeurons, int numOutEdges) {
+        super(numNeurons, numOutEdges);
     }
 
-    OutputLayer(int numNeurons, String id) {
-        super(numNeurons, id);
+    OutputLayer(int numNeurons, String id, int numOutEdges) {
+        super(numNeurons, id, numOutEdges);
     }
 
     /**
@@ -45,10 +47,11 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
      * @return - An array list of all newly created neurons
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons) {
+    public ArrayList<Neuron> createNeurons(int numNeurons, int numOutEdges) {
+        numOutEdges = NUM_OUT_EDGES;
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron("Input " + i));
+            neurons.add(new Neuron(i, numOutEdges));
         }
         return neurons;
     }
@@ -61,11 +64,18 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
      * @return - An array list of all newly created neurons
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
+    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
+                                           int numOutEdges) {
         this.layerID = layerID;
-        return createNeurons(numNeurons);
+        return createNeurons(numNeurons, numOutEdges);
     }
 
+    /**
+     * Computes the net input for each neuron in the layer
+     *
+     * @author - lts010
+     */
+    @Override
     public void fireNeurons() {
         for (Neuron neuron : neurons) {
             neuron.fire();
@@ -97,14 +107,9 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     * Computes net input values for each neuron in the layer
-     *
-     * @author ks061
-     */
-    @Override
-    public void fireNeurons() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void fireNeurons(double[] inputVals) {
+        throw new UnsupportedOperationException(
+                "Output layers don't fire neurons this way");
     }
 
 }
