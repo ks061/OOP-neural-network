@@ -21,8 +21,7 @@ import java.util.ArrayList;
  *
  * @author cld028
  */
-public class OutputLayer extends Layer implements LayerWithPrevLayer,
-                                                  LayerWithoutNextLayer {
+public class OutputLayer extends Layer {
 
     private String layerID;
 
