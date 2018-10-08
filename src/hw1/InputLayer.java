@@ -21,8 +21,7 @@ import java.util.ArrayList;
  *
  * @author cld028, ks061
  */
-public class InputLayer extends Layer implements LayerWithoutPrevLayer,
-                                                 LayerWithNextLayer {
+public class InputLayer extends Layer {
 
     private String layerID;
 
@@ -114,10 +113,6 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      */
     @Override
     public void connectLayer(Layer nextLayer) {
-        if (!(nextLayer instanceof LayerWithPrevLayer)) {
-            throw new UnsupportedOperationException(
-                    "The input layer cannot point to a layer that cannot point to a previous layer as its next layer.");
-        }
 
         for (Neuron neuron : this.neurons) {
             for (Neuron nextNeuron : nextLayer.neurons) {
