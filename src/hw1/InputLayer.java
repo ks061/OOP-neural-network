@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author cld028
+ * @author cld028, ks061
  */
 public class InputLayer extends Layer {
 
@@ -27,10 +27,27 @@ public class InputLayer extends Layer {
 
     private Layer nextLayer;
 
+    /**
+     * Explicit constructor that creates the input layer with a particular
+     * number of neurons.
+     *
+     * @param numNeurons number of neurons to be generated in this layer
+     *
+     * @author ks061
+     */
     InputLayer(int numNeurons) {
         super(numNeurons);
     }
 
+    /**
+     * Explicit constructor that creates the input layer with a particular
+     * number of neurons and an ID.
+     *
+     * @param numNeurons number of neurons to be generated in this layer
+     * @param id identifier of the layer
+     *
+     * @author ks061
+     */
     InputLayer(int numNeurons, String id) {
         super(numNeurons, id);
     }
@@ -39,6 +56,8 @@ public class InputLayer extends Layer {
      *
      * @param numNeurons - Total number of neurons to be created within layer
      * @return - An array list of all newly created neurons
+     *
+     * @author ks061
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
@@ -55,6 +74,8 @@ public class InputLayer extends Layer {
      * @param layerID - A string-based identifier that can be used when creating
      * the neurons
      * @return - An array list of all newly created neurons
+     *
+     * @author ks061
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
@@ -66,6 +87,8 @@ public class InputLayer extends Layer {
      * Fire neurons in layer
      *
      * @param inputVals
+     *
+     * @author ks061
      */
     public void fireNeurons(double[] inputVals) {
         // TODO -- integrate with Neuron's fire() method
@@ -78,6 +101,8 @@ public class InputLayer extends Layer {
      * Connects this layer to the next layer
      *
      * @param nextLayer next layer
+     *
+     * @author ks061
      */
     @Override
     public void connectLayer(Layer nextLayer) {
@@ -94,13 +119,22 @@ public class InputLayer extends Layer {
     }
 
     /**
+     * Throws an UnsupportedOperationException instance because the input layer
+     * should not be learning.
      *
+     * @author cld028
      */
     public void learn() {
         throw new UnsupportedOperationException(
                 "Input layer shouldn't learning!");
     }
 
+    /**
+     * Throws an UnsupportedOperationException instance because the input layer
+     * should not be calculating errors.
+     *
+     * @author cld028
+     */
     private void calculateErrors() {
         throw new UnsupportedOperationException(
                 "Input layer shouldn't be calculating errors!");

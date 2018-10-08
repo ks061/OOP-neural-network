@@ -28,10 +28,27 @@ public abstract class Layer {
      */
     protected ArrayList<Neuron> neurons;
 
+    /**
+     * Explicit constructor that creates a layer with a particular number of
+     * neurons.
+     *
+     * @param numNeurons number of neurons to create in this layer
+     *
+     * @author cld028
+     */
     Layer(int numNeurons) {
         this.neurons = this.createNeurons(numNeurons);
     }
 
+    /**
+     * Explicit constructor that creates a layer with a particular number of
+     * neurons
+     *
+     * @param numNeurons number of neurons to create in this layer
+     * @param layerID identifier for the layer
+     *
+     * @author cld028
+     */
     Layer(int numNeurons, String layerID) {
         this.neurons = this.createNeurons(numNeurons, layerID);
     }
@@ -40,7 +57,9 @@ public abstract class Layer {
      * Create neurons that will reside in layer
      *
      * @param numNeurons - total number of neurons to create
-     * @return
+     * @return list of neurons in the layer
+     *
+     * @author cld028
      */
     public abstract ArrayList<Neuron> createNeurons(int numNeurons);
 
@@ -49,7 +68,9 @@ public abstract class Layer {
      *
      * @param numNeurons - total number of neurons to create
      * @param layerID - string identifier for layer
-     * @return
+     * @return list of neurons in the layer
+     *
+     * @author cld028
      */
     public abstract ArrayList<Neuron> createNeurons(int numNeurons,
                                                     String layerID);
@@ -59,6 +80,8 @@ public abstract class Layer {
      * left)
      *
      * @param nextLayer - The right layer to which to connect
+     *
+     * @author cld028
      */
     public abstract void connectLayer(Layer nextLayer);
 
@@ -67,6 +90,8 @@ public abstract class Layer {
      *
      * @param oldEdges
      * @param deltaWeight
+     *
+     * @author cld028
      */
     protected abstract void updateWeights(ArrayList<Edge> oldEdges,
                                           double deltaWeight);
