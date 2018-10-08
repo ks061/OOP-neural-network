@@ -26,7 +26,6 @@ public class Edge {
     private double errorGradient = 0;
     private double weightDelta = 0;
     private double prevWeightDelta = 0;
-    private double input = 0;
     private Neuron to;
     private Neuron from;
 
@@ -50,18 +49,8 @@ public class Edge {
      */
     public void changeWeight(double alpha, double error) {
         this.prevWeightDelta = this.weightDelta;
-        this.weightDelta = alpha * this.input * error;
+        this.weightDelta = alpha * from.getValue() * error;
         this.weight += weightDelta;
-    }
-
-    /**
-     * Changes the value of the input
-     *
-     * @param newInput - the new input
-     * @author - lts010
-     */
-    public void setInputValue(double newInput) {
-        this.input = newInput;
     }
 
     /**
@@ -71,7 +60,7 @@ public class Edge {
      * @author - lts010
      */
     public double getWeightedValue() {
-        return weight * input;
+        return weight * from.getValue();
     }
 
     protected void setFrom(Neuron neuron) {

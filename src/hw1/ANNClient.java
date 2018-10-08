@@ -28,6 +28,9 @@ import java.util.Scanner;
  */
 public class ANNClient {
 
+    enum Mode {
+        READ, CREATE, TRAINING, CLASSIFICATION;
+    }
     /**
      * Neural network generated/used by the ANNClient
      */
@@ -37,8 +40,7 @@ public class ANNClient {
      * Asks for a file containing input values and prints and writes them to a
      * file
      *
-     * @param inputOption - the option for how the neural network is created
-     * (can be "read or "create")
+     * @param inputMode - the mode with which we create the neural network with
      * @param numInputs - number of inputs for the neural net (needed if
      * inputOption is create)
      * @param numOutputs - number of outputs for the neural net (needed if the
@@ -46,12 +48,12 @@ public class ANNClient {
      *
      * @author lts010
      */
-    public static void classificationMode(String inputOption, int numInputs,
+    public static void classificationMode(Mode inputMode, int numInputs,
                                           int numOutputs) {
         Scanner in = new Scanner(System.in);
         Scanner fReader = new Scanner(System.in);
         boolean csvFound = false;
-        if (inputOption.equals("read")) {
+        if (inputMode.equals("read")) {
             while (!csvFound) {
                 try {
                     System.out.println("Enter the name of the config file: ");
@@ -136,6 +138,109 @@ public class ANNClient {
     }
 
     /**
+     * Gives the user a prompt and requests an integer
+     *
+     * @param prompt - the prompt given to the user
+     * @return the integer given by the user
+     *
+     * @author lts010
+     */
+    public static int getIntInput(String prompt) {
+        Scanner in = new Scanner(System.in);
+        boolean invalidInput = true;
+        int result = -1;
+        while (invalidInput) {
+            System.out.println(prompt);
+
+            if (in.hasNextInt()) {
+                result = in.nextInt();
+                invalidInput = false;
+            }
+            else {
+                System.out.println("INVALID INPUT\n\n." + prompt);
+            }
+        }
+        return (result);
+    }
+
+    /**
+     * Gets the number of inputs for a neural network
+     *
+     * @return integer
+     * @author lts010
+     */
+    public static int getNumInputs() {
+        return getIntInput(
+                "What should the number of inputs be (as an integer)? :");
+    }
+
+    /**
+     * Gets the number of outputs for a neural network
+     *
+     * @return integer
+     * @author lts010
+     */
+    public static int getNumOutputs() {
+        return getIntInput(
+                "What should the number of outputs be (as an integer)?");
+    }
+
+    /**
+     * Gets the mode the program creates the neural network with (can be READ or
+     * CREATE)
+     *
+     * @return the mode that creates the neural network
+     * @author lts010
+     */
+    public static Mode getInputMode() {
+        int response = -1;
+        boolean invalidResponse = true;
+        Mode mode = Mode.READ;
+        String prompt = "Enter 1 or 2 for the desired method of creating the neural network\n\n";
+        prompt += "1 -- Read a config file\n2 -- Create a new ANN\n";
+        while (invalidResponse) {
+            response = getIntInput(prompt);
+            if (response != 1 && response != 2) {
+                System.out.println("INVALID INPUT\n\n.");
+            }
+            else {
+                invalidResponse = false;
+            }
+        }
+        if (response == 2) {
+            mode = Mode.CREATE;
+        }
+        return mode;
+    }
+
+    /**
+     * Gets the mode the program runs on (can be TRAINING or CLASSIFICATION)
+     *
+     * @return the mode the program runs on
+     * @author lts010
+     */
+    public static Mode getRunMode() {
+        int response = -1;
+        boolean invalidResponse = true;
+        Mode mode = Mode.TRAINING;
+        String prompt = "Enter 1 or 2 for the desired mode of operation\n\n";
+        prompt += "1 -- training mode\n2 -- classification mode\n";
+        while (invalidResponse) {
+            response = getIntInput(prompt);
+            if (response != 1 && response != 2) {
+                System.out.println("INVALID INPUT\n\n.");
+            }
+            else {
+                invalidResponse = false;
+            }
+        }
+        if (response == 2) {
+            mode = Mode.CLASSIFICATION;
+        }
+        return mode;
+    }
+
+    /**
      * Runs the training mode feature of the program.
      */
     public static void trainingMode() {
@@ -151,70 +256,22 @@ public class ANNClient {
      * @author lts010
      */
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        boolean invalidInput = true;
-        String inputOption = "";
-        String modeOption = "";
         int numInputs = 0;
         int numOutputs = 0;
+        Mode runMode;
+        Mode inputMode;
+        inputMode = getInputMode();
 
-        while (invalidInput) { //determine inputOption
-            System.out.println(
-                    "Do you want to create a new ANN, or read in a config file?");
-            System.out.println(
-                    "Type in 'create' for the former option, or 'read' for the latter option:");
-            inputOption = in.nextLine();
-            if (inputOption.equals("create") || inputOption.equals("read")) {
-                break; //input is now valid
-            }
-            else {
-                System.out.println("INVALID INPUT. Try again.");
-            }
+        if (inputMode == Mode.CREATE) {
+            numInputs = getNumInputs();
+            numOutputs = getNumOutputs();
         }
 
-        if (inputOption.equals("create")) //if we create a new ANN, we need numInputs and numOutputs
-        {
-            while (invalidInput) {
-                System.out.println(
-                        "What should the number of inputs be (as an integer)? :");
-                if (in.hasNextInt()) {
-                    numInputs = in.nextInt();
-                }
-                else {
-                    System.out.println(
-                            "INVALID INPUT. Reinput number of inputs.");
-                    continue;
-                }
-                System.out.println(
-                        "What should the number of outputs be (as an integer)?");
-                if (in.hasNextInt()) {
-                    numOutputs = in.nextInt();
-                    break; //input is now valid
-                }
-                else {
-                    System.out.println(
-                            "INVALID INPUT. Reinput number of inputs and outputs.");
-                }
-            }
+        runMode = getRunMode();
+        if (runMode == Mode.CLASSIFICATION) {
+            classificationMode(inputMode, numInputs, numOutputs);
         }
-
-        while (invalidInput) { //determine modeOption
-            System.out.println(
-                    "Type 'training' for training mode, and 'classification' for classification mode:");
-            modeOption = in.nextLine();
-            if (modeOption.equals("training") || modeOption.equals(
-                    "classification")) {
-                break; //input is now valid
-            }
-            else {
-                System.out.println("INVALID INPUT. Try again.");
-            }
-        }
-
-        if (modeOption.equals("classfication")) {
-            classificationMode(inputOption, numInputs, numOutputs);
-        }
-        else if (modeOption.equals("training")) {
+        else {
             trainingMode();
         }
     }

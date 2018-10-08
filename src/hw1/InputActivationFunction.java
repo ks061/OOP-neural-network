@@ -26,10 +26,16 @@ public class InputActivationFunction {
      * Calculate the output of a neuron given the input value
      *
      * @param netInput - total input from previous layer
-     * @return
+     * @return the output
+     * @author
      */
     public double calcOutput(double netInput) {
-        return netInput;
+        if (netInput >= 0) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 
     /**
