@@ -84,16 +84,23 @@ public class InputLayer extends Layer {
     }
 
     /**
-     * Fire neurons in layer
+     * Fire neurons in input layer layer
      *
-     * @param inputVals
+     * @param inputVals input values to assign to neurons in the input layer
      *
      * @author ks061
      */
     public void fireNeurons(double[] inputVals) {
         // TODO -- integrate with Neuron's fire() method
-        for (Neuron neuron : neurons) {
-            neuron.fire();
+        if (inputVals.length != this.neurons.size()) {
+            throw new NeuralNetConstructionException(
+                    "The number of input values and number of neurons in the "
+                    + "input layer of the neural network do not match.");
+        }
+
+        int numInputs = inputVals.length;
+        for (int i = 0; i < numInputs; i++) {
+            this.neurons.get(i).setNetValue(inputVals[i]);
         }
     }
 

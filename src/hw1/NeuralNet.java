@@ -25,6 +25,7 @@ public class NeuralNet {
 
     private ArrayList<Layer> layers;
     private double[][] inputs;
+    private double[] expectedOutputs;
     private double[] errors;
 
     /**
@@ -33,32 +34,49 @@ public class NeuralNet {
      *
      * @author cld028, ks061
      */
-    NeuralNet() {
-        InputLayer inputLayer = new InputLayer(2, "I1-");
-        HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
-        OutputLayer outputLayer = new OutputLayer(1, "O1-");
-        System.out.println("Connecting to in-hidden");
-        inputLayer.connectLayer(hiddenLayer);
-        System.out.println("Connecting to hidden-out");
-        hiddenLayer.connectLayer(outputLayer);
+    NeuralNet(double[][] inputs, double[] expectedOutputs) {
+        if (inputs.length == 0) {
+            throw new NeuralNetConstructionException(
+                    "No inputs have been provided.");
+        }
+        if (expectedOutputs.length == 0) {
+            throw new NeuralNetConstructionException(
+                    "No expected outputs have been provided.");
+        }
+        if (inputs.length != expectedOutputs.length) {
+            throw new NeuralNetConstructionException(
+                    "Each input set does not have a corresponding output set.");
+        }
+
+        int numInputs = inputs[0].length;
+        for (double[] inputSet : inputs) {
+            if (inputSet.length != numInputs) {
+                throw new NeuralNetConstructionException(
+                        "Not all input sets have the same amount of input entries.");
+            }
+        }
+
+        this.inputs = inputs;
+        this.expectedOutputs = expectedOutputs;
+
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-");
+        // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
+        OutputLayer outputLayer = new OutputLayer(expectedOutputs.length, "O1-");
+        // System.out.println("Connecting to in-hidden");
+        //inputLayer.connectLayer(hiddenLayer);
+        //System.out.println("Connecting to hidden-out");
+        // hiddenLayer.connectLayer(outputLayer);
+        inputLayer.connectLayer(outputLayer);
 
         for (double[] inputSet : this.inputs) {
             inputLayer.fireNeurons(inputSet);
+            // Send to edges connecting to output layer
+            // Read output layer
+            // Back propogate
+            // etc.
         }
 
         //Test your network here
-    }
-
-    /**
-     * Explicit constructor that creates a NeuralNet
-     *
-     * @param inputs training data to be used as inputs in the neural network
-     *
-     * @author ks061
-     */
-    NeuralNet(double[][] inputs) {
-        this();
-        this.inputs = inputs;
     }
 
 }
