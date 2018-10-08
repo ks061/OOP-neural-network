@@ -15,7 +15,6 @@
  */
 package hw1;
 
-import hw1.sol.Dancy.*;
 import java.util.ArrayList;
 
 /**

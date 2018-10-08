@@ -58,6 +58,7 @@ public class InputLayer extends Layer {
      * @param inputVals
      */
     public void fireNeurons(double[] inputVals) {
+
     }
 
     /**
@@ -74,12 +75,17 @@ public class InputLayer extends Layer {
      */
     public void learn() {
         throw new UnsupportedOperationException(
-          "Input layer shouldn't learning!");
+                "Input layer shouldn't learning!");
     }
 
     private void calculateErrors() {
         throw new UnsupportedOperationException(
-          "Input layer shouldn't be calculating errors!");
+                "Input layer shouldn't be calculating errors!");
+    }
+
+    @Override
+    protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
