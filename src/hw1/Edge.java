@@ -21,6 +21,7 @@ package hw1;
  * @author cld028
  */
 public class Edge {
+
     private double weight;
     private double errorGradient = 0;
     private double weightDelta = 0;
@@ -39,4 +40,17 @@ public class Edge {
     Edge(double weight) {
         this.weight = weight;
     }
+
+    protected void setFrom(Neuron neuron) {
+        this.from = neuron;
+    }
+
+    protected void setTo(Neuron neuron) {
+        this.to = neuron;
+    }
+
+    protected double getValue() {
+        return weight * from.getValue();
+    }
+
 }
