@@ -9,7 +9,7 @@
  * Project: 205-FA16Class
  * Package: hw01
  * File: RandomWeightAssignment
- * Description:
+ * Description: Assigns weight between range -0.5 and 0.5
  *
  * ****************************************
  */

@@ -1,15 +1,15 @@
 /* *****************************************
  * CSCI205 - Software Engineering and Design
- * Fall 2016
+ * Fall 2018
  *
- * Name: Chris Dancy
- * Date: Oct 7, 2016
- * Time: 8:29:57 AM
+ * Name: Logan Stiles and Kartikeya Sharma
+ * Date: Oct 10, 2018
+ * Time: 5:00:00 PM
  *
- * Project: 205-FA16Class
+ * Project: 205-FA18Class
  * Package: hw01
  * File: Edge
- * Description:
+ * Description: Represents an edge in a neural net
  *
  * ****************************************
  */
