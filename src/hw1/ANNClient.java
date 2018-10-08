@@ -63,13 +63,13 @@ public class ANNClient {
                 }
             }
         }
+        /**
+         * TO DO Read the config file if inputOption == read; Ask for input
+         * data, and read it; Create the neural network; Feed forward the neural
+         * net; Print and write the outputs
+         */
     }
 
-    /**
-     * TO DO Read the config file if inputOption == read; Ask for input data,
-     * and read it; Create the neural network; Feed forward the neural net;
-     * Print and write the outputs
-     */
     /**
      * Imports training data from the CSV file specified by the end user
      *
