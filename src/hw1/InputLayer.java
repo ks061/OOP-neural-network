@@ -21,7 +21,8 @@ import java.util.ArrayList;
  *
  * @author cld028, ks061
  */
-public class InputLayer extends Layer {
+public class InputLayer extends Layer implements LayerWithoutPrevLayer,
+                                                 LayerWithNextLayer {
 
     private String layerID;
 
@@ -90,6 +91,7 @@ public class InputLayer extends Layer {
      *
      * @author ks061
      */
+    @Override
     public void fireNeurons(double[] inputVals) {
         // TODO -- integrate with Neuron's fire() method
         if (inputVals.length != this.neurons.size()) {
@@ -102,6 +104,8 @@ public class InputLayer extends Layer {
         for (int i = 0; i < numInputs; i++) {
             this.neurons.get(i).setNetValue(inputVals[i]);
         }
+
+        nextLayer.fireNeurons();
     }
 
     /**
@@ -113,6 +117,11 @@ public class InputLayer extends Layer {
      */
     @Override
     public void connectLayer(Layer nextLayer) {
+        if (!(nextLayer instanceof LayerWithPrevLayer)) {
+            throw new UnsupportedOperationException(
+                    "The input layer cannot point to a layer that cannot point to a previous layer as its next layer.");
+        }
+
         for (Neuron neuron : this.neurons) {
             for (Edge edge : neuron.getOutEdges()) {
                 for (Neuron nextNeuron : nextLayer.neurons) {

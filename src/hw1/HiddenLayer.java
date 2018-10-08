@@ -23,7 +23,8 @@ import java.util.ArrayList;
  *
  * @author cld028
  */
-public class HiddenLayer extends Layer {
+public class HiddenLayer extends Layer implements LayerWithPrevLayer,
+                                                  LayerWithNextLayer {
 
     private Learnable learnAlg;
     private double[] outputErrors;
@@ -83,6 +84,21 @@ public class HiddenLayer extends Layer {
     }
 
     private void calculateErrors() {
+    }
+
+    @Override
+    protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Computes net input values for each neuron in the layer
+     *
+     * @author ks061
+     */
+    @Override
+    public void fireNeurons() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
