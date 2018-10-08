@@ -19,7 +19,7 @@ package hw1;
  *
  * @author cld028, ks061, lts010
  */
-public class InputActivationFunction {
+public class InputActivationFunction implements ActivationFunction {
 
     /**
      *
@@ -30,6 +30,7 @@ public class InputActivationFunction {
      *
      * @author lts010, ks061
      */
+    @Override
     public double calcOutput(double netInput) {
         if (netInput >= 0) {
             return 1;
@@ -45,6 +46,7 @@ public class InputActivationFunction {
      * @param netInput - total input from previous layer
      * @return
      */
+    @Override
     public double calcDervOutput(double netInput) {
         return 0;
     }

@@ -24,15 +24,19 @@ import java.util.ArrayList;
 public class OutputLayer extends Layer implements LayerWithPrevLayer,
                                                   LayerWithoutNextLayer {
 
+    private String layerID;
+
     private double[] targetOutput;
     private double[] outputErrors;
 
     private Layer prevLayer;
 
     OutputLayer(int numNeurons) {
+        super(numNeurons);
     }
 
     OutputLayer(int numNeurons, String id) {
+        super(numNeurons, id);
     }
 
     /**
@@ -42,7 +46,11 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
-
+        ArrayList<Neuron> neurons = new ArrayList<>();
+        for (int i = 0; i < numNeurons; i++) {
+            neurons.add(new Neuron("Input " + i));
+        }
+        return neurons;
     }
 
     /**
@@ -54,6 +62,15 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
+        this.layerID = layerID;
+        return createNeurons(numNeurons);
+    }
+
+    public void fireNeurons() {
+        for (Neuron neuron : neurons) {
+            neuron.fire();
+            System.out.println(neuron.getValue());
+        }
     }
 
     /**

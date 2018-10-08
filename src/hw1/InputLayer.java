@@ -104,7 +104,6 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
         for (int i = 0; i < numInputs; i++) {
             this.neurons.get(i).setNetValue(inputVals[i]);
         }
-
         nextLayer.fireNeurons();
     }
 
