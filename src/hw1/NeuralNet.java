@@ -36,6 +36,7 @@ public class NeuralNet {
         System.out.println("Connecting to hidden-out");
         hiddenLayer.connectLayer(outputLayer);
 
+        inputLayer.fireNeurons(this.inputs);
         //Test your network here
     }
 
