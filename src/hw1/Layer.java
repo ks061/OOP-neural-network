@@ -27,6 +27,8 @@ public abstract class Layer {
      * Neurons within this layer
      */
     protected ArrayList<Neuron> neurons;
+    protected Layer nextLayer;
+    protected Layer prevLayer;
 
     /**
      * Explicit constructor that creates a layer with a particular number of
@@ -97,6 +99,10 @@ public abstract class Layer {
                                           double deltaWeight);
 
     void setPrevLayer(InputLayer aThis) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.prevLayer = aThis;
     }
+
+    public abstract void fireNeurons(double[] inputVals);
+
+    public abstract void fireNeurons();
 }

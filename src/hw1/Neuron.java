@@ -57,6 +57,10 @@ public class Neuron {
         this.id = id;
         this.alpha = DEFAULTALPHA;
         this.theta = DEFAULTTHETA;
+        this.inEdges = new ArrayList<>();
+        this.outEdges = new ArrayList<>();
+        this.weightAssign = new FromFileWeightAssignment();
+        this.activationFunction = new InputActivationFunction();
     }
 
     /**
@@ -69,22 +73,6 @@ public class Neuron {
      */
     Neuron(int idNum) {
         this(Integer.toString(idNum));
-    }
-
-    /**
-     * Explicit constructor that creates a neuron with a particular numerical
-     * identifier and number of outbound edges
-     *
-     * @param idNum numerical identifier for the neuron
-     * @param numOutEdges number of outbound edges to be connected to the neuron
-     *
-     * @author ks061
-     */
-    Neuron(int idNum, int numOutEdges) {
-        this(idNum);
-        for (int i = 0; i < numOutEdges; i++) {
-            outEdges.add(new Edge(weightAssign.assignWeight()));
-        }
     }
 
     /**

@@ -29,8 +29,6 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
     private double[] targetOutput;
     private double[] outputErrors;
 
-    private Layer prevLayer;
-
     OutputLayer(int numNeurons) {
         super(numNeurons);
     }
@@ -48,7 +46,7 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
     public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron("Input " + i));
+            neurons.add(new Neuron(i));
         }
         return neurons;
     }
@@ -66,6 +64,12 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
         return createNeurons(numNeurons);
     }
 
+    /**
+     * Computes the net input for each neuron in the layer
+     *
+     * @author - lts010
+     */
+    @Override
     public void fireNeurons() {
         for (Neuron neuron : neurons) {
             neuron.fire();
@@ -97,14 +101,9 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     * Computes net input values for each neuron in the layer
-     *
-     * @author ks061
-     */
-    @Override
-    public void fireNeurons() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void fireNeurons(double[] inputVals) {
+        throw new UnsupportedOperationException(
+                "Output layers don't fire neurons this way");
     }
 
 }

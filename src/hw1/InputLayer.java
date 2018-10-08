@@ -26,8 +26,6 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
 
     private String layerID;
 
-    private Layer nextLayer;
-
     /**
      * Explicit constructor that creates the input layer with a particular
      * number of neurons.
@@ -64,7 +62,7 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
     public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron("Input " + i));
+            neurons.add(new Neuron(i));
         }
         return neurons;
     }
@@ -122,11 +120,12 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
         }
 
         for (Neuron neuron : this.neurons) {
-            for (Edge edge : neuron.getOutEdges()) {
-                for (Neuron nextNeuron : nextLayer.neurons) {
-                    edge.setFrom(neuron);
-                    edge.setTo(nextNeuron);
-                }
+            for (Neuron nextNeuron : nextLayer.neurons) {
+                Edge edge = new Edge();
+                neuron.getOutEdges().add(edge);
+                edge.setFrom(neuron);
+                nextNeuron.getInEdges().add(edge);
+                edge.setTo(nextNeuron);
             }
         }
         this.nextLayer = nextLayer;
@@ -153,6 +152,11 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
     private void calculateErrors() {
         throw new UnsupportedOperationException(
                 "Input layer shouldn't be calculating errors!");
+    }
+
+    public void fireNeurons() {
+        throw new UnsupportedOperationException(
+                "Input layer can't fire neurons this way");
     }
 
     @Override

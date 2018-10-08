@@ -23,14 +23,10 @@ import java.util.ArrayList;
  *
  * @author cld028
  */
-public class HiddenLayer extends Layer implements LayerWithPrevLayer,
-                                                  LayerWithNextLayer {
+public class HiddenLayer extends Layer {
 
     private Learnable learnAlg;
     private double[] outputErrors;
-
-    private Layer prevLayer;
-    private Layer nextLayer;
 
     HiddenLayer(int numNeurons) {
         super(numNeurons);
@@ -49,7 +45,11 @@ public class HiddenLayer extends Layer implements LayerWithPrevLayer,
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
-
+        ArrayList<Neuron> neurons = new ArrayList<>();
+        for (int i = 0; i < numNeurons; i++) {
+            neurons.add(new Neuron(i));
+        }
+        return neurons;
     }
 
     /**
@@ -61,6 +61,11 @@ public class HiddenLayer extends Layer implements LayerWithPrevLayer,
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
+        ArrayList<Neuron> neurons = new ArrayList<>();
+        for (int i = 0; i < numNeurons; i++) {
+            neurons.add(new Neuron(i));
+        }
+        return neurons;
     }
 
     /**
@@ -98,7 +103,12 @@ public class HiddenLayer extends Layer implements LayerWithPrevLayer,
      */
     @Override
     public void fireNeurons() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("lol."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void fireNeurons(double[] inputVals) {
+        throw new UnsupportedOperationException("lol"); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

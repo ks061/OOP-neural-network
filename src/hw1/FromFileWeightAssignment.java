@@ -19,7 +19,7 @@ package hw1;
  *
  * @author lts010, ks061
  */
-public class FromFileWeightAssignment {
+public class FromFileWeightAssignment implements WeightAssignment {
 
     /**
      * Assigns weights based on data saved in file
@@ -31,6 +31,6 @@ public class FromFileWeightAssignment {
     @Override
     public double assignWeight() {
         // TODO: implement
-        return 0.0;
+        return 1.0;
     }
 }
