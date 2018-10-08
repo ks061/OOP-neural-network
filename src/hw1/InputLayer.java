@@ -23,6 +23,10 @@ import java.util.ArrayList;
  */
 public class InputLayer extends Layer {
 
+    private String layerID;
+
+    private Layer nextLayer;
+
     InputLayer(int numNeurons) {
         super(numNeurons);
     }
@@ -38,7 +42,11 @@ public class InputLayer extends Layer {
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
-
+        ArrayList<Neuron> neurons = new ArrayList<>();
+        for (int i = 0; i < numNeurons; i++) {
+            neurons.add(new Neuron("Input " + i));
+        }
+        return neurons;
     }
 
     /**
@@ -50,6 +58,8 @@ public class InputLayer extends Layer {
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
+        this.layerID = layerID;
+        return createNeurons(numNeurons);
     }
 
     /**
@@ -58,15 +68,29 @@ public class InputLayer extends Layer {
      * @param inputVals
      */
     public void fireNeurons(double[] inputVals) {
+        // TODO -- integrate with Neuron's fire() method
+        for (Neuron neuron : neurons) {
+            neuron.fire();
+        }
     }
 
     /**
+     * Connects this layer to the next layer
      *
-     * @param nextLayer
+     * @param nextLayer next layer
      */
     @Override
     public void connectLayer(Layer nextLayer) {
-
+        for (Neuron neuron : this.neurons) {
+            for (Edge edge : neuron.getOutEdges()) {
+                for (Neuron nextNeuron : nextLayer.neurons) {
+                    edge.setFrom(neuron);
+                    edge.setTo(nextNeuron);
+                }
+            }
+        }
+        this.nextLayer = nextLayer;
+        nextLayer.setPrevLayer(this);
     }
 
     /**
@@ -74,12 +98,17 @@ public class InputLayer extends Layer {
      */
     public void learn() {
         throw new UnsupportedOperationException(
-          "Input layer shouldn't learning!");
+                "Input layer shouldn't learning!");
     }
 
     private void calculateErrors() {
         throw new UnsupportedOperationException(
-          "Input layer shouldn't be calculating errors!");
+                "Input layer shouldn't be calculating errors!");
+    }
+
+    @Override
+    protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

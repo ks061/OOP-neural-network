@@ -24,8 +24,12 @@ import java.util.ArrayList;
  * @author cld028
  */
 public class HiddenLayer extends Layer {
+
     private Learnable learnAlg;
     private double[] outputErrors;
+
+    private Layer prevLayer;
+    private Layer nextLayer;
 
     HiddenLayer(int numNeurons) {
         super(numNeurons);

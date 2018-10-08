@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public abstract class Layer {
 
     /**
-     *
+     * Neurons within this layer
      */
     protected ArrayList<Neuron> neurons;
 
@@ -70,4 +70,8 @@ public abstract class Layer {
      */
     protected abstract void updateWeights(ArrayList<Edge> oldEdges,
                                           double deltaWeight);
+
+    void setPrevLayer(InputLayer aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

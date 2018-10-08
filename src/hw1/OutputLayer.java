@@ -22,8 +22,11 @@ import java.util.ArrayList;
  * @author cld028
  */
 public class OutputLayer extends Layer {
+
     private double[] targetOutput;
     private double[] outputErrors;
+
+    private Layer prevLayer;
 
     OutputLayer(int numNeurons) {
     }
@@ -59,7 +62,7 @@ public class OutputLayer extends Layer {
     @Override
     public void connectLayer(Layer nextLayer) {
         throw new UnsupportedOperationException(
-          "Output layer shouldn't be connecting!");
+                "Output layer shouldn't be connecting!");
     }
 
     /**
