@@ -29,16 +29,12 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
     private double[] targetOutput;
     private double[] outputErrors;
 
-    private Layer prevLayer;
-
-    private static final int NUM_OUT_EDGES = 0;
-
-    OutputLayer(int numNeurons, int numOutEdges) {
-        super(numNeurons, numOutEdges);
+    OutputLayer(int numNeurons) {
+        super(numNeurons);
     }
 
-    OutputLayer(int numNeurons, String id, int numOutEdges) {
-        super(numNeurons, id, numOutEdges);
+    OutputLayer(int numNeurons, String id) {
+        super(numNeurons, id);
     }
 
     /**
@@ -47,11 +43,10 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
      * @return - An array list of all newly created neurons
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, int numOutEdges) {
-        numOutEdges = NUM_OUT_EDGES;
+    public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i, numOutEdges));
+            neurons.add(new Neuron(i));
         }
         return neurons;
     }
@@ -64,10 +59,9 @@ public class OutputLayer extends Layer implements LayerWithPrevLayer,
      * @return - An array list of all newly created neurons
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
-                                           int numOutEdges) {
+    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
         this.layerID = layerID;
-        return createNeurons(numNeurons, numOutEdges);
+        return createNeurons(numNeurons);
     }
 
     /**

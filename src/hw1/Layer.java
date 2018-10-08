@@ -27,6 +27,8 @@ public abstract class Layer {
      * Neurons within this layer
      */
     protected ArrayList<Neuron> neurons;
+    protected Layer nextLayer;
+    protected Layer prevLayer;
 
     /**
      * Explicit constructor that creates a layer with a particular number of
@@ -36,8 +38,8 @@ public abstract class Layer {
      *
      * @author cld028
      */
-    Layer(int numNeurons, int numOutEdges) {
-        this.neurons = this.createNeurons(numNeurons, numOutEdges);
+    Layer(int numNeurons) {
+        this.neurons = this.createNeurons(numNeurons);
     }
 
     /**
@@ -49,35 +51,31 @@ public abstract class Layer {
      *
      * @author cld028
      */
-    Layer(int numNeurons, String layerID, int numOutEdges) {
-        this.neurons = this.createNeurons(numNeurons, layerID, numOutEdges);
+    Layer(int numNeurons, String layerID) {
+        this.neurons = this.createNeurons(numNeurons, layerID);
     }
 
     /**
      * Create neurons that will reside in layer
      *
      * @param numNeurons - total number of neurons to create
-     * @param numOutEdges - number of out edges each neuron should have
      * @return list of neurons in the layer
      *
      * @author cld028
      */
-    public abstract ArrayList<Neuron> createNeurons(int numNeurons,
-                                                    int numOutEdges);
+    public abstract ArrayList<Neuron> createNeurons(int numNeurons);
 
     /**
      * Create neurons that will reside in layer
      *
      * @param numNeurons - total number of neurons to create
      * @param layerID - string identifier for layer
-     * @param numOutEdges - number of out edges each neuron should have
      * @return list of neurons in the layer
      *
      * @author cld028
      */
     public abstract ArrayList<Neuron> createNeurons(int numNeurons,
-                                                    String layerID,
-                                                    int numOutEdges);
+                                                    String layerID);
 
     /**
      * Connect the current layer to another layer (with this layer being on the
@@ -101,7 +99,7 @@ public abstract class Layer {
                                           double deltaWeight);
 
     void setPrevLayer(InputLayer aThis) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.prevLayer = aThis;
     }
 
     public abstract void fireNeurons(double[] inputVals);

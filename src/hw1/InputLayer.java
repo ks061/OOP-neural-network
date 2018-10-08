@@ -26,8 +26,6 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
 
     private String layerID;
 
-    private Layer nextLayer;
-
     /**
      * Explicit constructor that creates the input layer with a particular
      * number of neurons.
@@ -36,8 +34,8 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      *
      * @author ks061
      */
-    InputLayer(int numNeurons, int numOutEdges) {
-        super(numNeurons, numOutEdges);
+    InputLayer(int numNeurons) {
+        super(numNeurons);
     }
 
     /**
@@ -49,8 +47,8 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      *
      * @author ks061
      */
-    InputLayer(int numNeurons, String id, int numOutEdges) {
-        super(numNeurons, id, numOutEdges);
+    InputLayer(int numNeurons, String id) {
+        super(numNeurons, id);
     }
 
     /**
@@ -61,10 +59,10 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      * @author ks061
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, int numOutEdges) {
+    public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i, numOutEdges));
+            neurons.add(new Neuron(i));
         }
         return neurons;
     }
@@ -79,10 +77,9 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
      * @author ks061
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
-                                           int numOutEdges) {
+    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
         this.layerID = layerID;
-        return createNeurons(numNeurons, numOutEdges);
+        return createNeurons(numNeurons);
     }
 
     /**
@@ -123,11 +120,12 @@ public class InputLayer extends Layer implements LayerWithoutPrevLayer,
         }
 
         for (Neuron neuron : this.neurons) {
-            for (Edge edge : neuron.getOutEdges()) {
-                for (Neuron nextNeuron : nextLayer.neurons) {
-                    edge.setFrom(neuron);
-                    edge.setTo(nextNeuron);
-                }
+            for (Neuron nextNeuron : nextLayer.neurons) {
+                Edge edge = new Edge();
+                neuron.getOutEdges().add(edge);
+                edge.setFrom(neuron);
+                nextNeuron.getInEdges().add(edge);
+                edge.setTo(nextNeuron);
             }
         }
         this.nextLayer = nextLayer;

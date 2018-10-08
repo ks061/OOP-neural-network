@@ -23,22 +23,18 @@ import java.util.ArrayList;
  *
  * @author cld028
  */
-public abstract class HiddenLayer extends Layer implements LayerWithPrevLayer,
-                                                           LayerWithNextLayer {
+public class HiddenLayer extends Layer {
 
     private Learnable learnAlg;
     private double[] outputErrors;
 
-    private Layer prevLayer;
-    private Layer nextLayer;
-
-    HiddenLayer(int numNeurons, int numOutEdges) {
-        super(numNeurons, numOutEdges);
+    HiddenLayer(int numNeurons) {
+        super(numNeurons);
         this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 
-    HiddenLayer(int numNeurons, String id, int numOutEdges) {
-        super(numNeurons, id, numOutEdges);
+    HiddenLayer(int numNeurons, String id) {
+        super(numNeurons, id);
         this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 
@@ -48,10 +44,10 @@ public abstract class HiddenLayer extends Layer implements LayerWithPrevLayer,
      * @return - An array list of all newly created neurons
      */
     @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, int numOutEdges) {
+    public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i, numOutEdges));
+            neurons.add(new Neuron(i));
         }
         return neurons;
     }
@@ -63,11 +59,11 @@ public abstract class HiddenLayer extends Layer implements LayerWithPrevLayer,
      * the neurons
      * @return - An array list of all newly created neurons
      */
-    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
-                                           int numOutEdges) {
+    @Override
+    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i, numOutEdges));
+            neurons.add(new Neuron(i));
         }
         return neurons;
     }

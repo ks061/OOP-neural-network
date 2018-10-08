@@ -59,10 +59,9 @@ public class NeuralNet {
         this.inputs = inputs;
         this.expectedOutputs = expectedOutputs;
 
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-",
-                                               expectedOutputs.length);
-        OutputLayer outputLayer = new OutputLayer(expectedOutputs.length, "O1-",
-                                                  0);
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-");
+        OutputLayer outputLayer = new OutputLayer(
+                (expectedOutputs.length) / inputs.length, "O1-");
         // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
         // System.out.println("Connecting to in-hidden");
         //inputLayer.connectLayer(hiddenLayer);
@@ -72,7 +71,6 @@ public class NeuralNet {
 
         for (double[] inputSet : this.inputs) {
             inputLayer.fireNeurons(inputSet);
-            outputLayer.fireNeurons();
             // Read output layer
             // Back propogate
             // etc.
@@ -83,7 +81,7 @@ public class NeuralNet {
 
     public static void main(String args[]) {
         double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
-        double[] outputs = {0.0, 1.0, 1.0, 1.0};
+        double[] outputs = {0.0, 0.0, 0.0, 0.0};
         NeuralNet net = new NeuralNet(inputs, outputs);
     }
 }
