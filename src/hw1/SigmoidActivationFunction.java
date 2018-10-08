@@ -19,13 +19,14 @@ package hw1;
  *
  * @author cld028
  */
-public class SigmoidActivationFunction {
+public class SigmoidActivationFunction implements ActivationFunction {
 
     /**
      *
      * @param netInput - total input from previous layer
      * @return
      */
+    @Override
     public double calcOutput(double netInput) {
         double outputVal = 1 / (1 + Math.exp(-netInput));
         return outputVal;
@@ -36,6 +37,7 @@ public class SigmoidActivationFunction {
      * @param netInput - total input from previous layer
      * @return
      */
+    @Override
     public double calcDervOutput(double netInput) {
     }
 }
