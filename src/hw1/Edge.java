@@ -29,14 +29,12 @@ public class Edge {
     private Neuron to;
     private Neuron from;
 
-    Edge(Neuron to, Neuron from, double weight) {
-        this.to = to;
-        this.from = from;
+    Edge(double weight) {
         this.weight = weight;
     }
 
-    Edge(Neuron to, Neuron from) {
-        this(to, from, RandomWeightAssignment.assignWeight());
+    Edge() {
+        this.weight = 0;
     }
 
     /**
