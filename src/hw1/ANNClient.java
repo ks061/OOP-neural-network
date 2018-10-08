@@ -24,13 +24,14 @@ import java.util.Scanner;
 
 /**
  *
- * @author cld028
+ * @author cld028, ks061, lts010
  */
 public class ANNClient {
 
     enum Mode {
         READ, CREATE, TRAINING, CLASSIFICATION;
     }
+
     /**
      * Neural network generated/used by the ANNClient
      */
@@ -76,6 +77,8 @@ public class ANNClient {
      * Imports training data from the CSV file specified by the end user
      *
      * @return training data
+     *
+     * @author ks061
      */
     public static double[][] getTrainingData() {
         Scanner scanner = new Scanner(System.in);
@@ -242,6 +245,8 @@ public class ANNClient {
 
     /**
      * Runs the training mode feature of the program.
+     *
+     * @author ks061
      */
     public static void trainingMode() {
         double[][] trainingData = getTrainingData();
@@ -253,7 +258,7 @@ public class ANNClient {
      * another function to control testing of the neural network
      *
      * @param args the command line arguments
-     * @author lts010
+     * @author lts010, ks061
      */
     public static void main(String[] args) {
         int numInputs = 0;
