@@ -29,6 +29,7 @@ public class Neuron {
     private ArrayList<Edge> outEdges;
     private String id = "Neuron";
     private WeightAssignment weightAssign;
+    private ActivationFunction activationFunction;
     private double alpha;
     private double netInput;
     private double theta;
@@ -58,7 +59,7 @@ public class Neuron {
     Neuron(int idNum, int numOutEdges) {
         this(idNum);
         for (int i = 0; i < numOutEdges; i++) {
-            outEdges.add(new Edge());
+            outEdges.add(new Edge(weightAssign.assignWeight()));
         }
     }
 
@@ -76,7 +77,8 @@ public class Neuron {
             net += inEdge.getValue();
         }
         net -= theta;
-        this.value = net;
+        this.value = activationFunction.calcOutput(net);
+
     }
 
     public void setValue(double value) {
@@ -94,4 +96,13 @@ public class Neuron {
     public ArrayList<Edge> getOutEdges() {
         return outEdges;
     }
+
+    public void setWeightAssign(WeightAssignment weightAssign) {
+        this.weightAssign = weightAssign;
+    }
+
+    public void setActivationFunction(ActivationFunction activationFunction) {
+        this.activationFunction = activationFunction;
+    }
+
 }
