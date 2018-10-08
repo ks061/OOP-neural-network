@@ -23,15 +23,19 @@ import java.util.ArrayList;
  */
 public class OutputLayer extends Layer {
 
+    private String layerID;
+
     private double[] targetOutput;
     private double[] outputErrors;
 
     private Layer prevLayer;
 
     OutputLayer(int numNeurons) {
+        super(numNeurons);
     }
 
     OutputLayer(int numNeurons, String id) {
+        super(numNeurons, id);
     }
 
     /**
@@ -41,7 +45,11 @@ public class OutputLayer extends Layer {
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
-
+        ArrayList<Neuron> neurons = new ArrayList<>();
+        for (int i = 0; i < numNeurons; i++) {
+            neurons.add(new Neuron("Input " + i));
+        }
+        return neurons;
     }
 
     /**
@@ -53,6 +61,15 @@ public class OutputLayer extends Layer {
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
+        this.layerID = layerID;
+        return createNeurons(numNeurons);
+    }
+
+    public void fireNeurons() {
+        for (Neuron neuron : neurons) {
+            neuron.fire();
+            System.out.println(neuron.getValue());
+        }
     }
 
     /**
@@ -72,6 +89,11 @@ public class OutputLayer extends Layer {
     }
 
     private void calculateErrors() {
+    }
+
+    @Override
+    protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

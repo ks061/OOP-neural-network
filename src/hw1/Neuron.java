@@ -97,7 +97,7 @@ public class Neuron {
             net += inEdge.getValue();
         }
         net -= theta;
-        this.value = activationFunction.calcOutput(net);
+        this.netValue = activationFunction.calcOutput(net);
 
     }
 

@@ -102,6 +102,7 @@ public class InputLayer extends Layer {
         for (int i = 0; i < numInputs; i++) {
             this.neurons.get(i).setNetValue(inputVals[i]);
         }
+        nextLayer.fireNeurons();
     }
 
     /**
