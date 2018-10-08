@@ -17,11 +17,7 @@ package hw1;
 
 /**
  *
-<<<<<<< HEAD
  * @author cld028, ks061, lts010
-=======
- * @author lts010
->>>>>>> origin/master
  */
 public class InputActivationFunction {
 
@@ -31,12 +27,8 @@ public class InputActivationFunction {
      *
      * @param netInput - total input from previous layer
      * @return the output
-<<<<<<< HEAD
      *
      * @author lts010, ks061
-=======
-     * @author lts010
->>>>>>> origin/master
      */
     public double calcOutput(double netInput) {
         if (netInput >= 0) {
