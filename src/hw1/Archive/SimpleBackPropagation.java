@@ -13,8 +13,10 @@
  *
  * ****************************************
  */
-package hw1;
+package hw1.Archive;
 
+import hw1.Edge;
+import hw1.Neuron;
 import java.util.ArrayList;
 
 /**

@@ -9,7 +9,9 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: RandomWeightAssignment
- * Description: Assign weights randomly between -0.5 and 0.5
+ * Description: This file contains RandomWeightAssignment, which is a utility
+ *              that contains different algorithms for generating random
+ *              weights for the edges.
  *
  * ****************************************
  */
@@ -18,16 +20,15 @@ package hw1;
 import java.util.Random;
 
 /**
- * There are many methods for decided how to assign weights (initially) to
- * Neural Networks Use this class to implement the random weights discussed as a
- * requirement
+ * RandomWeightAssignment is a utility that contains different algorithms for
+ * generating random weights for the edges.
  *
- * @author cld028
+ * @author cld028, ks061, lts010
  */
 public class RandomWeightAssignment implements WeightAssignment {
 
     /**
-     *
+     * Gets a random weight from -0.5 to 0.5 (exclusive on the bounds)
      *
      * @return the new weight that is assigned to an initial edge
      *
@@ -47,4 +48,28 @@ public class RandomWeightAssignment implements WeightAssignment {
             return (-rndNum);
         }
     }
+
+    /**
+     * Gets a random weight from -2.4 divided by the number of input edges to
+     * 2.4 divided by the number of input edges (exclusive on the bounds)
+     *
+     * @param numInputEdges number of input edges
+     * @return the new weight that is assigned to an initial edge
+     *
+     * @author cld028, ks061, lts010
+     */
+    public double assignWeight(int numInputEdges) {
+        Random rnd = new Random();
+        boolean pos = rnd.nextBoolean();
+        //Get random double 0 < rndNum < 1.0
+        double rndNum = rnd.nextDouble();
+        rndNum = rndNum * (2.4 / numInputEdges);
+        if (pos) {
+            return (rndNum);
+        }
+        else {
+            return (-rndNum);
+        }
+    }
+
 }

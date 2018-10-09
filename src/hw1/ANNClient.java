@@ -9,7 +9,11 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: ANNClient
- * Description: Main file, interacts with the user
+ * Description: Main file that interacts with the user to either run the neural
+ *              network program in classification mode, which predicts what the
+ *              output will be based on given inputs, or training mode, which
+ *              trains the neural net program based on given inputs and
+ *              expected output.
  *
  * ****************************************
  */
@@ -25,17 +29,27 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
+ * ANNClient contains the main runner that interacts with the user that either
+ * runs the neural network program in classification mode, which predicts what
+ * the output will be based on given inputs, or training mode, which trains the
+ * neural net program based on given inputs and expected output.
  *
  * @author cld028, ks061, lts010
  */
 public class ANNClient {
 
+    /**
+     * Enumeration that helps distinguish whether the user wants to run the
+     * neural network program in training mode or classification mode, as well
+     * as whether the program will generate neural net edge weights from a
+     * configuration file or randomly assign them.
+     */
     enum Mode {
         READ, CREATE, TRAINING, CLASSIFICATION;
     }
 
     /**
-     * Neural network generated/used by the ANNClient
+     * Neural network generated/used by the neural network program
      */
     private static NeuralNet myNet;
 
@@ -46,7 +60,7 @@ public class ANNClient {
      * @param config - a configuration object containing all the important
      * variables for the neural network
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     public static void classificationMode(ConfigObject config) {
         double[][] inputs = readInputData(config.getNumInputs());
@@ -56,14 +70,27 @@ public class ANNClient {
     /**
      * Runs the training mode feature of the program.
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public static void trainingMode() {
         Object[] trainingData = getTrainingData();
+        // TODO
+        // How does NeuralNet take in inputs & ConfigObject
+        // (eventually returning output: classification mode)
+        // OR inputs & expected output (training the model with better weights:
+        // training mode?
         myNet = new NeuralNet((double[][]) trainingData[0],
                               (double[]) trainingData[1]);
     }
 
+    /**
+     * Reads input data from the training file
+     *
+     * @param numInputs number of inputs
+     * @return input data
+     *
+     * @author lts010, ks061
+     */
     private static double[][] readInputData(int numInputs) {
         Scanner in = new Scanner(System.in);
         boolean fileFound = false;
@@ -127,14 +154,15 @@ public class ANNClient {
      * CREATE)
      *
      * @return the mode that creates the neural network
-     * @author lts010
+     * @author lts010, ks061
      */
     public static Mode getInputMode() {
         int response = -1;
         boolean invalidResponse = true;
         Mode mode = Mode.READ;
-        String prompt = "Enter 1 or 2 for the desired method of creating the neural network\n\n";
-        prompt += "1 -- Read a config file\n2 -- Create a new ANN\n";
+        String prompt = "Enter 1 or 2 for the desired method of creating the "
+                        + "neural network\n\n"
+                        + "1 -- Read a config file\n2 -- Create a new ANN\n";
         while (invalidResponse) {
             response = getIntInput(prompt);
             if (response != 1 && response != 2) {
@@ -156,7 +184,7 @@ public class ANNClient {
      * @param prompt - the prompt given to the user
      * @return the integer given by the user
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     public static int getIntInput(String prompt) {
         Scanner in = new Scanner(System.in);
@@ -177,17 +205,6 @@ public class ANNClient {
     }
 
     /**
-     * Gets the number of inputs for a neural network
-     *
-     * @return integer
-     * @author lts010
-     */
-    public static int getNumInputs() {
-        return getIntInput(
-                "What should the number of inputs be (as an integer)? :");
-    }
-
-    /**
      * Sets up a list of lists to initialize all of the random weights
      *
      * @param numInputs - number of inputs
@@ -195,6 +212,8 @@ public class ANNClient {
      * @param numHiddenLayers - number of hidden layers
      * @param numNeuronsPerHiddenLayer - number of neurons per hidden layer
      * @return all of the weights needed to construct the neural net
+     *
+     * @author lts010, ks061
      */
     private static ArrayList<ArrayList<Double>> getRandomWeights(int numInputs,
                                                                  int numOutputs,
@@ -228,10 +247,21 @@ public class ANNClient {
     }
 
     /**
+     * Gets the number of inputs for a neural network
+     *
+     * @return integer
+     * @author lts010, ks061
+     */
+    public static int getNumInputs() {
+        return getIntInput(
+                "What should the number of inputs be (as an integer)?: ");
+    }
+
+    /**
      * Gets the number of outputs for a neural network
      *
      * @return integer
-     * @author lts010
+     * @author lts010, ks061
      */
     public static int getNumOutputs() {
         return getIntInput(
@@ -242,7 +272,7 @@ public class ANNClient {
      * Gets the number of hidden layers for a neural network
      *
      * @return integer
-     * @author lts010
+     * @author lts010, ks061
      */
     public static int getNumHiddenLayers() {
         return getIntInput(
@@ -253,7 +283,7 @@ public class ANNClient {
      * Gets the number of neurons per hidden layer for a neural network
      *
      * @return integer
-     * @author lts010
+     * @author lts010, ks061
      */
     public static int getNumNeuronsPerHiddenLayer() {
         return getIntInput(
@@ -264,7 +294,7 @@ public class ANNClient {
      * Gets the highest acceptable SSE for a neural network
      *
      * @return double
-     * @author lts010
+     * @author lts010, ks061
      */
     public static double getHighestSSE() {
         Scanner in = new Scanner(System.in);
@@ -290,7 +320,7 @@ public class ANNClient {
      * Gets the mode the program runs on (can be TRAINING or CLASSIFICATION)
      *
      * @return the mode the program runs on
-     * @author lts010
+     * @author lts010, ks061
      */
     public static Mode getRunMode() {
         int response = -1;
@@ -318,7 +348,7 @@ public class ANNClient {
      *
      * @return training data
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public static Object[] getTrainingData() {
         Scanner scanner = new Scanner(System.in);
@@ -392,6 +422,8 @@ public class ANNClient {
      * @return a double array list that provides the number of inputs, outputs,
      * and the weights
      * @throws java.io.FileNotFoundException
+     *
+     * @auhtor lts010, ks061
      */
     public static ArrayList<ArrayList<Double>> readConfigFile() throws FileNotFoundException {
         Scanner in = new Scanner(System.in);
@@ -421,7 +453,8 @@ public class ANNClient {
      *
      * @param strList - a list of strings
      * @return - a 2D array of double
-     * @author - lts010
+     *
+     * @author lts010, ks061
      */
     public static ArrayList<ArrayList<Double>> strListToDoubleList(
             ArrayList<String> strList) {
@@ -443,7 +476,8 @@ public class ANNClient {
      *
      * @param nN - a Neural Net
      * @throws java.io.FileNotFoundException
-     * @author - lts010
+     *
+     * @author lts010, ks061
      */
     public void exportConfig(NeuralNet nN) throws FileNotFoundException {
         Scanner in = new Scanner(System.in);
@@ -474,8 +508,9 @@ public class ANNClient {
      * another function to control testing of the neural network
      *
      * @param args the command line arguments
-     * @author lts010, ks061
      * @throws java.io.FileNotFoundException
+     *
+     * @author lts010, ks061
      */
     public static void main(String[] args) throws FileNotFoundException {
         int numInputs;
@@ -504,8 +539,8 @@ public class ANNClient {
             numHiddenLayers = (int) Math.round(configList.get(0).get(2));
             numNeuronsPerHiddenLayer = (int) Math.round(configList.get(0).get(3));
             highestSSE = (int) Math.round(configList.get(0).get(4));
-            weights = new ArrayList<ArrayList<Double>>(configList.subList(1,
-                                                                          configList.size()));
+            weights = new ArrayList<>(configList.subList(1,
+                                                         configList.size()));
         }
         ConfigObject config = new ConfigObject(numInputs, numOutputs,
                                                numHiddenLayers,

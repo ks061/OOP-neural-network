@@ -106,7 +106,6 @@ public class InputLayer extends Layer {
      */
     @Override
     public void fireNeurons() {
-        // TODO -- integrate with Neuron's fire() method
         if (this.inputs[t].length != this.neurons.size()) {
             throw new NeuralNetConstructionException(
                     "The number of input values and number of neurons in the "
@@ -144,14 +143,11 @@ public class InputLayer extends Layer {
     }
 
     /**
-     * Throws an UnsupportedOperationException instance because the input layer
-     * should not be learning.
+     * Does nothing; done learning once reached the input layer.
      *
      * @author cld028
      */
     public void learn() {
-        throw new UnsupportedOperationException(
-                "Input layer shouldn't learning!");
     }
 
     /**

@@ -9,7 +9,7 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: Layer
- * Description: An abstraction of a neural net layer
+ * Description: Layer is an abstraction of a neural network layer
  *
  * ****************************************
  */
@@ -18,53 +18,55 @@ package hw1;
 import java.util.ArrayList;
 
 /**
+ * Layer is an abstraction of columns of neurons within a neural network;
+ * neurons within a layer have similar functionality.
  *
- * @author cld028, lts010
+ * @author cld028, lts010, ks061
  */
 public abstract class Layer {
 
     /**
-     * Neurons within this layer
+     * List of neurons in this layer
      */
     protected ArrayList<Neuron> neurons;
 
     /**
-     * Contains the next layer in the ANN
+     * Link to next layer in the neural network
      */
     protected Layer nextLayer;
 
     /**
-     * Contains the previous layer in the ANN
+     * Link to previous layer in the neural network
      */
     protected Layer prevLayer;
 
     /**
-     * The number of edges linking to the next layer.
+     * Number of edges linking to the next layer
      */
     protected int numToEdges = 0;
 
     /**
-     * The number of Neurons in this layer
+     * Number of neurons in this layer
      */
     protected int numNeurons = 0;
 
     /**
-     *
+     * String identifier of this layer
      */
     protected String layerID;
 
     /**
-     *
+     * Index of this layer
      */
     protected int layerNum;
 
     /**
-     * Number of out edges in the layer, i
+     * Number of output edges in the layer
      */
     private int numberOfEdges = 0;
 
     /**
-     * The neural net the layer refers to
+     * Neural network this layer lies within
      */
     private NeuralNet neuralNet;
 
@@ -139,32 +141,60 @@ public abstract class Layer {
     protected abstract void updateWeights(ArrayList<Edge> oldEdges,
                                           double deltaWeight);
 
-    void setPrevLayer(InputLayer aThis) {
-        this.prevLayer = aThis;
-    }
-
-    void setNextLayer(InputLayer aThis) {
-        this.nextLayer = aThis;
+    /**
+     * Sets the previous layer
+     *
+     * @param prevLayer previous layer
+     *
+     * @author ks061, lts010
+     */
+    protected void setPrevLayer(Layer prevLayer) {
+        this.prevLayer = prevLayer;
     }
 
     /**
-     * Fires all neuron s in the layer
+     * Sets the next layer
+     *
+     * @param nextLayer next layer
+     *
+     * @author ks061, lts010
+     */
+    protected void setNextLayer(Layer nextLayer) {
+        this.nextLayer = nextLayer;
+    }
+
+    /**
+     * Fires all neurons in the layer
      *
      * @param inputVals provides input for the neuron to be used when firing
+     *
+     * @author ks061, lts010
      */
     public abstract void fireNeurons(double[] inputVals);
 
     /**
-     * Fires all neuron s in the layer
+     * Fires all neurons in the layer
+     *
+     * @author lts010, ks061
      */
     public abstract void fireNeurons();
+
+    /**
+     * Adjusts weights for nodes connecting to layer and then calls the learn
+     * method of the previous layer
+     *
+     * @param deltaWeight change in weight from current layer
+     *
+     * @author ks061, lts010
+     */
+    public abstract void learn(double deltaWeight);
 
     /**
      * increments the number of edges in the layer
      *
      * @return an int that is to be used as the ID for a newly created edge
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     protected int getNextEdgeNum() {
         return (++numberOfEdges);
@@ -175,7 +205,7 @@ public abstract class Layer {
      * layer to the next layer.
      *
      * @return the number of out edges
-     * @author lts010
+     * @author lts010, ks061
      */
     protected int getNumberOfEdges() {
         return (numberOfEdges);

@@ -9,24 +9,28 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: Sigmoid Activation Function
- * Description: Activates inputs using a sigmoid function
+ * Description: This file contains SigmoidActivationFunction, which represents
+ *              the SigmoidActivationFunction.
  *
  * ****************************************
  */
 package hw1;
 
 /**
+ * SigmoidActivationFunction represents the Sigmoid function
  *
  * @author cld028, lts010, ks061
  */
 public class SigmoidActivationFunction implements ActivationFunction {
 
     /**
+     * Gets the value of the Sigmoid function evaluated at the net input
      *
-     * @param netInput - total input from previous layer
+     * @param netInput net input evaluated based off inputs from previous
+     * neurons
      * @return the value of the sigmoid function at <code>netInput</code>
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Override
     public double calcOutput(double netInput) {
@@ -34,12 +38,15 @@ public class SigmoidActivationFunction implements ActivationFunction {
     }
 
     /**
+     * Gets the value of the derivative of the Sigmoid function evaluated at the
+     * inputted point
      *
-     * @param netInput - total input from previous layer
+     * @param netInput net input evaluated based off inputs from previous
+     * neurons
      * @return the value of the derivative of the sigmoid function at
      * <code>netInput</code>
      *
-     * @author ks061
+     * @author ks061, ls010
      */
     @Override
     public double calcDervOutput(double netInput) {

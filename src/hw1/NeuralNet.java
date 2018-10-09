@@ -30,59 +30,8 @@ public class NeuralNet {
     private ConfigObject configuration;
 
     /**
-     * Default constructor that creates the input layer, hidden layer, and
+     * Explicit constructor that creates the input layer, any hidden layers, and
      * output layer, along with creating connections among the layers.
-     *
-     * @author cld028, ks061, lts010
-     */
-    NeuralNet(double[][] inputs, double[] expectedOutputs) {
-        if (inputs.length == 0) {
-            throw new NeuralNetConstructionException(
-                    "No inputs have been provided.");
-        }
-        if (expectedOutputs.length == 0) {
-            throw new NeuralNetConstructionException(
-                    "No expected outputs have been provided.");
-        }
-        if (inputs.length != expectedOutputs.length) {
-            throw new NeuralNetConstructionException(
-                    "Each input set does not have a corresponding output set.");
-        }
-
-        int numInputs = inputs[0].length;
-        for (double[] inputSet : inputs) {
-            if (inputSet.length != numInputs) {
-                throw new NeuralNetConstructionException(
-                        "Not all input sets have the same amount of input entries.");
-            }
-        }
-
-        this.inputs = inputs;
-        this.expectedOutputs = expectedOutputs;
-
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this, inputs);
-        OutputLayer outputLayer = new OutputLayer(1, "O1-", 1, this,
-                                                  expectedOutputs);
-        // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
-        // System.out.println("Connecting to in-hidden");
-        //inputLayer.connectLayer(hiddenLayer);
-        //System.out.println("Connecting to hidden-out");
-        // hiddenLayer.connectLayer(outputLayer);
-        inputLayer.connectLayer(outputLayer);
-
-        for (int t = 0; t < this.inputs.length; t++) {
-            inputLayer.setT(t);
-            outputLayer.setT(t);
-            inputLayer.fireNeurons();
-        }
-
-        //Test your network here
-    }
-
-    /**
-     * Default constructor that creates the input layer, hidden layer, and
-     * output layer, along with creating connections among the layers. Weights
-     * are provided initially.
      *
      * @author cld028, ks061, lts010
      */
@@ -142,15 +91,90 @@ public class NeuralNet {
         //Test your network here
     }
 
+    /**
+     * Stores the weight of a particular edge in a particular layer.
+     *
+     * @param layerNum layer that the edge resides in
+     * @param edgeNum numerical identifier of the edge
+     * @param newWeight weight that will be stored for the edge
+     *
+     * @author lts010, ks061
+     */
     public void storeWeight(int layerNum, int edgeNum, double newWeight) {
         this.configuration.getWeights().get(layerNum).set(edgeNum, newWeight);
     }
 
+    /**
+     * Gets the weight of a particular edge in a particular layer.
+     *
+     * @param layerNum layer that the edge resides in
+     * @param edgeNum numerical identifier of the edge
+     *
+     * @return weight of an edge in <code>layerNum</code>th layer and has a
+     * numerical identifier of <code>edgeNum</code>
+     *
+     * @author lts010, ks061
+     */
     public double getWeight(int layerNum, int edgeNum) {
         return this.configuration.getWeights().get(layerNum).get(edgeNum);
     }
 
+    /**
+     * Gets the configuration for this neural network
+     *
+     * @return configuration for this neural network
+     */
     public ConfigObject getConfiguration() {
         return this.configuration;
     }
 }
+
+//    /**
+//     * Default constructor that creates the input layer, hidden layer, and
+//     * output layer, along with creating connections among the layers.
+//     *
+//     * @author cld028, ks061, lts010
+//     */
+//    NeuralNet(double[][] inputs, double[] expectedOutputs) {
+//        if (inputs.length == 0) {
+//            throw new NeuralNetConstructionException(
+//                    "No inputs have been provided.");
+//        }
+//        if (expectedOutputs.length == 0) {
+//            throw new NeuralNetConstructionException(
+//                    "No expected outputs have been provided.");
+//        }
+//        if (inputs.length != expectedOutputs.length) {
+//            throw new NeuralNetConstructionException(
+//                    "Each input set does not have a corresponding output set.");
+//        }
+//
+//        int numInputs = inputs[0].length;
+//        for (double[] inputSet : inputs) {
+//            if (inputSet.length != numInputs) {
+//                throw new NeuralNetConstructionException(
+//                        "Not all input sets have the same amount of input entries.");
+//            }
+//        }
+//
+//        this.inputs = inputs;
+//        this.expectedOutputs = expectedOutputs;
+//
+//        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this, inputs);
+//        OutputLayer outputLayer = new OutputLayer(1, "O1-", 1, this,
+//                                                  expectedOutputs);
+//        // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
+//        // System.out.println("Connecting to in-hidden");
+//        //inputLayer.connectLayer(hiddenLayer);
+//        //System.out.println("Connecting to hidden-out");
+//        // hiddenLayer.connectLayer(outputLayer);
+//        inputLayer.connectLayer(outputLayer);
+//
+//        for (int t = 0; t < this.inputs.length; t++) {
+//            inputLayer.setT(t);
+//            outputLayer.setT(t);
+//            inputLayer.fireNeurons();
+//        }
+//
+//        //Test your network here
+//    }

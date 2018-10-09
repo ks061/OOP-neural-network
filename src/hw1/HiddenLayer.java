@@ -21,27 +21,50 @@ import java.util.ArrayList;
  * Class used to create hidden layers. You may want to use a variable to store
  * which learning algorithm you are using.
  *
- * @author cld028
+ * @author cld028, lts010, ks061
  */
 public class HiddenLayer extends Layer {
 
-    private Learnable learnAlg;
+    // private Learnable learnAlg;
     private double[] outputErrors;
 
+    /**
+     * Explicit constructor that initializes the hidden layer with a particular
+     * number of neurons
+     *
+     * @param numNeurons
+     *
+     * @author cld028
+     */
     HiddenLayer(int numNeurons) {
         super(numNeurons);
-        this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
-    }
-
-    HiddenLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
-        super(numNeurons, id, layerNum, nN);
-        this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
+        // this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 
     /**
+     * Explicit constructor that initializes the hidden layer with a particular
+     * number of neurons, a string identifier for the layer, the index of the
+     * layer, and the neural network the layer is within
      *
-     * @param numNeurons - Total number of neurons to be created within layer
-     * @return - An array list of all newly created neurons
+     * @param numNeurons number of neurons in the hidden layer
+     * @param id string identifier for layer
+     * @param layerNum nth layer
+     * @param nN neural network hidden layer is within
+     *
+     * @author cld028
+     */
+    HiddenLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
+        super(numNeurons, id, layerNum, nN);
+        // this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
+    }
+
+    /**
+     * Creates a particular number of neurons in the hidden layer
+     *
+     * @param numNeurons number of neurons to be created within the layer
+     * @return list of neurons created within the layer
+     *
+     * @author lts010, ks061
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
@@ -53,13 +76,15 @@ public class HiddenLayer extends Layer {
     }
 
     /**
+     * Creates a particular number of neurons in the hidden layer with a string
+     * identifier for the layer
      *
-     * @param numNeurons - Total number of neurons to be created within layer
-     * @param layerID - A string-based identifier that can be used when creating
-     * the neurons
-     * @return - An array list of all newly created neurons
+     * @param numNeurons number of neurons to be created within the layer
+     * @param layerID string identifier for the layer
+     * @return list of neurons created within the layer
+     *
+     * @author lts010, ks061
      */
-    @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
@@ -69,15 +94,32 @@ public class HiddenLayer extends Layer {
     }
 
     /**
+     * Connects this layer to the next layer
      *
-     * @param nextLayer - Layer to the right of current layer
+     * @param nextLayer next layer
+     *
+     * @author ks061, lts010
      */
     @Override
     public void connectLayer(Layer nextLayer) {
+
+        for (Neuron neuron : this.neurons) {
+            for (Neuron nextNeuron : nextLayer.neurons) {
+                Edge edge = new Edge(getNextEdgeNum());
+                neuron.getOutEdges().add(edge);
+                edge.setFrom(neuron);
+                nextNeuron.getInEdges().add(edge);
+                edge.setTo(nextNeuron);
+            }
+        }
+        this.nextLayer = nextLayer;
+        nextLayer.setPrevLayer(this);
     }
 
     /**
-     * Calculate the delta weights that will be applied later (during learning)
+     * Runs the weight delta calculation for each neuron
+     *
+     * @author ks061, lts010
      */
     public void calculateWeightDeltas() {
     }
@@ -85,7 +127,7 @@ public class HiddenLayer extends Layer {
     /**
      * Given a set of output, use learn to actually update parameters in NN
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public void learn() {
         calculateErrors();
@@ -117,29 +159,41 @@ public class HiddenLayer extends Layer {
             edge.changeWeight(edge.getFrom().getAlpha(), deltaWeight);
         }
         if (this.prevLayer instanceof HiddenLayer) {
-            this.prevLayer.learn();
+            this.prevLayer.learn(deltaWeight);
         }
     }
 
     /**
      * Computes net input values for each neuron in the layer
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     @Override
     public void fireNeurons() {
-        throw new UnsupportedOperationException("lol."); //To change body of generated methods, choose Tools | Templates.
+        for (Neuron neuron : this.neurons) {
+            neuron.fire();
+        }
+        nextLayer.fireNeurons();
     }
 
+    /**
+     * Throws UnsupportedOperationException because the hidden layer does not
+     * assign input values to its neurons
+     *
+     * @param inputVals input values
+     *
+     * @author ks061, lts010
+     */
     @Override
     public void fireNeurons(double[] inputVals) {
-        throw new UnsupportedOperationException("lol"); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(
+                "Hidden layer does not assign input values to its neurons."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
-                                           int LayerNumber) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    //TODO: implement?
+//    @Override
+//    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
+//                                           int LayerNumber) {
+//
+//    }
 }

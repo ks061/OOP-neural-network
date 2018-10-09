@@ -37,7 +37,7 @@ public class Edge {
      *
      * @param weight weight applied to data transferred to neuron
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     Edge(double weight) {
         this.to = to;
@@ -65,7 +65,8 @@ public class Edge {
      * @param alpha - the learning rate
      * @param error - the difference between the desired output and the actual
      * output
-     * @author - lts010
+     *
+     * @author lts010, ks061
      */
     public void changeWeight(double alpha, double error) {
         this.prevWeightDelta = this.weightDelta;
@@ -78,7 +79,8 @@ public class Edge {
      * Gives the weighted value
      *
      * @return the weighted value
-     * @author - lts010
+     *
+     * @author lts010, ks061
      */
     public double getWeightedValue() {
         return weight * from.getValue();
@@ -89,7 +91,7 @@ public class Edge {
      *
      * @param neuron neuron that this edge should get data from
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     protected void setFrom(Neuron neuron) {
         this.from = neuron;
@@ -100,7 +102,7 @@ public class Edge {
      *
      * @param neuron neuron that this edge should deliver data to
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     protected void setTo(Neuron neuron) {
         this.to = neuron;
@@ -111,7 +113,7 @@ public class Edge {
      *
      * @return neuron that this edge gets data from
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     protected Neuron getFrom() {
         return this.from;
@@ -122,7 +124,7 @@ public class Edge {
      *
      * @return neuron that this edge delivers data to
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     protected Neuron getTo() {
         return this.to;
@@ -136,7 +138,7 @@ public class Edge {
      * @return value that this edge will send to the neuron this edge will
      * deliver data to
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     protected double getValue() {
         return weight * from.getValue();

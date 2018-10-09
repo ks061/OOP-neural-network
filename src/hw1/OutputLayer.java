@@ -9,7 +9,8 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: OutputLayer
- * Description: Represents an output layer of a neural net
+ * Description: This file contains OutputLayer, which represents the last
+ *              column of neurons within a neural network.
  *
  * ****************************************
  */
@@ -18,6 +19,7 @@ package hw1;
 import java.util.ArrayList;
 
 /**
+ * OutputLayer represents the last column of neurons within a neural network.
  *
  * @author cld028, lts010
  */
@@ -110,9 +112,8 @@ public class OutputLayer extends Layer {
     }
 
     /**
-     * Given a set of output, use learn to actually update parameters in NN
-     *
-     * @author ks061
+     * Adjusts weights for nodes connecting to layer and then calls the learn
+     * method of the previous layer
      */
     public void learn() {
         calculateErrors();
@@ -120,6 +121,9 @@ public class OutputLayer extends Layer {
                              * (1 - this.neurons.get(0).getValue())
                              * this.outputErrors[this.t];
         updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
+        if (this.prevLayer instanceof HiddenLayer) {
+            this.prevLayer.learn();
+        }
     }
 
     /**
@@ -143,9 +147,6 @@ public class OutputLayer extends Layer {
     protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
         for (Edge edge : oldEdges) {
             edge.changeWeight(edge.getFrom().getAlpha(), deltaWeight);
-        }
-        if (this.prevLayer instanceof HiddenLayer) {
-            this.prevLayer.learn();
         }
     }
 
