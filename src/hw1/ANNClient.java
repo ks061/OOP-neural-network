@@ -50,7 +50,7 @@ public class ANNClient {
      * @author lts010
      */
     public static void classificationMode(int numInputs, int numOutputs,
-                                          ArrayList<Double> weights) {
+                                          ArrayList<ArrayList<Double>> weights) {
         double[][] inputs = readInputData(numInputs);
 
     }
@@ -178,12 +178,43 @@ public class ANNClient {
                 "What should the number of inputs be (as an integer)? :");
     }
 
-    private static ArrayList<Double> getRandomWeights(int numWeights) {
-        ArrayList<Double> weights = new ArrayList<>();
+    /**
+     * Sets up a list of lists to initialize all of the random weights
+     *
+     * @param numInputs - number of inputs
+     * @param numOutputs - number of outputs
+     * @param numHiddenLayers - number of hidden layers
+     * @param numNeuronsPerHiddenLayer - number of neurons per hidden layer
+     * @return all of the weights needed to construct the neural net
+     */
+    private static ArrayList<ArrayList<Double>> getRandomWeights(int numInputs,
+                                                                 int numOutputs,
+                                                                 int numHiddenLayers,
+                                                                 int numNeuronsPerHiddenLayer) {
+        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
         WeightAssignment weightAssign = new RandomWeightAssignment();
-        for (int i = 0; i < numWeights; i++) {
-            weights.add(weightAssign.assignWeight());
+        weights.add(new ArrayList<Double>());
+        if (numHiddenLayers == 0) {
+            for (int i = 0; i < (numInputs * numOutputs); i++) {
+                weights.get(0).add(weightAssign.assignWeight());
+            }
         }
+        else {
+            for (int i = 0; i < (numInputs * numNeuronsPerHiddenLayer); i++) { //weights from the input layer connecting to the first hidden layer
+                weights.get(0).add(weightAssign.assignWeight());
+            }
+            for (int i = 1; i < numHiddenLayers; i++) { //weights for hidden layers that are connected to layer
+                weights.add(new ArrayList<Double>());
+                for (int j = 0; j < (numNeuronsPerHiddenLayer * numNeuronsPerHiddenLayer); j++) {
+                    weights.get(i).add(weightAssign.assignWeight());
+                }
+            }
+            weights.add(new ArrayList<Double>());
+            for (int i = 0; i < numOutputs * numNeuronsPerHiddenLayer; i++) { //weights for the output layer connecting to the last hidden layer
+                weights.get(weights.size() - 1).add(weightAssign.assignWeight());
+            }
+        }
+        System.out.println(weights);
         return weights;
     }
 
@@ -196,6 +227,54 @@ public class ANNClient {
     public static int getNumOutputs() {
         return getIntInput(
                 "What should the number of outputs be (as an integer)?");
+    }
+
+    /**
+     * Gets the number of hidden layers for a neural network
+     *
+     * @return integer
+     * @author lts010
+     */
+    public static int getNumHiddenLayers() {
+        return getIntInput(
+                "What should the number of hidden layers be (as an integer)?");
+    }
+
+    /**
+     * Gets the number of neurons per hidden layer for a neural network
+     *
+     * @return integer
+     * @author lts010
+     */
+    public static int getNumNeuronsPerHiddenLayer() {
+        return getIntInput(
+                "What should the number of neurons per hidden layer be (as an integer)?");
+    }
+
+    /**
+     * Gets the highest acceptable SSE for a neural network
+     *
+     * @return double
+     * @author lts010
+     */
+    public static double getHighestSSE() {
+        Scanner in = new Scanner(System.in);
+        boolean invalidInput = true;
+        String prompt = "What is the highest acceptable SSE (as a double?";
+        double result = -1;
+        while (invalidInput) {
+            System.out.println(prompt);
+
+            if (in.hasNextDouble()) {
+                result = in.nextDouble();
+                invalidInput = false;
+            }
+            else {
+                System.out.println(
+                        "INVALID INPUT\n\n." + prompt);
+            }
+        }
+        return (result);
     }
 
     /**
@@ -305,7 +384,7 @@ public class ANNClient {
      * and the weights
      * @throws java.io.FileNotFoundException
      */
-    public static ArrayList<Double> readConfigFile() throws FileNotFoundException {
+    public static ArrayList<ArrayList<Double>> readConfigFile() throws FileNotFoundException {
         Scanner in = new Scanner(System.in);
         Scanner fReader = new Scanner(System.in);
         boolean fileFound = false;
@@ -321,12 +400,26 @@ public class ANNClient {
                 System.out.println("File not found. Try again.");
             }
         }
-        ArrayList<Double> configList = new ArrayList<>();
-        while (fReader.hasNextDouble()) {
-            configList.add(fReader.nextDouble());
+        ArrayList<String> configList = new ArrayList<>();
+        while (fReader.hasNextLine()) {
+            configList.add(fReader.nextLine());
         }
-        return configList;
+        return strListToDoubleList(configList);
+    }
 
+    public static ArrayList<ArrayList<Double>> strListToDoubleList(
+            ArrayList<String> strList) {
+        Scanner strReader;
+        ArrayList<ArrayList<Double>> doubleList = new ArrayList<>();
+        for (int i = 0; i < strList.size(); i++) {
+            doubleList.add(new ArrayList<>());
+            strReader = new Scanner(strList.get(i));
+            while (strReader.hasNextDouble()) {
+                doubleList.get(i).add(strReader.nextDouble());
+            }
+        }
+
+        return doubleList;
     }
 
     /**
@@ -346,11 +439,15 @@ public class ANNClient {
      *
      * @param args the command line arguments
      * @author lts010, ks061
+     * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException {
         int numInputs = 0;
         int numOutputs = 0;
-        ArrayList<Double> weights = new ArrayList<>();
+        int numHiddenLayers = 0;
+        int numNeuronsPerHiddenLayer = 0;
+        double highestSSE = 0;
+        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
         Mode runMode;
         Mode inputMode;
         inputMode = getInputMode();
@@ -358,28 +455,20 @@ public class ANNClient {
         if (inputMode == Mode.CREATE) {
             numInputs = getNumInputs();
             numOutputs = getNumOutputs();
-            weights = getRandomWeights((numInputs * numOutputs));
+            numHiddenLayers = getNumHiddenLayers();
+            numNeuronsPerHiddenLayer = getNumNeuronsPerHiddenLayer();
+            highestSSE = getHighestSSE();
+            weights = getRandomWeights(numInputs, numOutputs, numHiddenLayers,
+                                       numNeuronsPerHiddenLayer);
         }
         else {
-            boolean validFile = false;
-            while (!validFile) {
-                ArrayList< Double> configList = readConfigFile();
-                double inputs = configList.get(0);
-                numInputs = (int) inputs;
-                double outputs = configList.get(1);
-                numOutputs = (int) outputs;
-                weights = new ArrayList<>(configList.subList(2,
-                                                             configList.size()));
-                if (weights.size() == (numOutputs * numInputs)) {
-                    System.out.println(weights);
-                    validFile = true;
-                }
-                else {
-                    System.out.println(
-                            "The number of weights must equal the number of inputs times the number of outputs.");
-                }
-
-            }
+            ArrayList<ArrayList<Double>> configList = readConfigFile();
+            double inputs = configList.get(0).get(0);
+            numInputs = (int) inputs;
+            double outputs = configList.get(0).get(1);
+            numOutputs = (int) outputs;
+            weights = new ArrayList<ArrayList<Double>>(configList.subList(1,
+                                                                          configList.size()));
         }
 
         runMode = getRunMode();

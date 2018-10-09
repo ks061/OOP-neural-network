@@ -102,6 +102,10 @@ public abstract class Layer {
         this.prevLayer = aThis;
     }
 
+    void setNextLayer(InputLayer aThis) {
+        this.nextLayer = aThis;
+    }
+
     public abstract void fireNeurons(double[] inputVals);
 
     public abstract void fireNeurons();

@@ -143,10 +143,4 @@ public class NeuralNet {
 
         //Test your network here
     }
-
-    public static void main(String args[]) {
-        double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
-        double[] outputs = {0.0, 0.0, 0.0, 1.0};
-        NeuralNet net = new NeuralNet(inputs, outputs);
-    }
 }
