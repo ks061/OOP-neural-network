@@ -54,11 +54,7 @@ public class Neuron {
      *
      * @author ks061
      */
-    Neuron(
-    String id. int num
-
-
-        ) {
+    Neuron(String id, int num) {
         this.id = id;
         this.layerNum = num;
         this.alpha = DEFAULTALPHA;
@@ -78,7 +74,7 @@ public class Neuron {
      * @author ks061
      */
     Neuron(int idNum) {
-        this(Integer.toString(idNum));
+        this(Integer.toString(idNum), idNum);
     }
 
     /**

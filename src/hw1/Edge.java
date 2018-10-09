@@ -71,7 +71,7 @@ public class Edge {
         this.prevWeightDelta = this.weightDelta;
         this.weightDelta = alpha * from.getValue() * error;
         this.weight += weightDelta;
-        neuralNet.storeWeight(layerNumber, edgeNumber);
+        neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
     }
 
     /**
