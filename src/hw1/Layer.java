@@ -64,6 +64,11 @@ public abstract class Layer {
     private int numberOfEdges = 0;
 
     /**
+     * The neural net the layer refers to
+     */
+    private NeuralNet neuralNet;
+
+    /**
      * Explicit constructor that creates a layer with a particular number of
      * neurons.
      *
@@ -84,7 +89,8 @@ public abstract class Layer {
      *
      * @author cld028
      */
-    Layer(int numNeurons, String layerID, int layerNumber) {
+    Layer(int numNeurons, String layerID, int layerNumber, NeuralNet nN) {
+        this.neuralNet = nN;
         this.neurons = this.createNeurons(numNeurons, layerID, layerNumber);
     }
 

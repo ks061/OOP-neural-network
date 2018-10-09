@@ -48,8 +48,8 @@ public class InputLayer extends Layer {
      *
      * @author ks061
      */
-    InputLayer(int numNeurons, String id, int layerNumber) {
-        super(numNeurons, id, layerNumber);
+    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
+        super(numNeurons, id, layerNum, nN);
     }
 
     /**
@@ -62,8 +62,9 @@ public class InputLayer extends Layer {
      *
      * @author ks061
      */
-    InputLayer(int numNeurons, String id, double[][] inputs) {
-        super(numNeurons, id);
+    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN,
+               double[][] inputs) {
+        super(numNeurons, id, layerNum, nN);
         this.inputs = inputs;
     }
 
@@ -92,7 +93,6 @@ public class InputLayer extends Layer {
      *
      * @author ks061
      */
-    @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
         this.layerID = layerID;
         return createNeurons(numNeurons);

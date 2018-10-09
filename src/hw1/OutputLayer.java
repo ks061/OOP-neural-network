@@ -32,8 +32,8 @@ public class OutputLayer extends Layer {
         super(numNeurons);
     }
 
-    OutputLayer(int numNeurons, String id, int layerNum) {
-        super(numNeurons, id, layerNum);
+    OutputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
+        super(numNeurons, id, layerNum, nN);
     }
 
     /**
@@ -47,9 +47,9 @@ public class OutputLayer extends Layer {
      *
      * @author ks061
      */
-    OutputLayer(int numNeurons, String id, int layerNumber,
+    OutputLayer(int numNeurons, String id, int layerNumber, NeuralNet nN,
                 double[] targetOutput) {
-        super(numNeurons, id, layerNumber);
+        super(numNeurons, id, layerNumber, nN);
         this.targetOutput = targetOutput;
         this.outputErrors = new double[this.targetOutput.length];
     }
@@ -77,7 +77,6 @@ public class OutputLayer extends Layer {
      * @return - An array list of all newly created neurons
      * @author - lts010
      */
-    @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
         this.layerID = layerID;
         return createNeurons(numNeurons);
@@ -150,6 +149,7 @@ public class OutputLayer extends Layer {
         }
     }
 
+    @Override
     public void fireNeurons(double[] inputVals) {
         throw new UnsupportedOperationException(
                 "Output layers don't fire neurons this way");
@@ -166,6 +166,12 @@ public class OutputLayer extends Layer {
      */
     public void setT(int t) {
         this.t = t;
+    }
+
+    @Override
+    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
+                                           int LayerNumber) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

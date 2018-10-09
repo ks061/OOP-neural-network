@@ -33,8 +33,8 @@ public class HiddenLayer extends Layer {
         this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 
-    HiddenLayer(int numNeurons, String id, int layer) {
-        super(numNeurons, id, layer);
+    HiddenLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
+        super(numNeurons, id, layerNum, nN);
         this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 
@@ -134,6 +134,12 @@ public class HiddenLayer extends Layer {
     @Override
     public void fireNeurons(double[] inputVals) {
         throw new UnsupportedOperationException("lol"); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
+                                           int LayerNumber) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
