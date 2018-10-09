@@ -27,8 +27,7 @@ public class NeuralNet {
     private double[][] inputs;
     private double[] expectedOutputs;
     private double[] errors;
-    private int numHiddenLayers = 0;  //For now there are no hidden layers
-    private int numNeuronsPerHiddenLayer = 3;  //For now there is 3
+    private ConfigObject configuration;
 
     /**
      * Default constructor that creates the input layer, hidden layer, and
@@ -61,8 +60,9 @@ public class NeuralNet {
         this.inputs = inputs;
         this.expectedOutputs = expectedOutputs;
 
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-", inputs);
-        OutputLayer outputLayer = new OutputLayer(1, "O1-", expectedOutputs);
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this, inputs);
+        OutputLayer outputLayer = new OutputLayer(1, "O1-", 1, this,
+                                                  expectedOutputs);
         // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
         // System.out.println("Connecting to in-hidden");
         //inputLayer.connectLayer(hiddenLayer);
@@ -86,7 +86,7 @@ public class NeuralNet {
      *
      * @author cld028, ks061, lts010
      */
-    NeuralNet(double[][] inputs, int numOutputs, ArrayList<Double> weights) {
+    NeuralNet(double[][] inputs, ConfigObject config) {
         if (inputs.length == 0) {
             throw new NeuralNetConstructionException(
                     "No inputs have been provided.");
@@ -107,18 +107,20 @@ public class NeuralNet {
                         "Not all input sets have the same amount of input entries.");
             }
         }
-
+        this.configuration = config;
         this.inputs = inputs;
         ArrayList<Layer> layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0);
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this);
         layers.add(inputLayer);
-        for (int i = 1; i < numHiddenLayers + 1; i++) {
-            layers.add(new HiddenLayer(numNeuronsPerHiddenLayer, "H" + i + "-",
-                                       i));
+        for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
+            layers.add(new HiddenLayer(
+                    this.configuration.getNumNeuronsPerHiddenLayer(),
+                    "H" + i + "-",
+                    i, this));
         }
 
-        OutputLayer outputLayer = new OutputLayer(numOutputs, "O1-",
-                                                  layers.size());
+        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(), "O1-",
+                                                  layers.size(), this);
         layers.add(outputLayer);
         Iterator it = layers.iterator();
         Layer currentLayer = (Layer) it.next();
@@ -140,11 +142,15 @@ public class NeuralNet {
         //Test your network here
     }
 
-    void storeWeight(int layerNumber, int edgeNumber) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void storeWeight(int layerNum, int edgeNum, double newWeight) {
+        this.configuration.getWeights().get(layerNum).set(edgeNum, newWeight);
     }
 
-    double getWeight(int layerNum, int edgeNum) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double getWeight(int layerNum, int edgeNum) {
+        return this.configuration.getWeights().get(layerNum).get(edgeNum);
+    }
+
+    public ConfigObject getConfiguration() {
+        return this.configuration;
     }
 }

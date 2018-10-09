@@ -18,6 +18,7 @@ package hw1;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -42,18 +43,25 @@ public class ANNClient {
      * Asks for a file containing input values and prints and writes them to a
      * file
      *
-     * @param numInputs - number of inputs for the neural net (needed if
-     * inputOption is create)
-     * @param numOutputs - number of outputs for the neural net (needed if the
-     * inputOption is create)
+     * @param config - a configuration object containing all the important
+     * variables for the neural network
      *
      * @author lts010
-     * @param weights
      */
-    public static void classificationMode(int numInputs, int numOutputs,
-                                          ArrayList<ArrayList<Double>> weights) {
-        double[][] inputs = readInputData(numInputs);
+    public static void classificationMode(ConfigObject config) {
+        double[][] inputs = readInputData(config.getNumInputs());
 
+    }
+
+    /**
+     * Runs the training mode feature of the program.
+     *
+     * @author ks061
+     */
+    public static void trainingMode() {
+        Object[] trainingData = getTrainingData();
+        myNet = new NeuralNet((double[][]) trainingData[0],
+                              (double[]) trainingData[1]);
     }
 
     private static double[][] readInputData(int numInputs) {
@@ -409,9 +417,11 @@ public class ANNClient {
     }
 
     /**
+     * Converts a list of strings to a list of lists of doubles
      *
-     * @param strList
-     * @return
+     * @param strList - a list of strings
+     * @return - a 2D array of double
+     * @author - lts010
      */
     public static ArrayList<ArrayList<Double>> strListToDoubleList(
             ArrayList<String> strList) {
@@ -429,14 +439,34 @@ public class ANNClient {
     }
 
     /**
-     * Runs the training mode feature of the program.
+     * Saves all relevant information of a neural net to a file
      *
-     * @author ks061
+     * @param nN - a Neural Net
+     * @throws java.io.FileNotFoundException
+     * @author - lts010
      */
-    public static void trainingMode() {
-        Object[] trainingData = getTrainingData();
-        myNet = new NeuralNet((double[][]) trainingData[0],
-                              (double[]) trainingData[1]);
+    public void exportConfig(NeuralNet nN) throws FileNotFoundException {
+        Scanner in = new Scanner(System.in);
+        String prompt = "What .txt file would you like to save the configuration to? ";
+        System.out.println(prompt);
+        String outputFile = in.next();
+        PrintWriter out = new PrintWriter(outputFile);
+        out.printf("%d.0 %d.0 %d.0 %d.0 %f\n",
+                   nN.getConfiguration().getNumInputs(),
+                   nN.getConfiguration().getNumOutputs(),
+                   nN.getConfiguration().getNumHiddenLayers(),
+                   nN.getConfiguration().getNumNeuronsPerHiddenLayer(),
+                   nN.getConfiguration().getHighestSSE());
+        ArrayList<ArrayList<Double>> weights = nN.getConfiguration().getWeights();
+        String weightLayer;
+        for (ArrayList<Double> weightList : weights) {
+            weightLayer = "";
+            for (double weight : weightList) {
+                weightLayer += weight + " ";
+            }
+            out.printf("%s\n", weightLayer);
+        }
+        out.close();
     }
 
     /**
@@ -448,12 +478,12 @@ public class ANNClient {
      * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException {
-        int numInputs = 0;
-        int numOutputs = 0;
-        int numHiddenLayers = 0;
-        int numNeuronsPerHiddenLayer = 0;
-        double highestSSE = 0;
-        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
+        int numInputs;
+        int numOutputs;
+        int numHiddenLayers;
+        int numNeuronsPerHiddenLayer;
+        double highestSSE;
+        ArrayList<ArrayList<Double>> weights;
         Mode runMode;
         Mode inputMode;
         inputMode = getInputMode();
@@ -469,17 +499,21 @@ public class ANNClient {
         }
         else {
             ArrayList<ArrayList<Double>> configList = readConfigFile();
-            double inputs = configList.get(0).get(0);
-            numInputs = (int) inputs;
-            double outputs = configList.get(0).get(1);
-            numOutputs = (int) outputs;
+            numInputs = (int) Math.round(configList.get(0).get(0));
+            numOutputs = (int) Math.round(configList.get(0).get(1));
+            numHiddenLayers = (int) Math.round(configList.get(0).get(2));
+            numNeuronsPerHiddenLayer = (int) Math.round(configList.get(0).get(3));
+            highestSSE = (int) Math.round(configList.get(0).get(4));
             weights = new ArrayList<ArrayList<Double>>(configList.subList(1,
                                                                           configList.size()));
         }
-
+        ConfigObject config = new ConfigObject(numInputs, numOutputs,
+                                               numHiddenLayers,
+                                               numNeuronsPerHiddenLayer,
+                                               highestSSE, weights);
         runMode = getRunMode();
         if (runMode == Mode.CLASSIFICATION) {
-            classificationMode(numInputs, numOutputs, weights);
+            classificationMode(config);
         }
         else {
             trainingMode();
