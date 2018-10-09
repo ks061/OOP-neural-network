@@ -15,7 +15,7 @@
  */
 package hw1;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -27,6 +27,8 @@ public class NeuralNet {
     private double[][] inputs;
     private double[] expectedOutputs;
     private double[] errors;
+    private int numHiddenLayers = 0;  //For now there are no hidden layers
+    private int numNeuronsPerHiddenLayer = 3;  //For now there is 3
 
     /**
      * Default constructor that creates the input layer, hidden layer, and
@@ -107,16 +109,30 @@ public class NeuralNet {
         }
 
         this.inputs = inputs;;
-
+        ArrayList<Layer> layers = new ArrayList<>();
         InputLayer inputLayer = new InputLayer(numInputs, "I1-");
-        OutputLayer outputLayer = new OutputLayer(
-                numOutputs, "O1-");
+        layers.add(inputLayer);
+        for (int i = 1; i < numHiddenLayers + 1; i++) {
+            layers.add(new HiddenLayer(numNeuronsPerHiddenLayer, "H" + i + "-"));
+        }
+
+        OutputLayer outputLayer = new OutputLayer(numOutputs, "O1-");
+        layers.add(outputLayer);
+        Iterator it = layers.iterator();
+        Layer currentLayer = (Layer) it.next();
+        Layer nextLayer;
+        while (it.hasNext()) {
+            nextLayer = (Layer) it.next();
+            currentLayer.connectLayer(nextLayer);
+            currentLayer = nextLayer;
+
+        }
         // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
         // System.out.println("Connecting to in-hidden");
         //inputLayer.connectLayer(hiddenLayer);
         //System.out.println("Connecting to hidden-out");
         // hiddenLayer.connectLayer(outputLayer);
-        inputLayer.connectLayer(outputLayer);
+        //inputLayer.connectLayer(outputLayer);
 
         for (double[] inputSet : this.inputs) {
             inputLayer.fireNeurons(inputSet);

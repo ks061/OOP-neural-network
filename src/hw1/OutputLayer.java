@@ -59,6 +59,7 @@ public class OutputLayer extends Layer {
      *
      * @param numNeurons - Total number of neurons to be created within layer
      * @return - An array list of all newly created neurons
+     * @author - lts010
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
@@ -75,6 +76,7 @@ public class OutputLayer extends Layer {
      * @param layerID - A string-based identifier that can be used when creating
      * the neurons
      * @return - An array list of all newly created neurons
+     * @author - lts010
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
