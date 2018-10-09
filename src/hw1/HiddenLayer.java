@@ -33,8 +33,8 @@ public class HiddenLayer extends Layer {
         this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 
-    HiddenLayer(int numNeurons, String id) {
-        super(numNeurons, id);
+    HiddenLayer(int numNeurons, String id, int layer) {
+        super(numNeurons, id, layer);
         this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 

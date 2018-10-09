@@ -34,7 +34,7 @@ public class NeuralNet {
      * Default constructor that creates the input layer, hidden layer, and
      * output layer, along with creating connections among the layers.
      *
-     * @author cld028, ks061
+     * @author cld028, ks061, lts010
      */
     NeuralNet(double[][] inputs, double[] expectedOutputs) {
         if (inputs.length == 0) {
@@ -84,7 +84,7 @@ public class NeuralNet {
      * output layer, along with creating connections among the layers. Weights
      * are provided initially.
      *
-     * @author cld028, ks061
+     * @author cld028, ks061, lts010
      */
     NeuralNet(double[][] inputs, int numOutputs, ArrayList<Double> weights) {
         if (inputs.length == 0) {
@@ -108,15 +108,17 @@ public class NeuralNet {
             }
         }
 
-        this.inputs = inputs;;
+        this.inputs = inputs;
         ArrayList<Layer> layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-");
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0);
         layers.add(inputLayer);
         for (int i = 1; i < numHiddenLayers + 1; i++) {
-            layers.add(new HiddenLayer(numNeuronsPerHiddenLayer, "H" + i + "-"));
+            layers.add(new HiddenLayer(numNeuronsPerHiddenLayer, "H" + i + "-",
+                                       i));
         }
 
-        OutputLayer outputLayer = new OutputLayer(numOutputs, "O1-");
+        OutputLayer outputLayer = new OutputLayer(numOutputs, "O1-",
+                                                  layers.size());
         layers.add(outputLayer);
         Iterator it = layers.iterator();
         Layer currentLayer = (Layer) it.next();
@@ -127,12 +129,6 @@ public class NeuralNet {
             currentLayer = nextLayer;
 
         }
-        // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
-        // System.out.println("Connecting to in-hidden");
-        //inputLayer.connectLayer(hiddenLayer);
-        //System.out.println("Connecting to hidden-out");
-        // hiddenLayer.connectLayer(outputLayer);
-        //inputLayer.connectLayer(outputLayer);
 
         for (double[] inputSet : this.inputs) {
             inputLayer.fireNeurons(inputSet);
@@ -142,5 +138,13 @@ public class NeuralNet {
         }
 
         //Test your network here
+    }
+
+    void storeWeight(int layerNumber, int edgeNumber) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    double getWeight(int layerNum, int edgeNum) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

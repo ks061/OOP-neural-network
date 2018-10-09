@@ -23,8 +23,6 @@ import java.util.ArrayList;
  */
 public class InputLayer extends Layer {
 
-    private String layerID;
-
     private double[][] inputs;
 
     private int t;
@@ -50,8 +48,8 @@ public class InputLayer extends Layer {
      *
      * @author ks061
      */
-    InputLayer(int numNeurons, String id) {
-        super(numNeurons, id);
+    InputLayer(int numNeurons, String id, int layerNumber) {
+        super(numNeurons, id, layerNumber);
     }
 
     /**
@@ -103,9 +101,8 @@ public class InputLayer extends Layer {
     /**
      * Fire neurons in input layer layer
      *
-     * @param inputVals input values to assign to neurons in the input layer
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     @Override
     public void fireNeurons() {
@@ -128,14 +125,14 @@ public class InputLayer extends Layer {
      *
      * @param nextLayer next layer
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     @Override
     public void connectLayer(Layer nextLayer) {
 
         for (Neuron neuron : this.neurons) {
             for (Neuron nextNeuron : nextLayer.neurons) {
-                Edge edge = new Edge();
+                Edge edge = new Edge(getNextEdgeNum());
                 neuron.getOutEdges().add(edge);
                 edge.setFrom(neuron);
                 nextNeuron.getInEdges().add(edge);

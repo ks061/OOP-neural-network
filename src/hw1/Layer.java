@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author cld028
+ * @author cld028, lts010
  */
 public abstract class Layer {
 
@@ -27,8 +27,41 @@ public abstract class Layer {
      * Neurons within this layer
      */
     protected ArrayList<Neuron> neurons;
+
+    /**
+     * Contains the next layer in the ANN
+     */
     protected Layer nextLayer;
+
+    /**
+     * Contains the previous layer in the ANN
+     */
     protected Layer prevLayer;
+
+    /**
+     * The number of edges linking to the next layer.
+     */
+    protected int numToEdges = 0;
+
+    /**
+     * The number of Neurons in this layer
+     */
+    protected int numNeurons = 0;
+
+    /**
+     *
+     */
+    protected String layerID;
+
+    /**
+     *
+     */
+    protected int layerNum;
+
+    /**
+     * Number of out edges in the layer, i
+     */
+    private int numberOfEdges = 0;
 
     /**
      * Explicit constructor that creates a layer with a particular number of
@@ -51,8 +84,8 @@ public abstract class Layer {
      *
      * @author cld028
      */
-    Layer(int numNeurons, String layerID) {
-        this.neurons = this.createNeurons(numNeurons, layerID);
+    Layer(int numNeurons, String layerID, int layerNumber) {
+        this.neurons = this.createNeurons(numNeurons, layerID, layerNumber);
     }
 
     /**
@@ -70,12 +103,14 @@ public abstract class Layer {
      *
      * @param numNeurons - total number of neurons to create
      * @param layerID - string identifier for layer
+     * @param LayerNumber
      * @return list of neurons in the layer
      *
      * @author cld028
      */
     public abstract ArrayList<Neuron> createNeurons(int numNeurons,
-                                                    String layerID);
+                                                    String layerID,
+                                                    int LayerNumber);
 
     /**
      * Connect the current layer to another layer (with this layer being on the
@@ -106,7 +141,37 @@ public abstract class Layer {
         this.nextLayer = aThis;
     }
 
+    /**
+     * Fires all neuron s in the layer
+     *
+     * @param inputVals provides input for the neuron to be used when firing
+     */
     public abstract void fireNeurons(double[] inputVals);
 
+    /**
+     * Fires all neuron s in the layer
+     */
     public abstract void fireNeurons();
+
+    /**
+     * increments the number of edges in the layer
+     *
+     * @return an int that is to be used as the ID for a newly created edge
+     *
+     * @author lts010
+     */
+    protected int getNextEdgeNum() {
+        return (++numberOfEdges);
+    }
+
+    /**
+     * gets the number out edges in the layer, ie the number of edges from this
+     * layer to the next layer.
+     *
+     * @return the number of out edges
+     * @author lts010
+     */
+    protected int getNumberOfEdges() {
+        return (numberOfEdges);
+    }
 }

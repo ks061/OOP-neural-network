@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Class for individual neuron elements
  *
- * @author cld028, ks061
+ * @author cld028, ks061, lts010
  *
  */
 public class Neuron {
@@ -28,6 +28,7 @@ public class Neuron {
     private ArrayList<Edge> inEdges;
     private ArrayList<Edge> outEdges;
     private String id = "Neuron";
+    private int layerNum; //the number for the layer that is neuron is in.
     private WeightAssignment weightAssign;
     private ActivationFunction activationFunction;
     private double alpha;
@@ -53,8 +54,13 @@ public class Neuron {
      *
      * @author ks061
      */
-    Neuron(String id) {
+    Neuron(
+    String id. int num
+
+
+        ) {
         this.id = id;
+        this.layerNum = num;
         this.alpha = DEFAULTALPHA;
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
@@ -142,6 +148,10 @@ public class Neuron {
         this.weightAssign = weightAssign;
     }
 
+    /**
+     *
+     * @param activationFunction
+     */
     public void setActivationFunction(ActivationFunction activationFunction) {
         this.activationFunction = activationFunction;
     }

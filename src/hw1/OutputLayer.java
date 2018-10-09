@@ -19,11 +19,9 @@ import java.util.ArrayList;
 
 /**
  *
- * @author cld028
+ * @author cld028, lts010
  */
 public class OutputLayer extends Layer {
-
-    private String layerID;
 
     private double[] targetOutput;
     private double[] outputErrors;
@@ -34,8 +32,8 @@ public class OutputLayer extends Layer {
         super(numNeurons);
     }
 
-    OutputLayer(int numNeurons, String id) {
-        super(numNeurons, id);
+    OutputLayer(int numNeurons, String id, int layerNum) {
+        super(numNeurons, id, layerNum);
     }
 
     /**
@@ -49,8 +47,9 @@ public class OutputLayer extends Layer {
      *
      * @author ks061
      */
-    OutputLayer(int numNeurons, String id, double[] targetOutput) {
-        super(numNeurons, id);
+    OutputLayer(int numNeurons, String id, int layerNumber,
+                double[] targetOutput) {
+        super(numNeurons, id, layerNumber);
         this.targetOutput = targetOutput;
         this.outputErrors = new double[this.targetOutput.length];
     }
@@ -141,6 +140,7 @@ public class OutputLayer extends Layer {
      *
      * @author ks061
      */
+    @Override
     protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
         for (Edge edge : oldEdges) {
             edge.changeWeight(edge.getFrom().getAlpha(), deltaWeight);

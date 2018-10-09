@@ -48,6 +48,7 @@ public class ANNClient {
      * inputOption is create)
      *
      * @author lts010
+     * @param weights
      */
     public static void classificationMode(int numInputs, int numOutputs,
                                           ArrayList<ArrayList<Double>> weights) {
@@ -407,6 +408,11 @@ public class ANNClient {
         return strListToDoubleList(configList);
     }
 
+    /**
+     *
+     * @param strList
+     * @return
+     */
     public static ArrayList<ArrayList<Double>> strListToDoubleList(
             ArrayList<String> strList) {
         Scanner strReader;

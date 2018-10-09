@@ -28,6 +28,9 @@ public class Edge {
     private double prevWeightDelta = 0;
     private Neuron to;
     private Neuron from;
+    private int edgeNumber;
+    private int layerNumber;
+    private NeuralNet neuralNet;
 
     /**
      * Explicit constructor for creating an edge
@@ -45,10 +48,15 @@ public class Edge {
     /**
      * Explicit constructor for creating an edge
      *
-     * @author ks061
+     * @param edgeNum is a ID number for this edge, and is unique within the
+     * layer. It is used a an index in the \\weight table.
+     * @author ks061, lts010
      */
-    Edge() {
-        this.weight = 1;
+    Edge(NeuralNet nN, int layerNum, int edgeNum) {
+        this.neuralNet = nN;
+        this.weight = neuralNet.getWeight(layerNum, edgeNum);
+        this.edgeNumber = edgeNum;
+        this.layerNumber = layerNum;
     }
 
     /**
@@ -63,6 +71,7 @@ public class Edge {
         this.prevWeightDelta = this.weightDelta;
         this.weightDelta = alpha * from.getValue() * error;
         this.weight += weightDelta;
+        neuralNet.storeWeight(layerNumber, edgeNumber);
     }
 
     /**

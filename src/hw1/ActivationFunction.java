@@ -21,7 +21,17 @@ package hw1;
  */
 public interface ActivationFunction {
 
+    /**
+     *
+     * @param netInput
+     * @return
+     */
     public double calcOutput(double netInput);
 
+    /**
+     *
+     * @param netInput
+     * @return
+     */
     public double calcDervOutput(double netInput);
 }
