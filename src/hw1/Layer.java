@@ -73,18 +73,6 @@ public abstract class Layer {
 
     /**
      * Explicit constructor that creates a layer with a particular number of
-     * neurons.
-     *
-     * @param numNeurons number of neurons to create in this layer
-     *
-     * @author cld028
-     */
-    Layer(int numNeurons) {
-        this.neurons = this.createNeurons(numNeurons);
-    }
-
-    /**
-     * Explicit constructor that creates a layer with a particular number of
      * neurons
      *
      * @param numNeurons number of neurons to create in this layer
@@ -92,9 +80,12 @@ public abstract class Layer {
      *
      * @author cld028
      */
-    Layer(int numNeurons, String layerID, int layerNumber, NeuralNet nN) {
-        this.neuralNet = nN;
-        this.neurons = this.createNeurons(numNeurons, layerID, layerNumber);
+    Layer(int numNeurons, String layerID, int layerNum, NeuralNet neuralNet) {
+        this.numNeurons = numNeurons;
+        this.layerID = layerID;
+        this.layerNum = layerNum;
+        this.neuralNet = neuralNet;
+        this.neurons = this.createNeurons(numNeurons);
     }
 
     /**
@@ -108,20 +99,6 @@ public abstract class Layer {
     public abstract ArrayList<Neuron> createNeurons(int numNeurons);
 
     /**
-     * Create neurons that will reside in layer
-     *
-     * @param numNeurons - total number of neurons to create
-     * @param layerID - string identifier for layer
-     * @param LayerNumber
-     * @return list of neurons in the layer
-     *
-     * @author cld028
-     */
-    public abstract ArrayList<Neuron> createNeurons(int numNeurons,
-                                                    String layerID,
-                                                    int LayerNumber);
-
-    /**
      * Connect the current layer to another layer (with this layer being on the
      * left)
      *
@@ -130,17 +107,6 @@ public abstract class Layer {
      * @author cld028
      */
     public abstract void connectLayer(Layer nextLayer);
-
-    /**
-     * update the weights in the layer to the
-     *
-     * @param oldEdges
-     * @param deltaWeight
-     *
-     * @author cld028
-     */
-    protected abstract void updateWeights(ArrayList<Edge> oldEdges,
-                                          double deltaWeight);
 
     /**
      * Sets the previous layer
@@ -167,15 +133,6 @@ public abstract class Layer {
     /**
      * Fires all neurons in the layer
      *
-     * @param inputVals provides input for the neuron to be used when firing
-     *
-     * @author ks061, lts010
-     */
-    public abstract void fireNeurons(double[] inputVals);
-
-    /**
-     * Fires all neurons in the layer
-     *
      * @author lts010, ks061
      */
     public abstract void fireNeurons();
@@ -184,11 +141,9 @@ public abstract class Layer {
      * Adjusts weights for nodes connecting to layer and then calls the learn
      * method of the previous layer
      *
-     * @param deltaWeight change in weight from current layer
-     *
      * @author ks061, lts010
      */
-    public abstract void learn(double deltaWeight);
+    public abstract void learn();
 
     /**
      * increments the number of edges in the layer
@@ -216,4 +171,51 @@ public abstract class Layer {
         return (numEdges);
     }
 
+    public NeuralNet getNeuralNet() {
+        return neuralNet;
+    }
+
 }
+
+//    /**
+//     * Explicit constructor that creates a layer with a particular number of
+//     * neurons.
+//     *
+//     * @param numNeurons number of neurons to create in this layer
+//     *
+//     * @author cld028
+//     */
+//    Layer(int numNeurons) {
+//        this.neurons = this.createNeurons(numNeurons);
+//    }
+//    /**
+//     * Create neurons that will reside in layer
+//     *
+//     * @param numNeurons - total number of neurons to create
+//     * @param layerID - string identifier for layer
+//     * @param LayerNumber
+//     * @return list of neurons in the layer
+//     *
+//     * @author cld028
+//     */
+//    public abstract ArrayList<Neuron> createNeurons(int numNeurons,
+//                                                    String layerID,
+//                                                    int LayerNumber);
+//    /**
+//     * Fires all neurons in the layer
+//     *
+//     * @param inputVals provides input for the neuron to be used when firing
+//     *
+//     * @author ks061, lts010
+//     */
+//    public abstract void fireNeurons(double[] inputVals);
+//    /**
+//     * update the weights in the layer to the
+//     *
+//     * @param oldEdges
+//     * @param deltaWeight
+//     *
+//     * @author cld028
+//     */
+//    protected abstract void updateWeights(ArrayList<Edge> oldEdges,
+//                                          double deltaWeight);

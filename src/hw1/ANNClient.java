@@ -28,6 +28,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// TODO: if no hidden layers, don't ask for neurons per hidden layer
+// TODO: don't ask for SSE if not in training mode
 /**
  * ANNClient contains the main runner that interacts with the user that either
  * runs the neural network program in classification mode, which predicts what
@@ -141,25 +143,27 @@ public class ANNClient {
                                                                  int numNeuronsPerHiddenLayer) {
         ArrayList<ArrayList<Double>> weights = new ArrayList<>();
         WeightAssignment weightAssign = new RandomWeightAssignment();
-        weights.add(new ArrayList<Double>());
+        weights.add(new ArrayList<>());
         if (numHiddenLayers == 0) {
             for (int i = 0; i < (numInputs * numOutputs); i++) {
-                weights.get(0).add(weightAssign.assignWeight());
+                weights.get(0).add(weightAssign.assignWeight() / numInputs);
             }
         }
         else {
             for (int i = 0; i < (numInputs * numNeuronsPerHiddenLayer); i++) { //weights from the input layer connecting to the first hidden layer
-                weights.get(0).add(weightAssign.assignWeight());
+                weights.get(0).add(weightAssign.assignWeight() / numInputs);
             }
             for (int i = 1; i < numHiddenLayers; i++) { //weights for hidden layers that are connected to layer
-                weights.add(new ArrayList<Double>());
+                weights.add(new ArrayList<>());
                 for (int j = 0; j < (numNeuronsPerHiddenLayer * numNeuronsPerHiddenLayer); j++) {
-                    weights.get(i).add(weightAssign.assignWeight());
+                    weights.get(i).add(
+                            weightAssign.assignWeight() / numNeuronsPerHiddenLayer);
                 }
             }
-            weights.add(new ArrayList<Double>());
+            weights.add(new ArrayList<>());
             for (int i = 0; i < numOutputs * numNeuronsPerHiddenLayer; i++) { //weights for the output layer connecting to the last hidden layer
-                weights.get(weights.size() - 1).add(weightAssign.assignWeight());
+                weights.get(weights.size() - 1).add(
+                        weightAssign.assignWeight() / numNeuronsPerHiddenLayer);
             }
         }
         System.out.println(weights);
@@ -219,7 +223,7 @@ public class ANNClient {
     public static double getHighestSSE() {
         Scanner in = new Scanner(System.in);
         boolean invalidInput = true;
-        String prompt = "What is the highest acceptable SSE (as a double?";
+        String prompt = "What is the highest acceptable SSE (as a double)?";
         double result = -1;
         while (invalidInput) {
             System.out.println(prompt);

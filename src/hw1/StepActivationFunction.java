@@ -8,7 +8,7 @@
  *
  * Project: 205-FA18Class
  * Package: hw01
- * File: InputActivationFunction
+ * File: StepActivationFunction
  * Description: Activation Functions for the Input
  *
  * ****************************************
@@ -19,7 +19,7 @@ package hw1;
  *
  * @author cld028, ks061, lts010
  */
-public class InputActivationFunction implements ActivationFunction {
+public class StepActivationFunction implements ActivationFunction {
 
     /**
      *

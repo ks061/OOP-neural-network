@@ -25,8 +25,6 @@ public class InputLayer extends Layer {
 
     private double[] inputs;
 
-    private int t;
-
     /**
      * Explicit constructor that creates the input layer with a particular
      * number of neurons and an ID, as well as specifying the set of inputs.
@@ -58,22 +56,7 @@ public class InputLayer extends Layer {
     }
 
     /**
-     *
-     * @param numNeurons - Total number of neurons to be created within layer
-     * @param layerID - A string-based identifier that can be used when creating
-     * the neurons
-     * @return - An array list of all newly created neurons
-     *
-     * @author ks061
-     */
-    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
-        this.layerID = layerID;
-        return createNeurons(numNeurons);
-    }
-
-    /**
-     * Fire neurons in input layer layer
-     *
+     * Fire neurons in input layer
      *
      * @author ks061, lts010
      */
@@ -104,7 +87,8 @@ public class InputLayer extends Layer {
 
         for (Neuron neuron : this.neurons) {
             for (Neuron nextNeuron : nextLayer.neurons) {
-                Edge edge = new Edge(getNextEdgeNum());
+                Edge edge = new Edge(this.getNeuralNet(), this.layerNum,
+                                     getNextEdgeNum());
                 neuron.getOutEdges().add(edge);
                 edge.setFrom(neuron);
                 nextNeuron.getInEdges().add(edge);
@@ -132,36 +116,6 @@ public class InputLayer extends Layer {
     private void calculateErrors() {
         throw new UnsupportedOperationException(
                 "Input layer shouldn't be calculating errors!");
-    }
-
-    /**
-     * Throws an UnsupportedOperationException instance because the input layer
-     * can't fire neurons without input values.
-     *
-     * @author cld028, ks061
-     */
-    @Override
-    public void fireNeurons() {
-        throw new UnsupportedOperationException(
-                "Input layer can't fire neurons without input values");
-    }
-
-    @Override
-    protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * Sets t, representing that the neural network is currently working through
-     * the t-th row of input
-     *
-     * @param t number that represents that the neural network is currently
-     * working through the t-th row of input
-     *
-     * @author ks061
-     */
-    public void setT(int t) {
-        this.t = t;
     }
 
     void setInputs(double[] inputs) {
@@ -193,4 +147,31 @@ public class InputLayer extends Layer {
 //     */
 //    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
 //        super(numNeurons, id, layerNum, nN);
+//    }
+//
+//
+//    /**
+//     *
+//     * @param numNeurons - Total number of neurons to be created within layer
+//     * @param layerID - A string-based identifier that can be used when creating
+//     * the neurons
+//     * @return - An array list of all newly created neurons
+//     *
+//     * @author ks061
+//     */
+//    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
+//        this.layerID = layerID;
+//        return createNeurons(numNeurons);
+//    }
+//    /**
+//     * Sets t, representing that the neural network is currently working through
+//     * the t-th row of input
+//     *
+//     * @param t number that represents that the neural network is currently
+//     * working through the t-th row of input
+//     *
+//     * @author ks061
+//     */
+//    public void setT(int t) {
+//        this.t = t;
 //    }

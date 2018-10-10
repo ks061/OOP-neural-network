@@ -37,6 +37,8 @@ public class Neuron {
     private double netValue;
     private boolean inputNeuron = false;
 
+    private double expectedValue;
+
     /**
      * A default theta (threshold) value
      */
@@ -55,8 +57,8 @@ public class Neuron {
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
-        this.weightAssign = new FromFileWeightAssignment();
-        this.activationFunction = new InputActivationFunction();
+        // TODO this.weightAssign = new FromFileWeightAssignment();
+        this.activationFunction = new StepActivationFunction();
     }
 
     /**
@@ -157,7 +159,7 @@ public class Neuron {
         // check to see if it is an output neuron
         double errorGradient = 0;
         if (outEdges.isEmpty()) {
-            errorGradient = this.netValue * (1 - this.netValue) * (/*expectedValue*/-netValue);
+            errorGradient = this.netValue * (1 - this.netValue) * (this.expectedValue - netValue);
             this.theta = this.theta + NeuralNet.alpha * -1 * errorGradient;
             for (Edge edge : inEdges) {
                 edge.learn(errorGradient, this.netValue);
@@ -179,5 +181,14 @@ public class Neuron {
             }
         }
 
+    }
+
+    /**
+     * Sets the expected value for the output neuron
+     *
+     * @param expectedValue expected value for the output neuron
+     */
+    public void setExpectedValue(double expectedValue) {
+        this.expectedValue = expectedValue;
     }
 }

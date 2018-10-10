@@ -23,8 +23,8 @@ package hw1;
 public class Edge {
 
     private double weight;
-    private double errorGradient = 0;
-    private double weightDelta = 0;
+    private final double errorGradient = 0;
+    private final double weightDelta = 0;
     private double weightTimesDelta = 0;
     private Neuron to;
     private Neuron from;
@@ -126,7 +126,7 @@ public class Edge {
         return weightTimesDelta;
     }
 
-    // TODO: make everything protected
+    // TODO: ASK PROF make everything protected (should they be public or protected)
     protected void learn(double errorGradient, double valueAtNextNeuron) {
         this.weightTimesDelta = this.weight * errorGradient;
         this.weight = this.weight + NeuralNet.alpha * valueAtNextNeuron * errorGradient;
