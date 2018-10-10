@@ -108,13 +108,13 @@ public class NeuralNet {
                                                                 inputOutputSet.length));
                 inputLayer.fireNeurons();
 
-                System.out.println(outputLayer.calculateSumOfSquaredErrors());
+                // System.out.println(outputLayer.calculateSumOfSquaredErrors());
                 // Read output layer
                 // Back propogate
                 // etc.
             }
-            System.out.println(
-                    "SSE = " + outputLayer.calculateSumOfSquaredErrors());
+//            System.out.println(
+//                    "SSE = " + outputLayer.calculateSumOfSquaredErrors());
         } while (outputLayer.calculateSumOfSquaredErrors() > config.getHighestSSE());
         // TODO: change while back to above line
         // } while (i < 10);
