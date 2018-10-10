@@ -29,8 +29,8 @@ public class Neuron {
     private ArrayList<Edge> outEdges;
     private String id = "Neuron";
     private int numberId;
+
     //   private int layerNum; //the number for the layer that is neuron is in.
-    private WeightAssignment weightAssign;
     private ActivationFunction activationFunction;
     // private double netInput;
     private double theta;
@@ -45,6 +45,18 @@ public class Neuron {
     public final static double DEFAULTTHETA = 0.1;
 
     /**
+     * Explicit constructor that creates a neuron with a particular numerical
+     * identifier
+     *
+     * @param idNum numerical identifier for the neuron
+     *
+     * @author ks061
+     */
+    Neuron(int idNum) {
+        this(Integer.toString(idNum), idNum);
+    }
+
+    /**
      * Explicit constructor that creates a neuron with a particular identifier
      *
      * @param id identifier for the neuron
@@ -57,20 +69,7 @@ public class Neuron {
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
-        // TODO this.weightAssign = new FromFileWeightAssignment();
-        this.activationFunction = new StepActivationFunction();
-    }
-
-    /**
-     * Explicit constructor that creates a neuron with a particular numerical
-     * identifier
-     *
-     * @param idNum numerical identifier for the neuron
-     *
-     * @author ks061
-     */
-    Neuron(int idNum) {
-        this(Integer.toString(idNum), idNum);
+        this.activationFunction = new SigmoidActivationFunction();
     }
 
     /**
@@ -84,7 +83,6 @@ public class Neuron {
         }
         net -= theta;
         this.netValue = activationFunction.calcOutput(net);
-
     }
 
     /**
@@ -106,7 +104,7 @@ public class Neuron {
      *
      * @author ks061
      */
-    public double getValue() {
+    public double getNetValue() {
         return this.netValue;
     }
 
@@ -130,14 +128,6 @@ public class Neuron {
      */
     public ArrayList<Edge> getOutEdges() {
         return outEdges;
-    }
-
-    /**
-     *
-     * @param weightAssign
-     */
-    public void setWeightAssign(WeightAssignment weightAssign) {
-        this.weightAssign = weightAssign;
     }
 
     /**
@@ -166,13 +156,12 @@ public class Neuron {
             }
         }
         else {
-            double sum = 0;
+            double weightedErrorGradients = 0;
             for (Edge edge : outEdges) {
-                sum += edge.getWeightTimesDelta();
+                weightedErrorGradients += edge.getWeightTimesDelta();
             }
-            errorGradient = this.netValue + (1 - this.netValue) * sum;
+            errorGradient = this.netValue + (1 - this.netValue) * weightedErrorGradients;
             this.theta = this.theta + NeuralNet.alpha * -1 * errorGradient;
-
             // if true, must be a hidden layer
             if (!inEdges.isEmpty()) {
                 for (Edge edge : inEdges) {
@@ -190,5 +179,9 @@ public class Neuron {
      */
     public void setExpectedValue(double expectedValue) {
         this.expectedValue = expectedValue;
+    }
+
+    public int getNumberId() {
+        return numberId;
     }
 }

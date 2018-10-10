@@ -340,7 +340,7 @@ public class ANNClient {
         for (int row = 0; scanner.hasNextLine(); row++) {
             line = scanner.nextLine();
             entriesInLine = line.split(",");
-            trainingData[row] = new double[entriesInLine.length - 1];
+            trainingData[row] = new double[entriesInLine.length];
             for (int col = 0; col < trainingData[row].length; col++) {
                 trainingData[row][col] = Double.parseDouble(
                         entriesInLine[col]);

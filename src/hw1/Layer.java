@@ -64,7 +64,7 @@ public abstract class Layer {
     /**
      * Number of output edges in the layer
      */
-    private int numEdges = 0;
+    private int numOutEdges = 0;
 
     /**
      * Neural network this layer lies within
@@ -153,7 +153,7 @@ public abstract class Layer {
      * @author lts010, ks061
      */
     protected int getNextEdgeNum() {
-        return (numEdges++);
+        return (numOutEdges++);
     }
 
     protected int getNextNeuronNum() {
@@ -168,7 +168,7 @@ public abstract class Layer {
      * @author lts010, ks061
      */
     protected int getNumEdges() {
-        return (numEdges);
+        return (numOutEdges);
     }
 
     public NeuralNet getNeuralNet() {

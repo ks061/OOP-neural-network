@@ -17,6 +17,7 @@
 package hw1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * OutputLayer represents the last column of neurons within a neural network.
@@ -27,8 +28,6 @@ public class OutputLayer extends Layer {
 
     private double[] targetOutputs;
     private double[] outputErrors;
-
-    private int t;
 
     /**
      * Explicit constructor that creates a particular number of neurons in the
@@ -67,10 +66,27 @@ public class OutputLayer extends Layer {
      */
     @Override
     public void fireNeurons() {
+        int neuronIndex = 0;
         for (Neuron neuron : this.neurons) {
             neuron.fire();
+            System.out.println(Arrays.toString(outputErrors));
+            System.out.println(Arrays.toString(targetOutputs));
+            System.out.println(neuronIndex);
+            neuronIndex = neuron.getNumberId();
+            System.out.println(Arrays.toString(outputErrors));
+            System.out.println(Arrays.toString(targetOutputs));
+            System.out.println(neuronIndex);
+            this.outputErrors[neuronIndex] = this.targetOutputs[neuronIndex] - neuron.getNetValue();
         }
         learn();
+    }
+
+    public double calculateSumOfSquaredErrors() {
+        double sumOfSquaredErrors = 0;
+        for (double error : this.outputErrors) {
+            sumOfSquaredErrors += error * error;
+        }
+        return sumOfSquaredErrors;
     }
 
     /**

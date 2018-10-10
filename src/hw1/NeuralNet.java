@@ -49,6 +49,8 @@ public class NeuralNet {
 
         int numInputs = data[0].length;
         for (double[] inputSet : data) {
+            // TODO remove
+            System.out.println(Arrays.toString(inputSet));
             if (inputSet.length != numInputs) {
                 throw new NeuralNetConstructionException(
                         "Not all rows in data set have the same amount of entries.");
@@ -81,16 +83,36 @@ public class NeuralNet {
 
         }
 
-        for (double[] inputOutputSet : this.data) {
-            inputLayer.setInputs(
-                    Arrays.copyOfRange(inputOutputSet, 0, numInputs));
-            outputLayer.setTargetOutputs(Arrays.copyOfRange(inputOutputSet,
-                                                            numInputs,
-                                                            inputOutputSet.length));
-            inputLayer.fireNeurons();
-            // Read output layer
-            // Back propogate
-            // etc.
+        for (ArrayList<Double> layer : config.getWeights()) {
+            System.out.println(layer);
+        }
+
+        // TODO: remove print statements
+        do {
+            for (double[] inputOutputSet : this.data) {
+                inputLayer.setInputs(
+                        Arrays.copyOfRange(inputOutputSet, 0, numInputs));
+                System.out.println("1" + Arrays.toString(inputOutputSet));
+                System.out.println("2" + numInputs);
+                System.out.println("3" + inputOutputSet.length);
+                System.out.println(Arrays.toString(Arrays.copyOfRange(
+                        inputOutputSet,
+                        numInputs,
+                        inputOutputSet.length)));
+                outputLayer.setTargetOutputs(Arrays.copyOfRange(inputOutputSet,
+                                                                numInputs,
+                                                                inputOutputSet.length));
+                inputLayer.fireNeurons();
+
+                System.out.println(outputLayer.calculateSumOfSquaredErrors());
+                // Read output layer
+                // Back propogate
+                // etc.
+            }
+        } while (outputLayer.calculateSumOfSquaredErrors() < config.getHighestSSE());
+
+        for (ArrayList<Double> layer : config.getWeights()) {
+            System.out.println(layer);
         }
 
         //Test your network here

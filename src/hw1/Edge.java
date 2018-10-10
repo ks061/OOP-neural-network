@@ -54,7 +54,7 @@ public class Edge {
      * @author lts010, ks061
      */
     public double getWeightedValue() {
-        return weight * from.getValue();
+        return weight * from.getNetValue();
     }
 
     /**
@@ -112,7 +112,7 @@ public class Edge {
      * @author ks061, lts010
      */
     protected double getValue() {
-        return weight * from.getValue();
+        return weight * from.getNetValue();
     }
 
     /**
