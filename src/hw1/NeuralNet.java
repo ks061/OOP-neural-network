@@ -60,6 +60,10 @@ public class NeuralNet {
         this.data = data;
         this.configuration = config;
 
+        for (ArrayList<Double> layer : config.getWeights()) {
+            System.out.println(layer);
+        }
+        System.out.println("initial weights are:  ");
         ArrayList<Layer> layers = new ArrayList<>();
         InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-", 0,
                                                this);
