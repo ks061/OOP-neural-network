@@ -162,8 +162,26 @@ public class ANNClient {
                 weights.get(weights.size() - 1).add(weightAssign.assignWeight());
             }
         }
-        System.out.println(weights);
         return weights;
+    }
+
+    private static ArrayList<ArrayList<Double>> getListOfThetas(int numInputs,
+                                                                int numOutputs,
+                                                                int numHiddenLayers,
+                                                                int numNeuronsPerHiddenLayer) {
+        ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<ArrayList<Double>>();
+        for (int i = 0; i < numHiddenLayers; i++) {
+            listOfThetas.add(new ArrayList<Double>());
+            for (int j = 0; j < numNeuronsPerHiddenLayer; j++) {
+                listOfThetas.get(i).add(Neuron.DEFAULTTHETA);
+            }
+        }
+        listOfThetas.add(new ArrayList<Double>());
+        for (int i = 0; i < numOutputs; i++) {
+            listOfThetas.get(listOfThetas.size() - 1).add(Neuron.DEFAULTTHETA);
+        }
+        System.out.println(listOfThetas);
+        return listOfThetas;
     }
 
     /**
@@ -336,7 +354,7 @@ public class ANNClient {
      *
      * @auhtor lts010, ks061
      */
-    public static ArrayList<ArrayList<Double>> readConfigFile() throws FileNotFoundException {
+    public static ArrayList<String> readConfigFile() throws FileNotFoundException {
         Scanner in = new Scanner(System.in);
         Scanner fReader = new Scanner(System.in);
         boolean fileFound = false;
@@ -356,11 +374,16 @@ public class ANNClient {
         while (fReader.hasNextLine()) {
             configList.add(fReader.nextLine());
         }
-        return strListToDoubleList(configList);
+        return configList;
     }
 
     /**
      * Converts a list of strings to a list of lists of doubles
+     *
+     * The following code was based on something found on stackoverflow
+     *
+     * @see
+     * <a href ="https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string">https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string</a>
      *
      * @param strList - a list of strings
      * @return - a 2D array of double
@@ -411,6 +434,16 @@ public class ANNClient {
             }
             out.printf("%s\n", weightLayer);
         }
+        out.printf("%s\n", "THETAS");
+        ArrayList<ArrayList<Double>> thetas = nN.getConfiguration().getThetas();
+        String thetaLayer;
+        for (ArrayList<Double> thetaList : thetas) {
+            thetaLayer = "";
+            for (double theta : thetaList) {
+                thetaLayer += theta + " ";
+            }
+            out.printf("%s\n", thetaLayer);
+        }
         out.close();
     }
 
@@ -430,6 +463,7 @@ public class ANNClient {
         int numNeuronsPerHiddenLayer;
         double highestSSE;
         ArrayList<ArrayList<Double>> weights;
+        ArrayList<ArrayList<Double>> thetas;
         ProgramMode programMode;
         WeightsMode inputMode;
         inputMode = getInputMode();
@@ -442,22 +476,35 @@ public class ANNClient {
             highestSSE = getHighestSSE();
             weights = getRandomWeights(numInputs, numOutputs, numHiddenLayers,
                                        numNeuronsPerHiddenLayer);
+            thetas = getListOfThetas(numInputs, numOutputs, numHiddenLayers,
+                                     numNeuronsPerHiddenLayer);
         }
         else {
-            ArrayList<ArrayList<Double>> configList = readConfigFile();
-            numInputs = (int) Math.round(configList.get(0).get(0));
-            numOutputs = (int) Math.round(configList.get(0).get(1));
-            numHiddenLayers = (int) Math.round(configList.get(0).get(2));
-            numNeuronsPerHiddenLayer = (int) Math.round(configList.get(0).get(3));
-            highestSSE = (int) Math.round(configList.get(0).get(4));
-            weights = new ArrayList<>(configList.subList(1,
-                                                         configList.size()));
+            ArrayList<String> configList = readConfigFile();
+            int thetaIndex = configList.indexOf("THETAS"); //need to know which index the thetas start at
+            ArrayList<String> configListWeights = new ArrayList<>(
+                    configList.subList(0,
+                                       thetaIndex)); //seperate the weights (and the numbers before the weights) into a list before the string "THETA"
+            ArrayList<String> configListThetas = new ArrayList<>( //seperate the thetas into a list after the string "THETA"
+                    configList.subList(
+                            thetaIndex + 1, configList.size()));
+            ArrayList<ArrayList<Double>> weightList = strListToDoubleList( //turn the weight list into a list of list of doubles
+                    configListWeights);
+            thetas = strListToDoubleList(configListThetas); //turn the theta list into a list of list of doubles
+            numInputs = (int) Math.round(weightList.get(0).get(0));
+            numOutputs = (int) Math.round(weightList.get(0).get(1));
+            numHiddenLayers = (int) Math.round(weightList.get(0).get(2));
+            numNeuronsPerHiddenLayer = (int) Math.round(weightList.get(0).get(3));
+            highestSSE = (int) Math.round(weightList.get(0).get(4));
+            weights = new ArrayList<>(weightList.subList(1,
+                                                         configListWeights.size()));
         }
         programMode = getProgramMode();
         ConfigObject config = new ConfigObject(numInputs, numOutputs,
                                                numHiddenLayers,
                                                numNeuronsPerHiddenLayer,
-                                               highestSSE, weights, programMode);
+                                               highestSSE, weights, thetas,
+                                               programMode);
 
         double[][] trainingData = getTrainingData();
         myNet = new NeuralNet(trainingData, config);
