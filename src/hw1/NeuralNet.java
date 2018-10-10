@@ -96,6 +96,10 @@ public class NeuralNet {
                 inputLayer.setInputs(
                         Arrays.copyOfRange(inputOutputSet, 0,
                                            config.getNumInputs()));
+                System.out.println("Initial weights are:  ");
+                for (ArrayList<Double> layer : config.getWeights()) {
+                    System.out.println(layer);
+                }
                 //System.out.println("IO Set " + Arrays.toString(inputOutputSet));
                 //System.out.println("dataLength = " + dataLength);
                 // System.out.println("length inputOutputSet = " + inputOutputSet.length);
@@ -113,11 +117,12 @@ public class NeuralNet {
                 // Back propogate
                 // etc.
             }
-            System.out.println(
-                    "SSE = " + outputLayer.calculateSumOfSquaredErrors());
+            //System.out.println(
+            //"SSE = " + outputLayer.calculateSumOfSquaredErrors());
         } while (outputLayer.calculateSumOfSquaredErrors() > config.getHighestSSE());
         // TODO: change while back to above line
         // } while (i < 10);
+        System.out.println("finial weights are:  ");
         for (ArrayList<Double> layer : config.getWeights()) {
             System.out.println(layer);
         }
