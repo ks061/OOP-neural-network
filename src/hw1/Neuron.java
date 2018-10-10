@@ -57,7 +57,6 @@ public class Neuron {
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
-        // TODO this.weightAssign = new FromFileWeightAssignment();
         this.activationFunction = new StepActivationFunction();
     }
 

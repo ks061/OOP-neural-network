@@ -28,8 +28,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// TODO: if no hidden layers, don't ask for neurons per hidden layer
-// TODO: don't ask for SSE if not in training mode
 /**
  * ANNClient contains the main runner that interacts with the user that either
  * runs the neural network program in classification mode, which predicts what

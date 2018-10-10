@@ -18,7 +18,6 @@ package hw1;
 
 import java.util.ArrayList;
 
-// TODO: modify config to store thetas
 /**
  * ConfigObject holds the configuration for a NeuralNet, including the number of
  * inputs (input neurons), the number of outputs (output neurons), the number of

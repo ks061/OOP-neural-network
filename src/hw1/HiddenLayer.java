@@ -136,13 +136,6 @@ public class HiddenLayer extends Layer {
         }
         nextLayer.fireNeurons();
     }
-
-    //TODO: implement?
-//    @Override
-//    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
-//                                           int LayerNumber) {
-//
-//    }
 }
 
 //    /**
