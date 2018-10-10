@@ -56,7 +56,10 @@ public class ConfigObject {
      * each layer except the output layer)
      */
     private ArrayList<ArrayList<Double>> weights;
-
+    /**
+     * List of thetas (a theta for each neuron that needs a theta)
+     */
+    private ArrayList<ArrayList<Double>> thetas;
     /**
      * Run mode (classification or training mode) that neural net will run in
      */
@@ -77,6 +80,7 @@ public class ConfigObject {
      * @param highestSSE maximum allowed sum of squared error value
      * @param weights list of edge weights (a weight for each edge going to the
      * next layer in each layer except the output layer)
+     * @param thetas list of thetas (a theta for each neuron that needs a theta)
      * @param programMode program mode (classification or training mode) that
      * neural net will run in
      *
@@ -85,6 +89,7 @@ public class ConfigObject {
     public ConfigObject(int numInputs, int numOutputs, int numHiddenLayers,
                         int numNeuronsPerHiddenLayer, double highestSSE,
                         ArrayList<ArrayList<Double>> weights,
+                        ArrayList<ArrayList<Double>> thetas,
                         ProgramMode programMode) {
         this.numInputs = numInputs;
         this.numOutputs = numOutputs;
@@ -92,6 +97,7 @@ public class ConfigObject {
         this.numNeuronsPerHiddenLayer = numNeuronsPerHiddenLayer;
         this.highestSSE = highestSSE;
         this.weights = weights;
+        this.thetas = thetas;
         this.programMode = programMode;
     }
 
@@ -227,6 +233,24 @@ public class ConfigObject {
      */
     public void setWeights(ArrayList<ArrayList<Double>> weights) {
         this.weights = weights;
+    }
+
+    /**
+     * Gets the list of thetas (a theta for each neuron that needs a theta)
+     *
+     * @return list of thetas
+     */
+    public ArrayList<ArrayList<Double>> getThetas() {
+        return thetas;
+    }
+
+    /**
+     * Sets the list of thetas (a theta for each neuron that needs a theta)
+     *
+     * @param thetas - list of thetaas
+     */
+    public void setThetas(ArrayList<ArrayList<Double>> thetas) {
+        this.thetas = thetas;
     }
 
     /**
