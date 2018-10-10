@@ -28,8 +28,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// TODO: if no hidden layers, don't ask for neurons per hidden layer
-// TODO: don't ask for SSE if not in training mode
 /**
  * ANNClient contains the main runner that interacts with the user that either
  * runs the neural network program in classification mode, which predicts what
@@ -471,13 +469,24 @@ public class ANNClient {
         ProgramMode programMode;
         WeightsMode inputMode;
         inputMode = getInputMode();
+        programMode = getProgramMode();
 
         if (inputMode == WeightsMode.CREATE) {
             numInputs = getNumInputs();
             numOutputs = getNumOutputs();
             numHiddenLayers = getNumHiddenLayers();
-            numNeuronsPerHiddenLayer = getNumNeuronsPerHiddenLayer();
-            highestSSE = getHighestSSE();
+            if (numHiddenLayers == 0) { //if there is no hidden layers we don't need to know the number of neurons per hidden layer
+                numNeuronsPerHiddenLayer = 0;
+            }
+            else {
+                numNeuronsPerHiddenLayer = getNumNeuronsPerHiddenLayer();
+            }
+            if (programMode != ProgramMode.TRAINING) { //if programMode is not training we don't need an SSE
+                highestSSE = 0;
+            }
+            else {
+                highestSSE = getHighestSSE();
+            }
             weights = getRandomWeights(numInputs, numOutputs, numHiddenLayers,
                                        numNeuronsPerHiddenLayer);
             thetas = getListOfThetas(numInputs, numOutputs, numHiddenLayers,
@@ -503,7 +512,6 @@ public class ANNClient {
             weights = new ArrayList<>(weightList.subList(1,
                                                          configListWeights.size()));
         }
-        programMode = getProgramMode();
         ConfigObject config = new ConfigObject(numInputs, numOutputs,
                                                numHiddenLayers,
                                                numNeuronsPerHiddenLayer,

@@ -69,7 +69,19 @@ public class Neuron {
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
-        this.activationFunction = new SigmoidActivationFunction();
+        this.activationFunction = new StepActivationFunction();
+    }
+
+    /**
+     * Explicit constructor that creates a neuron with a particular numerical
+     * identifier
+     *
+     * @param idNum numerical identifier for the neuron
+     *
+     * @author ks061
+     */
+    Neuron(int idNum) {
+        this(Integer.toString(idNum), idNum);
     }
 
     /**
