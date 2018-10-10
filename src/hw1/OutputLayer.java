@@ -109,16 +109,17 @@ public class OutputLayer extends Layer {
      */
     public void learn() {
 //        calculateErrors();
-//        double deltaWeight = this.neurons.get(0).getValue()
-//                             * (1 - this.neurons.get(0).getValue())
-//                             * this.outputErrors[this.t];
-//        for (Edge edge : oldEdges) {
-//            edge.changeWeight(NeuralNet.alpha, deltaWeight);
-//        }
-//        updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
-//        if (this.prevLayer instanceof HiddenLayer) {
-//            this.prevLayer.learn();
-//        }
+        //        double deltaWeight = this.neurons.get(0).getValue()
+        //                             * (1 - this.neurons.get(0).getValue())
+        //                             * this.outputErrors[this.t];
+        //        for (Edge edge : oldEdges) {
+        //            edge.changeWeight(NeuralNet.alpha, deltaWeight);
+        //        }
+        //        updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
+        //        if (this.prevLayer instanceof HiddenLayer) {
+        //            this.prevLayer.learn();
+        //        }
+
         for (Neuron neuron : this.neurons) {
             int neuronID = neuron.getNumberId();
             this.outputErrors[neuronID] = this.neurons.get(neuronID).getNetValue() - targetOutputs[neuronID];
@@ -128,6 +129,7 @@ public class OutputLayer extends Layer {
 //        while (it.hasNext()) {
 //            ((Neuron) it.next()).learn();
 //        }
+
         prevLayer.learn();
     }
 
