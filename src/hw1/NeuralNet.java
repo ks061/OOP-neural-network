@@ -23,11 +23,17 @@ import java.util.*;
  */
 public class NeuralNet {
 
-    private ArrayList<Layer> layers;
-    private double[][] inputs;
-    private double[] expectedOutputs;
-    private double[] errors;
+    private double[][] data;
     private ConfigObject configuration;
+    private ArrayList<Layer> layers;
+    private double[] errors;
+
+    protected static double alpha = 0.2;
+
+    /**
+     * A default learning rate if you decide to use this within the neurons
+     */
+    public final static double DEFAULTALPHA = 0.2;
 
     /**
      * Explicit constructor that creates the input layer, any hidden layers, and
@@ -35,31 +41,25 @@ public class NeuralNet {
      *
      * @author cld028, ks061, lts010
      */
-    NeuralNet(double[][] inputs, ConfigObject config) {
-        if (inputs.length == 0) {
+    NeuralNet(double[][] data, ConfigObject config) {
+        if (data.length == 0) {
             throw new NeuralNetConstructionException(
-                    "No inputs have been provided.");
-        }
-        if (expectedOutputs.length == 0) {
-            throw new NeuralNetConstructionException(
-                    "No expected outputs have been provided.");
-        }
-        if (inputs.length != expectedOutputs.length) {
-            throw new NeuralNetConstructionException(
-                    "Each input set does not have a corresponding output set.");
+                    "No data has been provided.");
         }
 
-        int numInputs = inputs[0].length;
-        for (double[] inputSet : inputs) {
-            if (inputSet.length != numInputs) {
+        int numInputs = data[0].length;
+        for (double[] inputSet : data) {
+            if (data.length != numInputs) {
                 throw new NeuralNetConstructionException(
-                        "Not all input sets have the same amount of input entries.");
+                        "Not all rows in data set have the same amount of entries.");
             }
         }
+
+        this.data = data;
         this.configuration = config;
-        this.inputs = inputs;
+
         ArrayList<Layer> layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this);
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this, /*put inputs in*/);
         layers.add(inputLayer);
         for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
             layers.add(new HiddenLayer(

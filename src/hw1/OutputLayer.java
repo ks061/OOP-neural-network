@@ -17,6 +17,7 @@
 package hw1;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * OutputLayer represents the last column of neurons within a neural network.
@@ -123,6 +124,11 @@ public class OutputLayer extends Layer {
         updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
         if (this.prevLayer instanceof HiddenLayer) {
             this.prevLayer.learn();
+        }
+
+        Iterator it = this.neurons.iterator();
+        while (it.hasNext()) {
+            ((Neuron) it.next()).learn();
         }
     }
 

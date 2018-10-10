@@ -31,16 +31,10 @@ public class Neuron {
     private int layerNum; //the number for the layer that is neuron is in.
     private WeightAssignment weightAssign;
     private ActivationFunction activationFunction;
-    private double alpha;
     private double netInput;
     private double theta;
     private double netValue;
     private boolean inputNeuron = false;
-
-    /**
-     * A default learning rate if you decide to use this within the neurons
-     */
-    public final static double DEFAULTALPHA = 0.2;
 
     /**
      * A default theta (threshold) value
@@ -57,7 +51,6 @@ public class Neuron {
     Neuron(String id, int num) {
         this.id = id;
         this.layerNum = num;
-        this.alpha = DEFAULTALPHA;
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
@@ -161,5 +154,40 @@ public class Neuron {
      */
     public double getAlpha() {
         return this.alpha;
+    }
+
+    /**
+     *
+     *
+     * @return
+     *
+     * @author lts010, ks061
+     */
+    public void learn() {
+        // check to see if it is an output neuron
+        double errorGradient = 0;
+        if (outEdges.isEmpty()) {
+            errorGradient = this.netValue * (1 - this.netValue) * (/*expectedValue*/-netValue);
+            this.theta = this.theta + NeuralNet.alpha * -1 * errorGradient;
+            for (Edge edge : inEdges) {
+                edge.learn(errorGradient, this.netValue);
+            }
+        }
+        else {
+            double sum = 0;
+            for (Edge edge : outEdges) {
+                sum += edge.getWeightTimesDelta();
+            }
+            errorGradient = this.netValue + (1 - this.netValue) * sum;
+            this.theta = this.theta + NeuralNet.alpha * -1 * errorGradient;
+
+            // if true, must be a hidden layer
+            if (!inEdges.isEmpty()) {
+                for (Edge edge : inEdges) {
+                    edge.learn(errorGradient, this.netValue);
+                }
+            }
+        }
+
     }
 }

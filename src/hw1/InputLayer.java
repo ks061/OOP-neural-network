@@ -29,31 +29,6 @@ public class InputLayer extends Layer {
 
     /**
      * Explicit constructor that creates the input layer with a particular
-     * number of neurons.
-     *
-     * @param numNeurons number of neurons to be generated in this layer
-     *
-     * @author ks061
-     */
-    InputLayer(int numNeurons) {
-        super(numNeurons);
-    }
-
-    /**
-     * Explicit constructor that creates the input layer with a particular
-     * number of neurons and an ID.
-     *
-     * @param numNeurons number of neurons to be generated in this layer
-     * @param id identifier of the layer
-     *
-     * @author ks061
-     */
-    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
-        super(numNeurons, id, layerNum, nN);
-    }
-
-    /**
-     * Explicit constructor that creates the input layer with a particular
      * number of neurons and an ID, as well as specifying the set of inputs.
      *
      * @param numNeurons number of neurons to be generated in this layer
@@ -192,3 +167,28 @@ public class InputLayer extends Layer {
     }
 
 }
+
+//    /**
+//     * Explicit constructor that creates the input layer with a particular
+//     * number of neurons.
+//     *
+//     * @param numNeurons number of neurons to be generated in this layer
+//     *
+//     * @author ks061
+//     */
+//    InputLayer(int numNeurons) {
+//        super(numNeurons);
+//    }
+//
+//    /**
+//     * Explicit constructor that creates the input layer with a particular
+//     * number of neurons and an ID.
+//     *
+//     * @param numNeurons number of neurons to be generated in this layer
+//     * @param id identifier of the layer
+//     *
+//     * @author ks061
+//     */
+//    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
+//        super(numNeurons, id, layerNum, nN);
+//    }

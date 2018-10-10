@@ -25,7 +25,7 @@ public class Edge {
     private double weight;
     private double errorGradient = 0;
     private double weightDelta = 0;
-    private double prevWeightDelta = 0;
+    private double weightTimesDelta = 0;
     private Neuron to;
     private Neuron from;
     private int edgeNumber;
@@ -57,22 +57,6 @@ public class Edge {
         this.weight = neuralNet.getWeight(layerNum, edgeNum);
         this.edgeNumber = edgeNum;
         this.layerNumber = layerNum;
-    }
-
-    /**
-     * Changes the weight
-     *
-     * @param alpha - the learning rate
-     * @param error - the difference between the desired output and the actual
-     * output
-     *
-     * @author lts010, ks061
-     */
-    public void changeWeight(double alpha, double error) {
-        this.prevWeightDelta = this.weightDelta;
-        this.weightDelta = alpha * from.getValue() * error;
-        this.weight += weightDelta;
-        neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
     }
 
     /**
@@ -144,4 +128,38 @@ public class Edge {
         return weight * from.getValue();
     }
 
+    /**
+     * Gets the weight times the delta
+     *
+     * @return weight times delta
+     *
+     * @author ks061, lts010
+     */
+    public double getWeightTimesDelta() {
+        return weightTimesDelta;
+    }
+
+    // TODO: make everything protected
+    protected void learn(double errorGradient, double valueAtNextNeuron) {
+        this.weightTimesDelta = this.weight * errorGradient;
+        this.weight = this.weight + NeuralNet.alpha * valueAtNextNeuron * errorGradient;
+        neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
+    }
+
 }
+
+//    /**
+//     * Changes the weight
+//     *
+//     * @param alpha - the learning rate
+//     * @param error - the difference between the desired output and the actual
+//     * output
+//     *
+//     * @author lts010, ks061
+//     */
+//    public void changeWeight(double alpha, double error) {
+//        this.prevWeightDelta = this.weightDelta;
+//        this.weightDelta = alpha * from.getValue() * error;
+//        this.weight += weightDelta;
+//        neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
+//    }

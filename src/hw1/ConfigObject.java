@@ -22,8 +22,9 @@ import java.util.ArrayList;
  * ConfigObject holds the configuration for a NeuralNet, including the number of
  * inputs (input neurons), the number of outputs (output neurons), the number of
  * hidden layers, the number of neurons per hidden layer, the maximum allowed
- * sum of squared error value, and list of edge weights (a weight for each edge
- * going to the next layer in each layer except the output layer)
+ * sum of squared error value, list of edge weights (a weight for each edge
+ * going to the next layer in each layer except the output layer), and program
+ * mode (classification or training mode) that neural net will run in
  *
  * @author lts010, ks061
  */
@@ -56,11 +57,17 @@ public class ConfigObject {
     private ArrayList<ArrayList<Double>> weights;
 
     /**
+     * Run mode (classification or training mode) that neural net will run in
+     */
+    private ProgramMode programMode;
+
+    /**
      * Explicit parameter that initializes the number of inputs (input neurons),
      * the number of outputs (output neurons), the number of hidden layers, the
      * number of neurons per hidden layer, the maximum allowed sum of squared
-     * error value, and list of edge weights (a weight for each edge going to
-     * the next layer in each layer except the output layer)
+     * error value, list of edge weights (a weight for each edge going to the
+     * next layer in each layer except the output layer), and program mode
+     * (classification or training mode) that neural net will run in
      *
      * @param numInputs number of inputs (input neurons)
      * @param numOutputs number of outputs (output neurons)
@@ -69,18 +76,22 @@ public class ConfigObject {
      * @param highestSSE maximum allowed sum of squared error value
      * @param weights list of edge weights (a weight for each edge going to the
      * next layer in each layer except the output layer)
+     * @param programMode program mode (classification or training mode) that
+     * neural net will run in
      *
      * @author lts010, ks061
      */
     public ConfigObject(int numInputs, int numOutputs, int numHiddenLayers,
                         int numNeuronsPerHiddenLayer, double highestSSE,
-                        ArrayList<ArrayList<Double>> weights) {
+                        ArrayList<ArrayList<Double>> weights,
+                        ProgramMode programMode) {
         this.numInputs = numInputs;
         this.numOutputs = numOutputs;
         this.numHiddenLayers = numHiddenLayers;
         this.numNeuronsPerHiddenLayer = numNeuronsPerHiddenLayer;
         this.highestSSE = highestSSE;
         this.weights = weights;
+        this.programMode = programMode;
     }
 
     /**
@@ -215,6 +226,32 @@ public class ConfigObject {
      */
     public void setWeights(ArrayList<ArrayList<Double>> weights) {
         this.weights = weights;
+    }
+
+    /**
+     * Sets the program mode (classification or training mode) that neural net
+     * will run in
+     *
+     * @param programMode program mode mode (classification or training mode)
+     * that neural net will run in
+     *
+     * @author ks061, lts010
+     */
+    public void setProgramMode(ProgramMode programMode) {
+        this.programMode = programMode;
+    }
+
+    /**
+     * Gets the program mode (classification or training mode) that neural net
+     * will run in
+     *
+     * @return program mode (classification or training mode) that neural net
+     * will run in
+     *
+     * @author ks061, lts010
+     */
+    public ProgramMode getProgramMode() {
+        return this.programMode;
     }
 
 }
