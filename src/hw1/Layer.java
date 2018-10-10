@@ -17,6 +17,7 @@ package hw1;
 
 import java.util.ArrayList;
 
+// TODO: move methods from layer subclasses
 /**
  * Layer is an abstraction of columns of neurons within a neural network;
  * neurons within a layer have similar functionality.
@@ -63,7 +64,7 @@ public abstract class Layer {
     /**
      * Number of output edges in the layer
      */
-    private int numberOfEdges = 0;
+    private int numEdges = 0;
 
     /**
      * Neural network this layer lies within
@@ -197,7 +198,11 @@ public abstract class Layer {
      * @author lts010, ks061
      */
     protected int getNextEdgeNum() {
-        return (++numberOfEdges);
+        return (numEdges++);
+    }
+
+    protected int getNextNeuronNum() {
+        return this.numNeurons;
     }
 
     /**
@@ -207,7 +212,8 @@ public abstract class Layer {
      * @return the number of out edges
      * @author lts010, ks061
      */
-    protected int getNumberOfEdges() {
-        return (numberOfEdges);
+    protected int getNumEdges() {
+        return (numEdges);
     }
+
 }

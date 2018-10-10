@@ -79,15 +79,15 @@ public class InputLayer extends Layer {
      */
     @Override
     public void fireNeurons() {
-        if (this.inputs[t].length != this.neurons.size()) {
+        if (this.inputs.length != this.neurons.size()) {
             throw new NeuralNetConstructionException(
                     "The number of input values and number of neurons in the "
                     + "input layer of the neural network do not match.");
         }
 
-        int numInputs = this.inputs[t].length;
+        int numInputs = this.inputs.length;
         for (int i = 0; i < numInputs; i++) {
-            this.neurons.get(i).setNetValue(this.inputs[t][i]);
+            this.neurons.get(i).setNetValue(this.inputs[i]);
         }
         nextLayer.fireNeurons();
     }

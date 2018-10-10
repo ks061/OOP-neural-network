@@ -28,22 +28,9 @@ public class Edge {
     private double weightTimesDelta = 0;
     private Neuron to;
     private Neuron from;
-    private int edgeNumber;
-    private int layerNumber;
-    private NeuralNet neuralNet;
-
-    /**
-     * Explicit constructor for creating an edge
-     *
-     * @param weight weight applied to data transferred to neuron
-     *
-     * @author ks061, lts010
-     */
-    Edge(double weight) {
-        this.to = to;
-        this.from = from;
-        this.weight = weight;
-    }
+    private final int edgeNumber;
+    private final int layerNumber;
+    private final NeuralNet neuralNet;
 
     /**
      * Explicit constructor for creating an edge
@@ -162,4 +149,16 @@ public class Edge {
 //        this.weightDelta = alpha * from.getValue() * error;
 //        this.weight += weightDelta;
 //        neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
+//    }
+//    /**
+//     * Explicit constructor for creating an edge
+//     *
+//     * @param weight weight applied to data transferred to neuron
+//     *
+//     * @author ks061, lts010
+//     */
+//    Edge(double weight) {
+//        this.to = to;
+//        this.from = from;
+//        this.weight = weight;
 //    }

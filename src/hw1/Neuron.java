@@ -28,10 +28,11 @@ public class Neuron {
     private ArrayList<Edge> inEdges;
     private ArrayList<Edge> outEdges;
     private String id = "Neuron";
-    private int layerNum; //the number for the layer that is neuron is in.
+    private int numberId;
+    //   private int layerNum; //the number for the layer that is neuron is in.
     private WeightAssignment weightAssign;
     private ActivationFunction activationFunction;
-    private double netInput;
+    // private double netInput;
     private double theta;
     private double netValue;
     private boolean inputNeuron = false;
@@ -50,7 +51,7 @@ public class Neuron {
      */
     Neuron(String id, int num) {
         this.id = id;
-        this.layerNum = num;
+        this.numberId = num;
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
