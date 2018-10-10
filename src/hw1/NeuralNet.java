@@ -49,7 +49,7 @@ public class NeuralNet {
 
         int numInputs = data[0].length;
         for (double[] inputSet : data) {
-            if (data.length != numInputs) {
+            if (inputSet.length != numInputs) {
                 throw new NeuralNetConstructionException(
                         "Not all rows in data set have the same amount of entries.");
             }
