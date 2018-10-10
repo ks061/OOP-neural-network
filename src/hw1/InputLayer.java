@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 public class InputLayer extends Layer {
 
-    private double[][] inputs;
+    private double[] inputs;
 
     private int t;
 
@@ -37,10 +37,8 @@ public class InputLayer extends Layer {
      *
      * @author ks061
      */
-    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN,
-               double[][] inputs) {
+    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
         super(numNeurons, id, layerNum, nN);
-        this.inputs = inputs;
     }
 
     /**
@@ -164,6 +162,10 @@ public class InputLayer extends Layer {
      */
     public void setT(int t) {
         this.t = t;
+    }
+
+    void setInputs(double[] inputs) {
+        this.inputs = inputs;
     }
 
 }

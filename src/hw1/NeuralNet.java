@@ -59,7 +59,7 @@ public class NeuralNet {
         this.configuration = config;
 
         ArrayList<Layer> layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this, /*put inputs in*/);
+        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this);
         layers.add(inputLayer);
         for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
             layers.add(new HiddenLayer(
@@ -81,8 +81,13 @@ public class NeuralNet {
 
         }
 
-        for (double[] inputSet : this.inputs) {
-            inputLayer.fireNeurons(inputSet);
+        for (double[] inputOutputSet : this.data) {
+            inputLayer.setInputs(
+                    Arrays.copyOfRange(inputOutputSet, 0, numInputs));
+            outputLayer.setTargetOutputs(Arrays.copyOfRange(inputOutputSet,
+                                                            numInputs,
+                                                            inputOutputSet.length));
+            inputLayer.fireNeurons();
             // Read output layer
             // Back propogate
             // etc.

@@ -26,7 +26,7 @@ import java.util.Iterator;
  */
 public class OutputLayer extends Layer {
 
-    private double[] targetOutput;
+    private double[] targetOutputs;
     private double[] outputErrors;
 
     private int t;
@@ -53,8 +53,8 @@ public class OutputLayer extends Layer {
     OutputLayer(int numNeurons, String id, int layerNumber, NeuralNet nN,
                 double[] targetOutput) {
         super(numNeurons, id, layerNumber, nN);
-        this.targetOutput = targetOutput;
-        this.outputErrors = new double[this.targetOutput.length];
+        this.targetOutputs = targetOutput;
+        this.outputErrors = new double[this.targetOutputs.length];
     }
 
     /**
@@ -138,7 +138,7 @@ public class OutputLayer extends Layer {
      * @author ks061
      */
     private void calculateErrors() {
-        outputErrors[this.t] = this.neurons.get(0).getValue() - targetOutput[this.t];
+        outputErrors[this.t] = this.neurons.get(0).getValue() - targetOutputs[this.t];
     }
 
     /**
@@ -179,6 +179,10 @@ public class OutputLayer extends Layer {
     public ArrayList<Neuron> createNeurons(int numNeurons, String layerID,
                                            int LayerNumber) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void setTargetOutputs(double[] targetOutputs) {
+        this.targetOutputs = targetOutputs;
     }
 
 }

@@ -110,18 +110,16 @@ public class ANNClient {
      */
     public static int getIntInput(String prompt) {
         Scanner in = new Scanner(System.in);
-        boolean invalidInput = true;
         int result = -1;
-        while (invalidInput) {
+        while (true) {
             System.out.println(prompt);
-
             if (in.hasNextInt()) {
                 result = in.nextInt();
-                invalidInput = false;
+                if (result >= 0) {
+                    break;
+                }
             }
-            else {
-                System.out.println("INVALID INPUT\n\n." + prompt);
-            }
+            System.out.println("INVALID INPUT\n\n." + prompt);
         }
         return (result);
     }

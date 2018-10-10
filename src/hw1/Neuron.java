@@ -146,17 +146,6 @@ public class Neuron {
     }
 
     /**
-     * Gets alpha value
-     *
-     * @return alpha value
-     *
-     * @author ks061
-     */
-    public double getAlpha() {
-        return this.alpha;
-    }
-
-    /**
      *
      *
      * @return
