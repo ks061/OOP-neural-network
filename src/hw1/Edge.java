@@ -127,9 +127,17 @@ public class Edge {
     }
 
     // TODO: ASK PROF make everything protected (should they be public or protected)
-    protected void learn(double errorGradient, double valueAtNextNeuron) {
+    /**
+     * Updates the weight for the edge
+     *
+     * @param errorGradient the value of delta, the error gradient
+     * @param toOutputLayer true if this edge is connected to the output layer.
+     *
+     * @author lts010, ks061
+     */
+    protected void learn(double errorGradient) {
         this.weightTimesDelta = this.weight * errorGradient;
-        this.weight = this.weight + NeuralNet.alpha * valueAtNextNeuron * errorGradient;
+        this.weight = this.weight + NeuralNet.alpha * this.from.getNetValue() * errorGradient;
         neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
     }
 

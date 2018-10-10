@@ -17,7 +17,6 @@
 package hw1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * OutputLayer represents the last column of neurons within a neural network.
@@ -69,14 +68,15 @@ public class OutputLayer extends Layer {
         int neuronIndex = 0;
         for (Neuron neuron : this.neurons) {
             neuron.fire();
-            System.out.println(Arrays.toString(outputErrors));
-            System.out.println(Arrays.toString(targetOutputs));
-            System.out.println(neuronIndex);
             neuronIndex = neuron.getNumberId();
-            System.out.println(Arrays.toString(outputErrors));
-            System.out.println(Arrays.toString(targetOutputs));
-            System.out.println(neuronIndex);
+
             this.outputErrors[neuronIndex] = this.targetOutputs[neuronIndex] - neuron.getNetValue();
+            //System.out.println("neuronIndex = " + neuronIndex);
+            //System.out.print(
+            //       "Output Errors = " + Arrays.toString(outputErrors));
+            //System.out.print("   Target Outputs = " + Arrays.toString(
+            //       targetOutputs));
+            // System.out.println(" Output Errors = " + Arrays.toString(outputErrors));
         }
         learn();
     }
@@ -120,6 +120,8 @@ public class OutputLayer extends Layer {
 //            this.prevLayer.learn();
 //        }
         for (Neuron neuron : this.neurons) {
+            int neuronID = neuron.getNumberId();
+            this.outputErrors[neuronID] = this.neurons.get(neuronID).getNetValue() - targetOutputs[neuronID];
             neuron.learn();
         }
 //        Iterator it = this.neurons.iterator();
@@ -127,15 +129,6 @@ public class OutputLayer extends Layer {
 //            ((Neuron) it.next()).learn();
 //        }
         prevLayer.learn();
-    }
-
-    /**
-     * Calculates output errors after forward propagation complete
-     *
-     * @author ks061
-     */
-    private void calculateErrors() {
-        // TODO outputErrors[this.t] = this.neurons.get(0).getValue() - targetOutputs[this.t];
     }
 
     void setTargetOutputs(double[] targetOutputs) {
@@ -186,3 +179,11 @@ public class OutputLayer extends Layer {
 //    OutputLayer(int numNeurons) {
 //        super(numNeurons);
 //    }
+/**
+ * Calculates output errors after forward propagation complete
+ *
+ * @author ks061
+ */
+//  private void calculateErrors() {
+//     outputErrors[this.t] = this.neurons.get(0).getValue() - targetOutputs[this.t];
+ // }

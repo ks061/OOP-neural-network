@@ -69,7 +69,7 @@ public class Neuron {
         this.theta = DEFAULTTHETA;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
-        this.activationFunction = new StepActivationFunction();
+        this.activationFunction = new SigmoidActivationFunction();
     }
 
     /**
@@ -80,13 +80,12 @@ public class Neuron {
      *
      * @author ks061
      */
-    Neuron(int idNum) {
-        this(Integer.toString(idNum), idNum);
-    }
-
     /**
      * Fire the neuron (essentially run net input in neuron using an activation
      * function)
+     *
+     *
+     * @author lts010, ks061
      */
     public void fire() {
         double net = 0.0;
@@ -164,7 +163,7 @@ public class Neuron {
             errorGradient = this.netValue * (1 - this.netValue) * (this.expectedValue - netValue);
             this.theta = this.theta + NeuralNet.alpha * -1 * errorGradient;
             for (Edge edge : inEdges) {
-                edge.learn(errorGradient, this.netValue);
+                edge.learn(errorGradient);
             }
         }
         else {
@@ -177,7 +176,7 @@ public class Neuron {
             // if true, must be a hidden layer
             if (!inEdges.isEmpty()) {
                 for (Edge edge : inEdges) {
-                    edge.learn(errorGradient, this.netValue);
+                    edge.learn(errorGradient);
                 }
             }
         }

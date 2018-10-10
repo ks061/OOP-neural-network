@@ -27,13 +27,14 @@ public class InputLayer extends Layer {
 
     /**
      * Explicit constructor that creates the input layer with a particular
-     * number of neurons and an ID, as well as specifying the set of inputs.
+     * number of neurons and an ID,
      *
      * @param numNeurons number of neurons to be generated in this layer
      * @param id identifier of the layer
-     * @param inputs set of inputs
+     * @param layerNum the layer index number (always 0 for the input layer)
+     * @param nN the neuralNet
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
         super(numNeurons, id, layerNum, nN);
@@ -49,6 +50,8 @@ public class InputLayer extends Layer {
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
+        System.out.println("number of input Neurons = " + numNeurons);
+
         for (int i = 0; i < numNeurons; i++) {
             neurons.add(new Neuron(i));
         }
@@ -56,7 +59,8 @@ public class InputLayer extends Layer {
     }
 
     /**
-     * Fire neurons in input layer
+     * In the input layer the fireNeurons method simply populates the input
+     * neurons with the input data.
      *
      * @author ks061, lts010
      */
@@ -67,11 +71,13 @@ public class InputLayer extends Layer {
                     "The number of input values and number of neurons in the "
                     + "input layer of the neural network do not match.");
         }
-
+        // System.out.print("setting input values = ");
         int numInputs = this.inputs.length;
         for (int i = 0; i < numInputs; i++) {
             this.neurons.get(i).setNetValue(this.inputs[i]);
+            //  System.out.print("  " + this.neurons.get(i).getNetValue());
         }
+        // System.out.println();
         nextLayer.fireNeurons();
     }
 

@@ -47,11 +47,11 @@ public class NeuralNet {
                     "No data has been provided.");
         }
 
-        int numInputs = data[0].length;
+        int dataLength = data[0].length;
         for (double[] inputSet : data) {
             // TODO remove
             System.out.println(Arrays.toString(inputSet));
-            if (inputSet.length != numInputs) {
+            if (inputSet.length != dataLength) {
                 throw new NeuralNetConstructionException(
                         "Not all rows in data set have the same amount of entries.");
             }
@@ -61,7 +61,8 @@ public class NeuralNet {
         this.configuration = config;
 
         ArrayList<Layer> layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this);
+        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-", 0,
+                                               this);
         layers.add(inputLayer);
         for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
             layers.add(new HiddenLayer(
@@ -88,19 +89,22 @@ public class NeuralNet {
         }
 
         // TODO: remove print statements
+        int i = 0; //TODO: remove this
         do {
+            i++;
             for (double[] inputOutputSet : this.data) {
                 inputLayer.setInputs(
-                        Arrays.copyOfRange(inputOutputSet, 0, numInputs));
-                System.out.println("1" + Arrays.toString(inputOutputSet));
-                System.out.println("2" + numInputs);
-                System.out.println("3" + inputOutputSet.length);
-                System.out.println(Arrays.toString(Arrays.copyOfRange(
-                        inputOutputSet,
-                        numInputs,
-                        inputOutputSet.length)));
+                        Arrays.copyOfRange(inputOutputSet, 0,
+                                           config.getNumInputs()));
+                //System.out.println("IO Set " + Arrays.toString(inputOutputSet));
+                //System.out.println("dataLength = " + dataLength);
+                // System.out.println("length inputOutputSet = " + inputOutputSet.length);
+                // System.out.println(Arrays.toString(Arrays.copyOfRange(
+                //      inputOutputSet,
+                //      config.getNumInputs(),
+                //     inputOutputSet.length)));
                 outputLayer.setTargetOutputs(Arrays.copyOfRange(inputOutputSet,
-                                                                numInputs,
+                                                                config.getNumInputs(),
                                                                 inputOutputSet.length));
                 inputLayer.fireNeurons();
 
@@ -109,8 +113,11 @@ public class NeuralNet {
                 // Back propogate
                 // etc.
             }
-        } while (outputLayer.calculateSumOfSquaredErrors() < config.getHighestSSE());
-
+            System.out.println(
+                    "SSE = " + outputLayer.calculateSumOfSquaredErrors());
+        } while (outputLayer.calculateSumOfSquaredErrors() > config.getHighestSSE());
+        // TODO: change while back to above line
+        // } while (i < 10);
         for (ArrayList<Double> layer : config.getWeights()) {
             System.out.println(layer);
         }
