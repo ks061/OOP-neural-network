@@ -51,10 +51,12 @@ public class ANNClient {
     private static NeuralNet myNet;
 
     /**
-     * Gets the mode the program creates the neural network with (can be READ or
-     * CREATE)
+     * Gets the method that the user wishes the neural network program assign
+     * the weights; either read them from a file or randomly create them.
      *
-     * @return the mode that creates the neural network
+     * @return method that the user wishes the neural network program assign the
+     * weights; either read them from a file or randomly create them.
+     *
      * @author lts010, ks061
      */
     private static WeightsMode getInputMode() {
@@ -80,9 +82,13 @@ public class ANNClient {
     }
 
     /**
-     * Gets the mode the program runs on (can be TRAINING or CLASSIFICATION)
+     * Gets the mode that the user wishes to run the program in; either a neural
+     * network can be trained using existing input and output training data or a
+     * prediction can be made based on existing input and the neural network.
      *
-     * @return the mode the program runs on
+     * @return the mode the program runs in (training mode or classification
+     * mode)
+     *
      * @author lts010, ks061
      */
     private static ProgramMode getProgramMode() {
@@ -171,10 +177,10 @@ public class ANNClient {
     }
 
     /**
-     * Gives the user a prompt and requests an integer
+     * Gives the user the provided prompt and requests an integer
      *
-     * @param prompt - the prompt given to the user
-     * @return the integer given by the user
+     * @param prompt prompt given to user
+     * @return the integer given by user
      *
      * @author lts010, ks061
      */
@@ -237,12 +243,21 @@ public class ANNClient {
         return weights;
     }
 
-    private static ArrayList<ArrayList<Double>> getListOfThetas(int numInputs,
-                                                                int numOutputs,
+    /**
+     * Gets a 2D list of thetas across each neuron in each layer in the neural
+     * network
+     *
+     * @param numOutputs number of outputs in the neural network
+     * @param numHiddenLayers
+     * @param numNeuronsPerHiddenLayer
+     * @return
+     */
+    private static ArrayList<ArrayList<Double>> getListOfThetas(int numOutputs,
                                                                 int numHiddenLayers,
                                                                 int numNeuronsPerHiddenLayer) {
         ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<>();
-        for (int i = 0; i < numHiddenLayers; i++) {
+        listOfThetas.add(new ArrayList<>());
+        for (int i = 1; i < numHiddenLayers + 1; i++) {
             listOfThetas.add(new ArrayList<>());
             for (int j = 0; j < numNeuronsPerHiddenLayer; j++) {
                 listOfThetas.get(i).add(Neuron.DEFAULTTHETA);
@@ -392,7 +407,7 @@ public class ANNClient {
             }
             weights = getRandomWeights(numInputs, numOutputs, numHiddenLayers,
                                        numNeuronsPerHiddenLayer);
-            thetas = getListOfThetas(numInputs, numOutputs, numHiddenLayers,
+            thetas = getListOfThetas(numOutputs, numHiddenLayers,
                                      numNeuronsPerHiddenLayer);
         }
         else {
@@ -407,6 +422,7 @@ public class ANNClient {
             ArrayList<ArrayList<Double>> weightList = strListToDoubleList( //turn the weight list into a list of list of doubles
                     configListWeights);
             thetas = strListToDoubleList(configListThetas); //turn the theta list into a list of list of doubles
+            thetas.add(0, new ArrayList<>()); // adds input layer without any weights
             numInputs = (int) Math.round(weightList.get(0).get(0));
             numOutputs = (int) Math.round(weightList.get(0).get(1));
             numHiddenLayers = (int) Math.round(weightList.get(0).get(2));

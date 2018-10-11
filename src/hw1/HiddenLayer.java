@@ -25,8 +25,20 @@ import java.util.ArrayList;
  */
 public class HiddenLayer extends Layer {
 
-    // private Learnable learnAlg;
-    private double[] outputErrors;
+    /**
+     * Number of output edges in the layer
+     */
+    private int numOutEdges;
+
+    /**
+     * Link to previous layer in the neural network
+     */
+    protected Layer prevLayer;
+
+    /**
+     * Link to next layer in the neural network
+     */
+    protected Layer nextLayer;
 
     /**
      * Explicit constructor that initializes the hidden layer with a particular
@@ -46,7 +58,7 @@ public class HiddenLayer extends Layer {
     }
 
     /**
-     * Creates a particular number of neurons in the hidden layer
+     * Creates and returns a list of hidden neurons
      *
      * @param numNeurons number of neurons to be created within the layer
      * @return list of neurons created within the layer
@@ -55,11 +67,15 @@ public class HiddenLayer extends Layer {
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
-        ArrayList<Neuron> neurons = new ArrayList<>();
+        ArrayList<Neuron> createdNeurons = new ArrayList<>();
+
+        Neuron neuronToAdd;
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i, this.layerNum, this.neuralNet));
+            neuronToAdd = new HiddenNeuron(i, this.layerNum, this.neuralNet);
+            createdNeurons.add(neuronToAdd);
         }
-        return neurons;
+
+        return createdNeurons;
     }
 
     /**
@@ -71,6 +87,10 @@ public class HiddenLayer extends Layer {
      */
     @Override
     public void connectLayer(Layer nextLayer) {
+        if (nextLayer instanceof InputLayer) {
+            throw new NeuralNetConstructionException(
+                    "Input layer cannot be linked to another input layer; only one input layer can exist in a neural network.");
+        }
 
         for (Neuron neuron : this.neurons) {
             for (Neuron nextNeuron : nextLayer.neurons) {
@@ -83,7 +103,12 @@ public class HiddenLayer extends Layer {
             }
         }
         this.nextLayer = nextLayer;
-        nextLayer.setPrevLayer(this);
+        if (nextLayer instanceof HiddenLayer) {
+            ((HiddenLayer) nextLayer).setPrevLayer(this);
+        }
+        else if (nextLayer instanceof OutputLayer) {
+            ((OutputLayer) nextLayer).setPrevLayer(this);
+        }
     }
 
     /**
@@ -106,14 +131,14 @@ public class HiddenLayer extends Layer {
 //                             * this.outputErrors[this.t];
 //        updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
         for (Neuron neuron : this.neurons) {
-            neuron.learn();
+            ((HiddenNeuron) neuron).learn();
         }
 //        Iterator it = this.neurons.iterator();
 //        while (it.hasNext()) {
 //            ((Neuron) it.next()).learn();
 //        }
         if (prevLayer instanceof HiddenLayer) {
-            prevLayer.learn();
+            ((HiddenLayer) prevLayer).learn();
         }
     }
 
@@ -134,9 +159,53 @@ public class HiddenLayer extends Layer {
     @Override
     public void fireNeurons() {
         for (Neuron neuron : this.neurons) {
-            neuron.fire();
+            ((HiddenNeuron) neuron).fire();
         }
         nextLayer.fireNeurons();
+    }
+
+    /**
+     * increments the number of edges in the layer
+     *
+     * @return an int that is to be used as the ID for a newly created edge
+     *
+     * @author lts010, ks061
+     */
+    protected int getNextEdgeNum() {
+        return (numOutEdges++);
+    }
+
+    /**
+     * Gets the number out edges in the layer, i.e. the number of edges from
+     * this layer to the next layer.
+     *
+     * @return number of out edges
+     * @author lts010, ks061
+     */
+    protected int getNumOutEdges() {
+        return (this.numOutEdges);
+    }
+
+    /**
+     * Sets the previous layer
+     *
+     * @param prevLayer previous layer
+     *
+     * @author ks061, lts010
+     */
+    protected void setPrevLayer(Layer prevLayer) {
+        this.prevLayer = prevLayer;
+    }
+
+    /**
+     * Sets the next layer
+     *
+     * @param nextLayer next layer
+     *
+     * @author ks061, lts010
+     */
+    protected void setNextLayer(Layer nextLayer) {
+        this.nextLayer = nextLayer;
     }
 }
 

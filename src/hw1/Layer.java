@@ -32,21 +32,6 @@ public abstract class Layer {
     protected ArrayList<Neuron> neurons;
 
     /**
-     * Link to next layer in the neural network
-     */
-    protected Layer nextLayer;
-
-    /**
-     * Link to previous layer in the neural network
-     */
-    protected Layer prevLayer;
-
-    /**
-     * Number of edges linking to the next layer
-     */
-    protected int numToEdges = 0;
-
-    /**
      * Number of neurons in this layer
      */
     protected int numNeurons = 0;
@@ -60,11 +45,6 @@ public abstract class Layer {
      * Index of this layer
      */
     protected int layerNum;
-
-    /**
-     * Number of output edges in the layer
-     */
-    private int numOutEdges = 0;
 
     /**
      * Neural network this layer lies within
@@ -109,28 +89,6 @@ public abstract class Layer {
     public abstract void connectLayer(Layer nextLayer);
 
     /**
-     * Sets the previous layer
-     *
-     * @param prevLayer previous layer
-     *
-     * @author ks061, lts010
-     */
-    protected void setPrevLayer(Layer prevLayer) {
-        this.prevLayer = prevLayer;
-    }
-
-    /**
-     * Sets the next layer
-     *
-     * @param nextLayer next layer
-     *
-     * @author ks061, lts010
-     */
-    protected void setNextLayer(Layer nextLayer) {
-        this.nextLayer = nextLayer;
-    }
-
-    /**
      * Fires all neurons in the layer
      *
      * @author lts010, ks061
@@ -146,33 +104,7 @@ public abstract class Layer {
     public abstract void learn();
 
     /**
-     * increments the number of edges in the layer
-     *
-     * @return an int that is to be used as the ID for a newly created edge
-     *
-     * @author lts010, ks061
-     */
-    protected int getNextEdgeNum() {
-        return (numOutEdges++);
-    }
-
-    protected int getNextNeuronNum() {
-        return this.numNeurons;
-    }
-
-    /**
-     * gets the number out edges in the layer, ie the number of edges from this
-     * layer to the next layer.
-     *
-     * @return the number of out edges
-     * @author lts010, ks061
-     */
-    protected int getNumEdges() {
-        return (numOutEdges);
-    }
-
-    /**
-     * gets the neural net
+     * Gets the neural net
      *
      * @return the neural net
      * @author lts010, ks061

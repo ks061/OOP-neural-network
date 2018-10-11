@@ -26,6 +26,16 @@ public class InputLayer extends Layer {
     private double[] inputs;
 
     /**
+     * Number of output edges in the layer
+     */
+    private int numOutEdges;
+
+    /**
+     * Link to next layer in the neural network
+     */
+    protected Layer nextLayer;
+
+    /**
      * Explicit constructor that creates the input layer with a particular
      * number of neurons and an ID,
      *
@@ -41,6 +51,7 @@ public class InputLayer extends Layer {
     }
 
     /**
+     * Creates and returns a list of input neurons
      *
      * @param numNeurons - Total number of neurons to be created within layer
      * @return - An array list of all newly created neurons
@@ -49,17 +60,21 @@ public class InputLayer extends Layer {
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
-        ArrayList<Neuron> neurons = new ArrayList<>();
+        ArrayList<Neuron> createdNeurons = new ArrayList<>();
 
+        Neuron neuronToAdd;
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i, this.layerNum, this.neuralNet));
+            neuronToAdd = new InputNeuron(i, this.layerNum,
+                                          this.neuralNet);
+            createdNeurons.add(neuronToAdd);
         }
-        return neurons;
+
+        return createdNeurons;
     }
 
     /**
-     * In the input layer the fireNeurons method simply populates the input
-     * neurons with the input data.
+     * Populates the input neurons within this input layer with input values
+     * from the training data.
      *
      * @author ks061, lts010
      */
@@ -86,6 +101,10 @@ public class InputLayer extends Layer {
      */
     @Override
     public void connectLayer(Layer nextLayer) {
+        if (nextLayer instanceof InputLayer) {
+            throw new NeuralNetConstructionException(
+                    "Input layer cannot be linked to another input layer; only one input layer can exist in a neural network.");
+        }
 
         for (Neuron neuron : this.neurons) {
             for (Neuron nextNeuron : nextLayer.neurons) {
@@ -98,9 +117,19 @@ public class InputLayer extends Layer {
             }
         }
         this.nextLayer = nextLayer;
-        nextLayer.setPrevLayer(this);
+        if (nextLayer instanceof HiddenLayer) {
+            ((HiddenLayer) nextLayer).setPrevLayer(this);
+        }
+        else if (nextLayer instanceof OutputLayer) {
+            ((OutputLayer) nextLayer).setPrevLayer(this);
+        }
     }
 
+    /**
+     * Sets set of input values
+     *
+     * @param inputs set of input values
+     */
     public void setInputs(double[] inputs) {
         this.inputs = inputs;
     }
@@ -125,6 +154,39 @@ public class InputLayer extends Layer {
     private void calculateErrors() {
         throw new UnsupportedOperationException(
                 "Input layer shouldn't be calculating errors!");
+    }
+
+    /**
+     * increments the number of edges in the layer
+     *
+     * @return an int that is to be used as the ID for a newly created edge
+     *
+     * @author lts010, ks061
+     */
+    protected int getNextEdgeNum() {
+        return (numOutEdges++);
+    }
+
+    /**
+     * Gets the number out edges in the layer, i.e. the number of edges from
+     * this layer to the next layer.
+     *
+     * @return number of out edges
+     * @author lts010, ks061
+     */
+    protected int getNumOutEdges() {
+        return (this.numOutEdges);
+    }
+
+    /**
+     * Sets the next layer
+     *
+     * @param nextLayer next layer
+     *
+     * @author ks061, lts010
+     */
+    protected void setNextLayer(Layer nextLayer) {
+        this.nextLayer = nextLayer;
     }
 
 }

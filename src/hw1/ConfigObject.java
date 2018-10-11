@@ -326,7 +326,7 @@ public class ConfigObject {
      *
      * @author lts010, ks061
      */
-    public void exportConfig(NeuralNet nN) throws FileNotFoundException {
+    public static void exportConfig(NeuralNet nN) throws FileNotFoundException {
         Scanner in = new Scanner(System.in);
         String prompt = "What .txt file would you like to save the configuration to? ";
         System.out.println(prompt);
@@ -349,6 +349,7 @@ public class ConfigObject {
         }
         out.printf("%s\n", "THETAS");
         ArrayList<ArrayList<Double>> thetas = nN.getConfiguration().getThetas();
+        thetas = (ArrayList<ArrayList<Double>>) thetas.subList(1, thetas.size());
         String thetaLayer;
         for (ArrayList<Double> thetaList : thetas) {
             thetaLayer = "";

@@ -124,6 +124,9 @@ public class Edge {
     protected void learn(double errorGradient) {
         this.weightTimesDelta = this.weight * errorGradient;
         this.weight = this.weight + NeuralNet.alpha * this.from.getNetValue() * errorGradient;
+        System.out.println(
+                "w " + "layerNumber: " + layerNumber + " edgeNumber: " + edgeNumber + "is" + this.weight
+        );
         neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
     }
 

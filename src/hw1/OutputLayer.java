@@ -29,6 +29,11 @@ public class OutputLayer extends Layer {
     private double[] outputErrors;
 
     /**
+     * Link to previous layer in the neural network
+     */
+    protected Layer prevLayer;
+
+    /**
      * Explicit constructor that creates a particular number of neurons in the
      * layer, sets an identifier for the layer, and passes in the target output
      * values from data set.
@@ -44,18 +49,25 @@ public class OutputLayer extends Layer {
     }
 
     /**
+     * Creates and returns a list of output neurons
      *
-     * @param numNeurons - Total number of neurons to be created within layer
-     * @return - An array list of all newly created neurons
-     * @author - lts010
+     * @param numNeurons total number of neurons to be created within layer
+     * @return list of all newly created neurons
+     * @author lts010, ks061
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
-        ArrayList<Neuron> neurons = new ArrayList<>();
+        ArrayList<Neuron> createdNeurons = new ArrayList<>();
+
+        Neuron neuronToAdd;
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i, this.layerNum, this.neuralNet));
+            neuronToAdd = new OutputNeuron(i, this.layerNum,
+                                           this.neuralNet);
+            createdNeurons.add(
+                    neuronToAdd);
         }
-        return neurons;
+
+        return createdNeurons;
     }
 
     /**
@@ -67,7 +79,7 @@ public class OutputLayer extends Layer {
     public void fireNeurons() {
         int neuronIndex = 0;
         for (Neuron neuron : this.neurons) {
-            neuron.fire();
+            ((OutputNeuron) neuron).fire();
             neuronIndex = neuron.getNeuronNum();
 
             this.outputErrors[neuronIndex] = this.targetOutputs[neuronIndex] - neuron.getNetValue();
@@ -107,6 +119,7 @@ public class OutputLayer extends Layer {
      * Adjusts weights for nodes connecting to layer and then calls the learn
      * method of the previous layer
      */
+    @Override
     public void learn() {
 //        calculateErrors();
         //        double deltaWeight = this.neurons.get(0).getValue()
@@ -122,8 +135,11 @@ public class OutputLayer extends Layer {
 
         for (Neuron neuron : this.neurons) {
             int neuronID = neuron.getNeuronNum();
-            this.outputErrors[neuronID] = this.neurons.get(neuronID).getNetValue() - targetOutputs[neuronID];
-            neuron.learn();
+            this.outputErrors[neuronID] = targetOutputs[neuronID] - this.neurons.get(
+                    neuronID).getNetValue();
+            System.out.println(
+                    "E(0) = " + this.outputErrors[neuronID]);
+            ((OutputNeuron) neuron).learn(this.outputErrors[neuronID]);
         }
 //        Iterator it = this.neurons.iterator();
 //        while (it.hasNext()) {
@@ -131,13 +147,24 @@ public class OutputLayer extends Layer {
 //        }
 
         if (prevLayer instanceof HiddenLayer) {
-            prevLayer.learn();
+            ((HiddenLayer) prevLayer).learn();
         }
     }
 
     void setTargetOutputs(double[] targetOutputs) {
         this.targetOutputs = targetOutputs;
         this.outputErrors = new double[this.targetOutputs.length];
+    }
+
+    /**
+     * Sets the previous layer
+     *
+     * @param prevLayer previous layer
+     *
+     * @author ks061, lts010
+     */
+    protected void setPrevLayer(Layer prevLayer) {
+        this.prevLayer = prevLayer;
     }
 
 }
