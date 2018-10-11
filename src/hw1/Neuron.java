@@ -42,7 +42,7 @@ public class Neuron {
     /**
      * A default theta (threshold) value
      */
-    public final static double DEFAULTTHETA = 0.1;
+    public final static double DEFAULTTHETA = 0.0;
 
     /**
      * Explicit constructor that creates a neuron with a particular numerical
@@ -90,7 +90,7 @@ public class Neuron {
     public void fire() {
         double net = 0.0;
         for (Edge inEdge : this.inEdges) {
-            net += inEdge.getValue();
+            net += inEdge.getWeightedValue();
         }
         net -= theta;
         this.netValue = activationFunction.calcOutput(net);
@@ -172,6 +172,8 @@ public class Neuron {
                 weightedErrorGradients += edge.getWeightTimesDelta();
             }
             errorGradient = this.netValue + (1 - this.netValue) * weightedErrorGradients;
+            System.out.print(
+                    "for node " + this.numberId + "delta = " + errorGradient);
             this.theta = this.theta + NeuralNet.alpha * -1 * errorGradient;
             // if true, must be a hidden layer
             if (!inEdges.isEmpty()) {
@@ -180,7 +182,7 @@ public class Neuron {
                 }
             }
         }
-
+        System.out.println("  theta = " + this.theta);
     }
 
     /**
@@ -195,4 +197,9 @@ public class Neuron {
     public int getNumberId() {
         return numberId;
     }
+
+    public double getTheta() {
+        return theta;
+    }
+
 }

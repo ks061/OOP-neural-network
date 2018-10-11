@@ -50,7 +50,6 @@ public class InputLayer extends Layer {
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
-        System.out.println("number of input Neurons = " + numNeurons);
 
         for (int i = 0; i < numNeurons; i++) {
             neurons.add(new Neuron(i));
@@ -71,13 +70,10 @@ public class InputLayer extends Layer {
                     "The number of input values and number of neurons in the "
                     + "input layer of the neural network do not match.");
         }
-        // System.out.print("setting input values = ");
         int numInputs = this.inputs.length;
         for (int i = 0; i < numInputs; i++) {
             this.neurons.get(i).setNetValue(this.inputs[i]);
-            //  System.out.print("  " + this.neurons.get(i).getNetValue());
         }
-        // System.out.println();
         nextLayer.fireNeurons();
     }
 
@@ -105,12 +101,19 @@ public class InputLayer extends Layer {
         nextLayer.setPrevLayer(this);
     }
 
+    public void setInputs(double[] inputs) {
+        this.inputs = inputs;
+    }
+
     /**
      * Does nothing; done learning once reached the input layer.
      *
      * @author cld028
      */
+    @Override
     public void learn() {
+        throw new UnsupportedOperationException(
+                "Input layer shouldn't be learning!");
     }
 
     /**
@@ -124,60 +127,4 @@ public class InputLayer extends Layer {
                 "Input layer shouldn't be calculating errors!");
     }
 
-    void setInputs(double[] inputs) {
-        this.inputs = inputs;
-    }
-
 }
-
-//    /**
-//     * Explicit constructor that creates the input layer with a particular
-//     * number of neurons.
-//     *
-//     * @param numNeurons number of neurons to be generated in this layer
-//     *
-//     * @author ks061
-//     */
-//    InputLayer(int numNeurons) {
-//        super(numNeurons);
-//    }
-//
-//    /**
-//     * Explicit constructor that creates the input layer with a particular
-//     * number of neurons and an ID.
-//     *
-//     * @param numNeurons number of neurons to be generated in this layer
-//     * @param id identifier of the layer
-//     *
-//     * @author ks061
-//     */
-//    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
-//        super(numNeurons, id, layerNum, nN);
-//    }
-//
-//
-//    /**
-//     *
-//     * @param numNeurons - Total number of neurons to be created within layer
-//     * @param layerID - A string-based identifier that can be used when creating
-//     * the neurons
-//     * @return - An array list of all newly created neurons
-//     *
-//     * @author ks061
-//     */
-//    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
-//        this.layerID = layerID;
-//        return createNeurons(numNeurons);
-//    }
-//    /**
-//     * Sets t, representing that the neural network is currently working through
-//     * the t-th row of input
-//     *
-//     * @param t number that represents that the neural network is currently
-//     * working through the t-th row of input
-//     *
-//     * @author ks061
-//     */
-//    public void setT(int t) {
-//        this.t = t;
-//    }
