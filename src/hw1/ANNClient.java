@@ -337,7 +337,7 @@ public class ANNClient {
      *
      * @author lts010, ks061
      */
-    private static ArrayList<ArrayList<Double>> strListToDoubleList(
+    public static ArrayList<ArrayList<Double>> strListToDoubleList(
             ArrayList<String> strList) {
         Scanner strReader;
         ArrayList<ArrayList<Double>> doubleList = new ArrayList<>();

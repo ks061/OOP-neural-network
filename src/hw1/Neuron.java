@@ -27,17 +27,15 @@ public class Neuron {
 
     private ArrayList<Edge> inEdges;
     private ArrayList<Edge> outEdges;
-    private String id = "Neuron";
-    private int numberId;
-
-    //   private int layerNum; //the number for the layer that is neuron is in.
+    private int neuronNum;
+    private int layerNum; //the number for the layer that is neuron is in.
     private ActivationFunction activationFunction;
-    // private double netInput;
     private double theta;
     private double netValue;
     private boolean inputNeuron = false;
 
     private double expectedValue;
+    private NeuralNet neuralNet;
 
     /**
      * A default theta (threshold) value
@@ -45,31 +43,26 @@ public class Neuron {
     public final static double DEFAULTTHETA = 0.0;
 
     /**
-     * Explicit constructor that creates a neuron with a particular numerical
-     * identifier
-     *
-     * @param idNum numerical identifier for the neuron
-     *
-     * @author ks061
-     */
-    Neuron(int idNum) {
-        this(Integer.toString(idNum), idNum);
-    }
-
-    /**
      * Explicit constructor that creates a neuron with a particular identifier
      *
-     * @param id identifier for the neuron
+     * @param neuronNum - numerical identifier for the neuron
+     * @param layerNum - numerical identifier for the layer it's in
+     * @param nN - the neural net the neuron is in
      *
-     * @author ks061
+     * @author ks061, lts010
      */
-    Neuron(String id, int num) {
-        this.id = id;
-        this.numberId = num;
-        this.theta = DEFAULTTHETA;
+    Neuron(int neuronNum, int layerNum, NeuralNet nN) {
+        this.neuronNum = neuronNum;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
         this.activationFunction = new SigmoidActivationFunction();
+        this.neuralNet = nN;
+        if (layerNum == 0) {
+            this.theta = DEFAULTTHETA;
+        }
+        else {
+            this.theta = this.neuralNet.getTheta(layerNum, neuronNum);
+        }
     }
 
     /**
@@ -173,7 +166,7 @@ public class Neuron {
             }
             errorGradient = this.netValue + (1 - this.netValue) * weightedErrorGradients;
             System.out.print(
-                    "for node " + this.numberId + "delta = " + errorGradient);
+                    "for node " + this.neuronNum + "delta = " + errorGradient);
             this.theta = this.theta + NeuralNet.alpha * -1 * errorGradient;
             // if true, must be a hidden layer
             if (!inEdges.isEmpty()) {
@@ -182,6 +175,7 @@ public class Neuron {
                 }
             }
         }
+        this.neuralNet.storeTheta(layerNum, neuronNum, theta);
         System.out.println("  theta = " + this.theta);
     }
 
@@ -194,12 +188,16 @@ public class Neuron {
         this.expectedValue = expectedValue;
     }
 
-    public int getNumberId() {
-        return numberId;
+    public int getNeuronNum() {
+        return neuronNum;
     }
 
     public double getTheta() {
         return theta;
+    }
+
+    public void setTheta(double theta) {
+        this.theta = theta;
     }
 
 }

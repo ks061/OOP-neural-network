@@ -52,7 +52,7 @@ public class InputLayer extends Layer {
         ArrayList<Neuron> neurons = new ArrayList<>();
 
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i));
+            neurons.add(new Neuron(i, this.layerNum, this.neuralNet));
         }
         return neurons;
     }

@@ -111,7 +111,6 @@ public class NeuralNet {
                         "Not all rows in data set have the same amount of entries.");
             }
         }
-
         this.data = data;
         this.configuration = config;
 
@@ -144,39 +143,24 @@ public class NeuralNet {
             currentLayer = nextLayer;
 
         }
-
         for (ArrayList<Double> layer : config.getWeights()) {
             System.out.println(layer);
         }
-
-        // TODO: remove print statements
-        int i = 0; //TODO: remove this
         do {
-            i++;
             for (double[] inputOutputSet : this.data) {
                 inputLayer.setInputs(
                         Arrays.copyOfRange(inputOutputSet, 0,
                                            config.getNumInputs()));
-                //System.out.println("IO Set " + Arrays.toString(inputOutputSet));
-                //System.out.println("dataLength = " + dataLength);
-                // System.out.println("length inputOutputSet = " + inputOutputSet.length);
-                // System.out.println(Arrays.toString(Arrays.copyOfRange(
-                //      inputOutputSet,
-                //      config.getNumInputs(),
-                //     inputOutputSet.length)));
                 outputLayer.setTargetOutputs(Arrays.copyOfRange(
                         inputOutputSet,
                         config.getNumInputs(),
                         inputOutputSet.length));
                 inputLayer.fireNeurons();
-
                 // System.out.println(outputLayer.calculateSumOfSquaredErrors());
                 // Read output layer
                 // Back propogate
                 // etc.
             }
-//            System.out.println(
-//                    "SSE = " + outputLayer.calculateSumOfSquaredErrors());
         } while (outputLayer.calculateSumOfSquaredErrors() > config.getHighestSSE());
         // TODO: change while back to above line
         // } while (i < 10);
@@ -207,13 +191,41 @@ public class NeuralNet {
      * @param layerNum layer that the edge resides in
      * @param edgeNum numerical identifier of the edge
      *
-     * @return weight of an edge in <code>layerNum</code>th layer and has a
-     * numerical identifier of <code>edgeNum</code>
+     * @return weight of an edge in layerNumth layer and has a numerical
+     * identifier of edgeNum
      *
      * @author lts010, ks061
      */
     public double getWeight(int layerNum, int edgeNum) {
         return this.configuration.getWeights().get(layerNum).get(edgeNum);
+    }
+
+    /**
+     * Stores the theta of a particular neuron in a particular layer.
+     *
+     * @param layerNum layer that the neuron resides in
+     * @param neuronNum numerical identifier of the neuron
+     * @param newTheta theta that will be stored for the neuron
+     *
+     * @author lts010, ks061
+     */
+    public void storeTheta(int layerNum, int neuronNum, double newTheta) {
+        this.configuration.getThetas().get(layerNum).set(neuronNum, newTheta);
+    }
+
+    /**
+     * Gets the theta of a particular neuron in a particular layer.
+     *
+     * @param layerNum layer that the neuron resides in
+     * @param neuronNum numerical identifier of the neuron
+     *
+     * @return theta of a neuron in layerNumth layer and has a numerical
+     * identifier of neuronNum
+     *
+     * @author lts010, ks061
+     */
+    public double getTheta(int layerNum, int neuronNum) {
+        return this.configuration.getThetas().get(layerNum - 1).get(neuronNum);
     }
 
     /**
@@ -236,53 +248,3 @@ public class NeuralNet {
     }
 
 }
-
-//    /**
-//     * Default constructor that creates the input layer, hidden layer, and
-//     * output layer, along with creating connections among the layers.
-//     *
-//     * @author cld028, ks061, lts010
-//     */
-//    NeuralNet(double[][] inputs, double[] expectedOutputs) {
-//        if (inputs.length == 0) {
-//            throw new NeuralNetConstructionException(
-//                    "No inputs have been provided.");
-//        }
-//        if (expectedOutputs.length == 0) {
-//            throw new NeuralNetConstructionException(
-//                    "No expected outputs have been provided.");
-//        }
-//        if (inputs.length != expectedOutputs.length) {
-//            throw new NeuralNetConstructionException(
-//                    "Each input set does not have a corresponding output set.");
-//        }
-//
-//        int numInputs = inputs[0].length;
-//        for (double[] inputSet : inputs) {
-//            if (inputSet.length != numInputs) {
-//                throw new NeuralNetConstructionException(
-//                        "Not all input sets have the same amount of input entries.");
-//            }
-//        }
-//
-//        this.inputs = inputs;
-//        this.expectedOutputs = expectedOutputs;
-//
-//        InputLayer inputLayer = new InputLayer(numInputs, "I1-", 0, this, inputs);
-//        OutputLayer outputLayer = new OutputLayer(1, "O1-", 1, this,
-//                                                  expectedOutputs);
-//        // HiddenLayer hiddenLayer = new HiddenLayer(3, "H1-");
-//        // System.out.println("Connecting to in-hidden");
-//        //inputLayer.connectLayer(hiddenLayer);
-//        //System.out.println("Connecting to hidden-out");
-//        // hiddenLayer.connectLayer(outputLayer);
-//        inputLayer.connectLayer(outputLayer);
-//
-//        for (int t = 0; t < this.inputs.length; t++) {
-//            inputLayer.setT(t);
-//            outputLayer.setT(t);
-//            inputLayer.fireNeurons();
-//        }
-//
-//        //Test your network here
-//    }

@@ -57,7 +57,7 @@ public class HiddenLayer extends Layer {
     public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i));
+            neurons.add(new Neuron(i, this.layerNum, this.neuralNet));
         }
         return neurons;
     }
@@ -112,7 +112,9 @@ public class HiddenLayer extends Layer {
 //        while (it.hasNext()) {
 //            ((Neuron) it.next()).learn();
 //        }
-        prevLayer.learn();
+        if (prevLayer instanceof HiddenLayer) {
+            prevLayer.learn();
+        }
     }
 
     /**

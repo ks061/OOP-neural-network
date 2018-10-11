@@ -53,7 +53,7 @@ public class OutputLayer extends Layer {
     public ArrayList<Neuron> createNeurons(int numNeurons) {
         ArrayList<Neuron> neurons = new ArrayList<>();
         for (int i = 0; i < numNeurons; i++) {
-            neurons.add(new Neuron(i));
+            neurons.add(new Neuron(i, this.layerNum, this.neuralNet));
         }
         return neurons;
     }
@@ -68,7 +68,7 @@ public class OutputLayer extends Layer {
         int neuronIndex = 0;
         for (Neuron neuron : this.neurons) {
             neuron.fire();
-            neuronIndex = neuron.getNumberId();
+            neuronIndex = neuron.getNeuronNum();
 
             this.outputErrors[neuronIndex] = this.targetOutputs[neuronIndex] - neuron.getNetValue();
             //System.out.println("neuronIndex = " + neuronIndex);
@@ -121,7 +121,7 @@ public class OutputLayer extends Layer {
         //        }
 
         for (Neuron neuron : this.neurons) {
-            int neuronID = neuron.getNumberId();
+            int neuronID = neuron.getNeuronNum();
             this.outputErrors[neuronID] = this.neurons.get(neuronID).getNetValue() - targetOutputs[neuronID];
             neuron.learn();
         }
@@ -130,7 +130,9 @@ public class OutputLayer extends Layer {
 //            ((Neuron) it.next()).learn();
 //        }
 
-        prevLayer.learn();
+        if (prevLayer instanceof HiddenLayer) {
+            prevLayer.learn();
+        }
     }
 
     void setTargetOutputs(double[] targetOutputs) {

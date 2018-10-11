@@ -69,7 +69,7 @@ public abstract class Layer {
     /**
      * Neural network this layer lies within
      */
-    private NeuralNet neuralNet;
+    protected NeuralNet neuralNet;
 
     /**
      * Explicit constructor that creates a layer with a particular number of
