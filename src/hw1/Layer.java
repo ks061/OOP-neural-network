@@ -171,8 +171,24 @@ public abstract class Layer {
         return (numOutEdges);
     }
 
+    /**
+     * gets the neural net
+     *
+     * @return the neural net
+     * @author lts010, ks061
+     */
     public NeuralNet getNeuralNet() {
         return neuralNet;
+    }
+
+    /**
+     * Get list of neurons
+     *
+     * @return list of neurons
+     * @author lts010
+     */
+    public ArrayList<Neuron> getNeurons() {
+        return neurons;
     }
 
 }

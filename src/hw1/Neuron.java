@@ -90,7 +90,7 @@ public class Neuron {
     public void fire() {
         double net = 0.0;
         for (Edge inEdge : this.inEdges) {
-            net += inEdge.getValue();
+            net += inEdge.getWeightedValue();
         }
         net -= theta;
         this.netValue = activationFunction.calcOutput(net);
@@ -197,4 +197,9 @@ public class Neuron {
     public int getNumberId() {
         return numberId;
     }
+
+    public double getTheta() {
+        return theta;
+    }
+
 }

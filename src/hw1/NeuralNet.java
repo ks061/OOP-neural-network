@@ -37,6 +37,61 @@ public class NeuralNet {
 
     /**
      * Explicit constructor that creates the input layer, any hidden layers, and
+     * output layer, along with creating connections among the layers. Used only
+     * for JUnit Testing
+     *
+     * @author lts010
+     */
+    NeuralNet() {
+        ArrayList<ArrayList<Double>> weights = new ArrayList<ArrayList<Double>>();
+        weights.add(new ArrayList<Double>());
+        weights.add(new ArrayList<Double>());
+        weights.get(0).add(-0.3);
+        weights.get(0).add(0.2);
+        weights.get(0).add(0.1);
+        weights.get(0).add(-0.2);
+        weights.get(1).add(-0.1);
+        weights.get(1).add(-0.5);
+        ArrayList<ArrayList<Double>> thetas = new ArrayList<ArrayList<Double>>();
+        thetas.add(new ArrayList<Double>());
+        thetas.add(new ArrayList<Double>());
+        thetas.get(0).add(0.1);
+        thetas.get(0).add(0.1);
+        thetas.get(1).add(0.1);
+        ConfigObject config = new ConfigObject(2, 1, 1, 2, 0.001, weights,
+                                               thetas, ProgramMode.TRAINING);
+        double[][] data = {{1, 1, 1}};
+
+        this.data = data;
+        this.configuration = config;
+        ArrayList<Layer> layers = new ArrayList<>();
+        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-", 0,
+                                               this);
+        layers.add(inputLayer);
+        for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
+            layers.add(new HiddenLayer(
+                    this.configuration.getNumNeuronsPerHiddenLayer(),
+                    "H" + i + "-",
+                    i, this));
+        }
+
+        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(), "O1-",
+                                                  layers.size(), this);
+        layers.add(outputLayer);
+        Iterator it = layers.iterator();
+        Layer currentLayer = (Layer) it.next();
+        Layer nextLayer;
+        while (it.hasNext()) {
+            nextLayer = (Layer) it.next();
+            currentLayer.connectLayer(nextLayer);
+            currentLayer = nextLayer;
+
+        }
+        this.layers = layers;
+    }
+
+    /**
+     * Explicit constructor that creates the input layer, any hidden layers, and
      * output layer, along with creating connections among the layers.
      *
      * @author cld028, ks061, lts010
@@ -65,7 +120,8 @@ public class NeuralNet {
         }
         System.out.println("initial weights are:  ");
         ArrayList<Layer> layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-", 0,
+        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-",
+                                               0,
                                                this);
         layers.add(inputLayer);
         for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
@@ -75,7 +131,8 @@ public class NeuralNet {
                     i, this));
         }
 
-        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(), "O1-",
+        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(),
+                                                  "O1-",
                                                   layers.size(), this);
         layers.add(outputLayer);
         Iterator it = layers.iterator();
@@ -100,10 +157,6 @@ public class NeuralNet {
                 inputLayer.setInputs(
                         Arrays.copyOfRange(inputOutputSet, 0,
                                            config.getNumInputs()));
-                System.out.println("Initial weights are:  ");
-                for (ArrayList<Double> layer : config.getWeights()) {
-                    System.out.println(layer);
-                }
                 //System.out.println("IO Set " + Arrays.toString(inputOutputSet));
                 //System.out.println("dataLength = " + dataLength);
                 // System.out.println("length inputOutputSet = " + inputOutputSet.length);
@@ -111,9 +164,10 @@ public class NeuralNet {
                 //      inputOutputSet,
                 //      config.getNumInputs(),
                 //     inputOutputSet.length)));
-                outputLayer.setTargetOutputs(Arrays.copyOfRange(inputOutputSet,
-                                                                config.getNumInputs(),
-                                                                inputOutputSet.length));
+                outputLayer.setTargetOutputs(Arrays.copyOfRange(
+                        inputOutputSet,
+                        config.getNumInputs(),
+                        inputOutputSet.length));
                 inputLayer.fireNeurons();
 
                 // System.out.println(outputLayer.calculateSumOfSquaredErrors());
@@ -170,6 +224,17 @@ public class NeuralNet {
     public ConfigObject getConfiguration() {
         return this.configuration;
     }
+
+    /**
+     * Gets list of layers
+     *
+     * @return list of layers
+     * @author lts010
+     */
+    public ArrayList<Layer> getLayers() {
+        return layers;
+    }
+
 }
 
 //    /**

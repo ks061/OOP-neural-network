@@ -102,20 +102,6 @@ public class Edge {
     }
 
     /**
-     * Gets the value that this edge will send to the neuron this edge will
-     * deliver data to (after applying the weight to the input received from the
-     * neuron that delivers data to the edge)
-     *
-     * @return value that this edge will send to the neuron this edge will
-     * deliver data to
-     *
-     * @author ks061, lts010
-     */
-    protected double getValue() {
-        return weight * from.getNetValue();
-    }
-
-    /**
      * Gets the weight times the delta
      *
      * @return weight times delta
