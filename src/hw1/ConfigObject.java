@@ -16,7 +16,11 @@
  */
 package hw1;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * ConfigObject holds the configuration for a NeuralNet, including the number of
@@ -238,6 +242,8 @@ public class ConfigObject {
      * Gets the list of thetas (a theta for each neuron that needs a theta)
      *
      * @return list of thetas
+     *
+     * @author ks061, lts010
      */
     public ArrayList<ArrayList<Double>> getThetas() {
         return thetas;
@@ -246,7 +252,9 @@ public class ConfigObject {
     /**
      * Sets the list of thetas (a theta for each neuron that needs a theta)
      *
-     * @param thetas - list of thetaas
+     * @param thetas - list of thetas
+     *
+     * @author ks061, lts010
      */
     public void setThetas(ArrayList<ArrayList<Double>> thetas) {
         this.thetas = thetas;
@@ -276,6 +284,80 @@ public class ConfigObject {
      */
     public ProgramMode getProgramMode() {
         return this.programMode;
+    }
+
+    /**
+     * Reads a config file
+     *
+     * @return a double array list that provides the number of inputs, outputs,
+     * and the weights
+     * @throws java.io.FileNotFoundException
+     *
+     * @author lts010, ks061
+     */
+    public static ArrayList<String> readConfigFile() throws FileNotFoundException {
+        Scanner in = new Scanner(System.in);
+        Scanner fReader = new Scanner(System.in);
+        boolean fileFound = false;
+        while (!fileFound) {
+            try {
+                System.out.println(
+                        "Enter the filename of the configuration file: ");
+                String filename = in.nextLine();
+                File f = new File(filename);
+                fReader = new Scanner(f);
+                fileFound = true;
+            } catch (FileNotFoundException ex) {
+                System.out.println("File not found. Try again.");
+            }
+        }
+        ArrayList<String> configList = new ArrayList<>();
+        while (fReader.hasNextLine()) {
+            configList.add(fReader.nextLine());
+        }
+        return configList;
+    }
+
+    /**
+     * Saves all relevant information of a neural net to a file
+     *
+     * @param nN - a Neural Net
+     * @throws java.io.FileNotFoundException
+     *
+     * @author lts010, ks061
+     */
+    public void exportConfig(NeuralNet nN) throws FileNotFoundException {
+        Scanner in = new Scanner(System.in);
+        String prompt = "What .txt file would you like to save the configuration to? ";
+        System.out.println(prompt);
+        String outputFile = in.next();
+        PrintWriter out = new PrintWriter(outputFile);
+        out.printf("%d.0 %d.0 %d.0 %d.0 %f\n",
+                   nN.getConfiguration().getNumInputs(),
+                   nN.getConfiguration().getNumOutputs(),
+                   nN.getConfiguration().getNumHiddenLayers(),
+                   nN.getConfiguration().getNumNeuronsPerHiddenLayer(),
+                   nN.getConfiguration().getHighestSSE());
+        ArrayList<ArrayList<Double>> weights = nN.getConfiguration().getWeights();
+        String weightLayer;
+        for (ArrayList<Double> weightList : weights) {
+            weightLayer = "";
+            for (double weight : weightList) {
+                weightLayer += weight + " ";
+            }
+            out.printf("%s\n", weightLayer);
+        }
+        out.printf("%s\n", "THETAS");
+        ArrayList<ArrayList<Double>> thetas = nN.getConfiguration().getThetas();
+        String thetaLayer;
+        for (ArrayList<Double> thetaList : thetas) {
+            thetaLayer = "";
+            for (double theta : thetaList) {
+                thetaLayer += theta + " ";
+            }
+            out.printf("%s\n", thetaLayer);
+        }
+        out.close();
     }
 
 }

@@ -22,7 +22,6 @@ package hw1;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -52,33 +51,13 @@ public class ANNClient {
     private static NeuralNet myNet;
 
     /**
-     * Asks for a file containing input values and prints and writes them to a
-     * file
-     *
-     * @param config - a configuration object containing all the important
-     * variables for the neural network
-     *
-     * @author lts010, ks061
-     */
-    public static void classificationMode(ConfigObject config) {
-    }
-
-    /**
-     * Runs the training mode feature of the program.
-     *
-     * @author ks061, lts010
-     */
-    public static void trainingMode() {
-    }
-
-    /**
      * Gets the mode the program creates the neural network with (can be READ or
      * CREATE)
      *
      * @return the mode that creates the neural network
      * @author lts010, ks061
      */
-    public static WeightsMode getInputMode() {
+    private static WeightsMode getInputMode() {
         int response = -1;
         boolean invalidResponse = true;
         WeightsMode mode = WeightsMode.READ;
@@ -101,6 +80,97 @@ public class ANNClient {
     }
 
     /**
+     * Gets the mode the program runs on (can be TRAINING or CLASSIFICATION)
+     *
+     * @return the mode the program runs on
+     * @author lts010, ks061
+     */
+    private static ProgramMode getProgramMode() {
+        int response = -1;
+        boolean invalidResponse = true;
+        ProgramMode mode = ProgramMode.TRAINING;
+        String prompt = "Enter 1 or 2 for the desired mode of operation\n\n";
+        prompt += "1 -- training mode\n2 -- classification mode\n";
+        while (invalidResponse) {
+            response = getIntInput(prompt);
+            if (response != 1 && response != 2) {
+                System.out.println("INVALID INPUT\n\n.");
+            }
+            else {
+                invalidResponse = false;
+            }
+        }
+        if (response == 2) {
+            mode = ProgramMode.CLASSIFICATION;
+        }
+        return mode;
+    }
+
+    /**
+     * Imports training data from the CSV file specified by the end user
+     *
+     * @return training data
+     *
+     * @author ks061, lts010
+     */
+    private static double[][] getTrainingData() {
+        Scanner scanner = new Scanner(System.in);
+        boolean csvFound = false;
+        String filename = null;
+        while (!csvFound) {
+            // Get CSV filename from user
+            System.out.print("Enter the name of the training data file: ");
+            filename = scanner.nextLine();
+            // Try to access CSV file
+            File csv = new File(filename);
+            try {
+                scanner = new Scanner(csv);
+                csvFound = true;
+            } catch (FileNotFoundException ex) {
+                System.out.println("The training data file has not been found. ");
+            }
+        }
+
+        // Gets number of lines in file
+        String line;
+        String[] entriesInLine;
+        long lineCountDouble = 0;
+        try {
+            lineCountDouble = Files.lines(Paths.get(filename)).count();
+        } catch (IOException ex) {
+            System.out.println(
+                    "An unexpected input-output error occured when trying to "
+                    + "count the number of lines in the training data file.");
+            System.exit(0);
+        }
+        int lineCount = 0;
+        if (-2147483647 <= lineCountDouble && lineCountDouble <= 2147483647) {
+            lineCount = (int) lineCountDouble;
+        }
+        else {
+            // NeuralNet.java has specified double[][], which implies that the
+            // size of the array cannot be outside of the range of values an
+            // int can hold.
+            throw new IndexOutOfBoundsException(
+                    "Number of lines in file is outside of the range of values "
+                    + "an int can hold.");
+        }
+
+        // Initializes an array based on number of lines in CSV file
+        double[][] trainingData = new double[lineCount][];
+        for (int row = 0; scanner.hasNextLine(); row++) {
+            line = scanner.nextLine();
+            entriesInLine = line.split(",");
+            trainingData[row] = new double[entriesInLine.length];
+            for (int col = 0; col < trainingData[row].length; col++) {
+                trainingData[row][col] = Double.parseDouble(
+                        entriesInLine[col]);
+            }
+        }
+        return trainingData;
+    }
+
+    /**
      * Gives the user a prompt and requests an integer
      *
      * @param prompt - the prompt given to the user
@@ -108,7 +178,7 @@ public class ANNClient {
      *
      * @author lts010, ks061
      */
-    public static int getIntInput(String prompt) {
+    private static int getIntInput(String prompt) {
         Scanner in = new Scanner(System.in);
         int result = -1;
         while (true) {
@@ -171,14 +241,14 @@ public class ANNClient {
                                                                 int numOutputs,
                                                                 int numHiddenLayers,
                                                                 int numNeuronsPerHiddenLayer) {
-        ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<ArrayList<Double>>();
+        ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<>();
         for (int i = 0; i < numHiddenLayers; i++) {
-            listOfThetas.add(new ArrayList<Double>());
+            listOfThetas.add(new ArrayList<>());
             for (int j = 0; j < numNeuronsPerHiddenLayer; j++) {
                 listOfThetas.get(i).add(Neuron.DEFAULTTHETA);
             }
         }
-        listOfThetas.add(new ArrayList<Double>());
+        listOfThetas.add(new ArrayList<>());
         for (int i = 0; i < numOutputs; i++) {
             listOfThetas.get(listOfThetas.size() - 1).add(Neuron.DEFAULTTHETA);
         }
@@ -192,7 +262,7 @@ public class ANNClient {
      * @return integer
      * @author lts010, ks061
      */
-    public static int getNumInputs() {
+    private static int getNumInputs() {
         return getIntInput(
                 "What should the number of inputs be (as an integer)?: ");
     }
@@ -203,7 +273,7 @@ public class ANNClient {
      * @return integer
      * @author lts010, ks061
      */
-    public static int getNumOutputs() {
+    private static int getNumOutputs() {
         return getIntInput(
                 "What should the number of outputs be (as an integer)?");
     }
@@ -214,7 +284,7 @@ public class ANNClient {
      * @return integer
      * @author lts010, ks061
      */
-    public static int getNumHiddenLayers() {
+    private static int getNumHiddenLayers() {
         return getIntInput(
                 "What should the number of hidden layers be (as an integer)?");
     }
@@ -225,7 +295,7 @@ public class ANNClient {
      * @return integer
      * @author lts010, ks061
      */
-    public static int getNumNeuronsPerHiddenLayer() {
+    private static int getNumNeuronsPerHiddenLayer() {
         return getIntInput(
                 "What should the number of neurons per hidden layer be (as an integer)?");
     }
@@ -236,7 +306,7 @@ public class ANNClient {
      * @return double
      * @author lts010, ks061
      */
-    public static double getHighestSSE() {
+    private static double getHighestSSE() {
         Scanner in = new Scanner(System.in);
         boolean invalidInput = true;
         String prompt = "What is the highest acceptable SSE (as a double)?";
@@ -257,132 +327,7 @@ public class ANNClient {
     }
 
     /**
-     * Gets the mode the program runs on (can be TRAINING or CLASSIFICATION)
-     *
-     * @return the mode the program runs on
-     * @author lts010, ks061
-     */
-    public static ProgramMode getProgramMode() {
-        int response = -1;
-        boolean invalidResponse = true;
-        ProgramMode mode = ProgramMode.TRAINING;
-        String prompt = "Enter 1 or 2 for the desired mode of operation\n\n";
-        prompt += "1 -- training mode\n2 -- classification mode\n";
-        while (invalidResponse) {
-            response = getIntInput(prompt);
-            if (response != 1 && response != 2) {
-                System.out.println("INVALID INPUT\n\n.");
-            }
-            else {
-                invalidResponse = false;
-            }
-        }
-        if (response == 2) {
-            mode = ProgramMode.CLASSIFICATION;
-        }
-        return mode;
-    }
-
-    /**
-     * Imports training data from the CSV file specified by the end user
-     *
-     * @return training data
-     *
-     * @author ks061, lts010
-     */
-    public static double[][] getTrainingData() {
-        Scanner scanner = new Scanner(System.in);
-        boolean csvFound = false;
-        String filename = null;
-        while (!csvFound) {
-            // Get CSV filename from user
-            System.out.print("Enter the name of the training data file: ");
-            filename = scanner.nextLine();
-            // Try to access CSV file
-            File csv = new File(filename);
-            try {
-                scanner = new Scanner(csv);
-                csvFound = true;
-            } catch (FileNotFoundException ex) {
-                System.out.println("The training data file has not been found. ");
-            }
-        }
-
-        // Gets number of lines in file
-        String line;
-        String[] entriesInLine;
-        long lineCountDouble = 0;
-        try {
-            lineCountDouble = Files.lines(Paths.get(filename)).count();
-        } catch (IOException ex) {
-            System.out.println(
-                    "An unexpected input-output error occured when trying to "
-                    + "count the number of lines in the training data file.");
-            System.exit(0);
-        }
-        int lineCount = 0;
-        if (-2147483647 <= lineCountDouble && lineCountDouble <= 2147483647) {
-            lineCount = (int) lineCountDouble;
-        }
-        else {
-            // NeuralNet.java has specified double[][], which implies that the
-            // size of the array cannot be outside of the range of values an
-            // int can hold.
-            throw new IndexOutOfBoundsException(
-                    "Number of lines in file is outside of the range of values "
-                    + "an int can hold.");
-        }
-
-        // Initializes an array based on number of lines in CSV file
-        double[][] trainingData = new double[lineCount][];
-        for (int row = 0; scanner.hasNextLine(); row++) {
-            line = scanner.nextLine();
-            entriesInLine = line.split(",");
-            trainingData[row] = new double[entriesInLine.length];
-            for (int col = 0; col < trainingData[row].length; col++) {
-                trainingData[row][col] = Double.parseDouble(
-                        entriesInLine[col]);
-            }
-        }
-        return trainingData;
-    }
-
-    /**
-     * Reads a config file
-     *
-     * @return a double array list that provides the number of inputs, outputs,
-     * and the weights
-     * @throws java.io.FileNotFoundException
-     *
-     * @auhtor lts010, ks061
-     */
-    public static ArrayList<String> readConfigFile() throws FileNotFoundException {
-        Scanner in = new Scanner(System.in);
-        Scanner fReader = new Scanner(System.in);
-        boolean fileFound = false;
-        while (!fileFound) {
-            try {
-                System.out.println(
-                        "Enter the filename of the configuration file: ");
-                String filename = in.nextLine();
-                File f = new File(filename);
-                fReader = new Scanner(f);
-                fileFound = true;
-            } catch (FileNotFoundException ex) {
-                System.out.println("File not found. Try again.");
-            }
-        }
-        ArrayList<String> configList = new ArrayList<>();
-        while (fReader.hasNextLine()) {
-            configList.add(fReader.nextLine());
-        }
-        return configList;
-    }
-
-    /**
      * Converts a list of strings to a list of lists of doubles
-     *
-     * The following code was based on something found on stackoverflow
      *
      * @see
      * <a href ="https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string">https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string</a>
@@ -392,7 +337,7 @@ public class ANNClient {
      *
      * @author lts010, ks061
      */
-    public static ArrayList<ArrayList<Double>> strListToDoubleList(
+    private static ArrayList<ArrayList<Double>> strListToDoubleList(
             ArrayList<String> strList) {
         Scanner strReader;
         ArrayList<ArrayList<Double>> doubleList = new ArrayList<>();
@@ -405,48 +350,6 @@ public class ANNClient {
         }
 
         return doubleList;
-    }
-
-    /**
-     * Saves all relevant information of a neural net to a file
-     *
-     * @param nN - a Neural Net
-     * @throws java.io.FileNotFoundException
-     *
-     * @author lts010, ks061
-     */
-    public void exportConfig(NeuralNet nN) throws FileNotFoundException {
-        Scanner in = new Scanner(System.in);
-        String prompt = "What .txt file would you like to save the configuration to? ";
-        System.out.println(prompt);
-        String outputFile = in.next();
-        PrintWriter out = new PrintWriter(outputFile);
-        out.printf("%d.0 %d.0 %d.0 %d.0 %f\n",
-                   nN.getConfiguration().getNumInputs(),
-                   nN.getConfiguration().getNumOutputs(),
-                   nN.getConfiguration().getNumHiddenLayers(),
-                   nN.getConfiguration().getNumNeuronsPerHiddenLayer(),
-                   nN.getConfiguration().getHighestSSE());
-        ArrayList<ArrayList<Double>> weights = nN.getConfiguration().getWeights();
-        String weightLayer;
-        for (ArrayList<Double> weightList : weights) {
-            weightLayer = "";
-            for (double weight : weightList) {
-                weightLayer += weight + " ";
-            }
-            out.printf("%s\n", weightLayer);
-        }
-        out.printf("%s\n", "THETAS");
-        ArrayList<ArrayList<Double>> thetas = nN.getConfiguration().getThetas();
-        String thetaLayer;
-        for (ArrayList<Double> thetaList : thetas) {
-            thetaLayer = "";
-            for (double theta : thetaList) {
-                thetaLayer += theta + " ";
-            }
-            out.printf("%s\n", thetaLayer);
-        }
-        out.close();
     }
 
     /**
@@ -493,7 +396,7 @@ public class ANNClient {
                                      numNeuronsPerHiddenLayer);
         }
         else {
-            ArrayList<String> configList = readConfigFile();
+            ArrayList<String> configList = ConfigObject.readConfigFile();
             int thetaIndex = configList.indexOf("THETAS"); //need to know which index the thetas start at
             ArrayList<String> configListWeights = new ArrayList<>(
                     configList.subList(0,
@@ -587,4 +490,23 @@ public class ANNClient {
 //            }
 //        }
 //        return inputs;
+//    }
+//    /**
+//     * Asks for a file containing input values and prints and writes them to a
+//     * file
+//     *
+//     * @param config - a configuration object containing all the important
+//     * variables for the neural network
+//     *
+//     * @author lts010, ks061
+//     */
+//    public static void classificationMode(ConfigObject config) {
+//    }
+//
+//    /**
+//     * Runs the training mode feature of the program.
+//     *
+//     * @author ks061, lts010
+//     */
+//    public static void trainingMode() {
 //    }
