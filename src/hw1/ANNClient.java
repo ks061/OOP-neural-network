@@ -14,7 +14,6 @@
  *              output will be based on given inputs, or training mode, which
  *              trains the neural net program based on given inputs and
  *              expected output.
- *
  * ****************************************
  */
 package hw1;
