@@ -40,6 +40,8 @@ public class ANNClient {
     /**
      * Enumeration that helps distinguish whether the program will generate
      * neural net edge weights from a configuration file or randomly assign them
+     *
+     * @author ks061, lts010
      */
     enum WeightsMode {
         READ, CREATE;
@@ -51,15 +53,15 @@ public class ANNClient {
     private static NeuralNet myNet;
 
     /**
-     * Gets the method that the user wishes the neural network program assign
-     * the weights; either read them from a file or randomly create them.
+     * Gets the mode that the user wishes the neural network program to assign
+     * the weights with; either read them from a file or randomly create them.
      *
-     * @return method that the user wishes the neural network program assign the
-     * weights; either read them from a file or randomly create them.
+     * @return mode that the user wishes the neural network program to assign
+     * the weights with; either read them from a file or randomly create them.
      *
      * @author lts010, ks061
      */
-    private static WeightsMode getInputMode() {
+    private static WeightsMode getWeightsMode() {
         int response = -1;
         boolean invalidResponse = true;
         WeightsMode mode = WeightsMode.READ;
@@ -84,7 +86,7 @@ public class ANNClient {
     /**
      * Gets the mode that the user wishes to run the program in; either a neural
      * network can be trained using existing input and output training data or a
-     * prediction can be made based on existing input and the neural network.
+     * prediction can be made based on existing input and a neural network.
      *
      * @return the mode the program runs in (training mode or classification
      * mode)
@@ -113,9 +115,13 @@ public class ANNClient {
     }
 
     /**
-     * Imports training data from the CSV file specified by the end user
+     * Imports training data from a CSV file specified by the end user; the file
+     * entered when prompted must end with .csv, or the program will not attempt
+     * to scan or find the file. Additionally, if the entered file is not found,
+     * the end user will be re-prompted for the filename of the CSV file with
+     * the training data.
      *
-     * @return training data
+     * @return training data, including sets of inputs and corresponding outputs
      *
      * @author ks061, lts010
      */
@@ -186,10 +192,10 @@ public class ANNClient {
     }
 
     /**
-     * Gives the user the provided prompt and requests an integer
+     * Gives the end user the provided prompt and requests an integer
      *
-     * @param prompt prompt given to user
-     * @return the integer given by user
+     * @param prompt prompt given to end user
+     * @return the integer entered by end user
      *
      * @author lts010, ks061
      */
@@ -210,13 +216,21 @@ public class ANNClient {
     }
 
     /**
-     * Sets up a list of lists to initialize all of the random weights
+     * Creates and returns a 2D list of random weights for each edge in each
+     * layer of the neural network. The weights are given a random value from
+     * the set of all numbers within the range -2.4 divided by the number of
+     * input edges to 2.4 divided by the number of input edges.
      *
-     * @param numInputs - number of inputs
-     * @param numOutputs - number of outputs
-     * @param numHiddenLayers - number of hidden layers
-     * @param numNeuronsPerHiddenLayer - number of neurons per hidden layer
-     * @return all of the weights needed to construct the neural net
+     * @param numInputs number of input neurons in the neural network the
+     * program will use
+     * @param numOutputs number of output neurons in the neural network the
+     * program will use
+     * @param numHiddenLayers number of hidden layers in the neural network the
+     * program will use
+     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer in the
+     * neural network the program will use
+     * @return 2D list of randomly generated weights for each edge in each layer
+     * of the neural network that will be used by the program
      *
      * @author lts010, ks061
      */
@@ -225,41 +239,52 @@ public class ANNClient {
                                                                  int numHiddenLayers,
                                                                  int numNeuronsPerHiddenLayer) {
         ArrayList<ArrayList<Double>> weights = new ArrayList<>();
-        WeightAssignment weightAssign = new RandomWeightAssignment();
+        RandomWeightAssignment weightAssign = new RandomWeightAssignment();
         weights.add(new ArrayList<>());
         if (numHiddenLayers == 0) {
             for (int i = 0; i < (numInputs * numOutputs); i++) {
-                weights.get(0).add(weightAssign.assignWeight() / numInputs);
+                weights.get(0).add(
+                        weightAssign.assignWeight(numInputs) / numInputs);
             }
         }
         else {
             for (int i = 0; i < (numInputs * numNeuronsPerHiddenLayer); i++) { //weights from the input layer connecting to the first hidden layer
-                weights.get(0).add(weightAssign.assignWeight() / numInputs);
+                weights.get(0).add(
+                        weightAssign.assignWeight(numInputs) / numInputs);
             }
             for (int i = 1; i < numHiddenLayers; i++) { //weights for hidden layers that are connected to layer
                 weights.add(new ArrayList<>());
                 for (int j = 0; j < (numNeuronsPerHiddenLayer * numNeuronsPerHiddenLayer); j++) {
                     weights.get(i).add(
-                            weightAssign.assignWeight() / numNeuronsPerHiddenLayer);
+                            weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
                 }
             }
             weights.add(new ArrayList<>());
             for (int i = 0; i < numOutputs * numNeuronsPerHiddenLayer; i++) { //weights for the output layer connecting to the last hidden layer
                 weights.get(weights.size() - 1).add(
-                        weightAssign.assignWeight() / numNeuronsPerHiddenLayer);
+                        weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
             }
         }
         return weights;
     }
 
     /**
-     * Gets a 2D list of thetas across each neuron in each layer in the neural
-     * network
+     * Gets a 2D list with default theta values for each neuron in each layer in
+     * the neural network; the default theta value is set as a constant field in
+     * the Neuron class.
      *
-     * @param numOutputs number of outputs in the neural network
-     * @param numHiddenLayers
-     * @param numNeuronsPerHiddenLayer
-     * @return
+     * @param numOutputs number of output neurons in the neural network the
+     * program will use
+     * @param numHiddenLayers number of hidden layers in the neural network the
+     * program will use
+     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer in the
+     * neural network the program will use
+     *
+     * @return 2D list with default theta values for each neuron in each layer
+     * in the neural network; the default theta value is set as a constant field
+     * in the Neuron class.
+     *
+     * @author ks061, lts010
      */
     private static ArrayList<ArrayList<Double>> getListOfThetas(int numOutputs,
                                                                 int numHiddenLayers,
@@ -280,9 +305,12 @@ public class ANNClient {
     }
 
     /**
-     * Gets the number of inputs for a neural network
+     * Prompts the user for and returns the number of input neurons the neural
+     * network will be configured to have.
      *
-     * @return integer
+     * @return number of input neurons the neural network will be configured to
+     * have
+     *
      * @author lts010, ks061
      */
     private static int getNumInputs() {
@@ -291,9 +319,12 @@ public class ANNClient {
     }
 
     /**
-     * Gets the number of outputs for a neural network
+     * Prompts the user for and returns the number of output neurons the neural
+     * network will be configured to have have.
      *
-     * @return integer
+     * @return number of output neurons the neural network will be configured to
+     * have
+     *
      * @author lts010, ks061
      */
     private static int getNumOutputs() {
@@ -302,9 +333,12 @@ public class ANNClient {
     }
 
     /**
-     * Gets the number of hidden layers for a neural network
+     * Prompts the user for and returns the number of hidden layers the neural
+     * network will be configured to have.
      *
-     * @return integer
+     * @return number of hidden layers the neural network will be configured to
+     * have
+     *
      * @author lts010, ks061
      */
     private static int getNumHiddenLayers() {
@@ -313,9 +347,12 @@ public class ANNClient {
     }
 
     /**
-     * Gets the number of neurons per hidden layer for a neural network
+     * Prompts the user for and returns the number of neurons per hidden layer
+     * the neural network will be configured to have
      *
-     * @return integer
+     * @return number of neurons per hidden layer the neural network will be
+     * configured to have
+     *
      * @author lts010, ks061
      */
     private static int getNumNeuronsPerHiddenLayer() {
@@ -324,15 +361,21 @@ public class ANNClient {
     }
 
     /**
-     * Gets the highest acceptable SSE for a neural network
+     * Prompts the user for and returns the highest acceptable SSE, i.e. sum of
+     * squared errors, the neural network will be configured to have; this is
+     * only used if the user selects training mode, where the neural network
+     * goes through multiple iterations of training itself against the training
+     * data until its SSE is below this maximum allowed SSE.
      *
-     * @return double
+     * @return highest acceptable SSE, i.e. sum of squared errors, neural
+     * network will be configured with (for training mode)
+     *
      * @author lts010, ks061
      */
     private static double getHighestSSE() {
         Scanner in = new Scanner(System.in);
         boolean invalidInput = true;
-        String prompt = "What is the highest acceptable SSE (as a double)?";
+        String prompt = "What is the highest acceptable SSE, i.e. sum of squared errors, (as a double)?";
         double result = -1;
         while (invalidInput) {
             System.out.println(prompt);
@@ -350,13 +393,15 @@ public class ANNClient {
     }
 
     /**
-     * Converts a list of strings to a list of lists of doubles
+     * Parses doubles from each string in a list of strings and returns a list
+     * of lists of doubles (doubles in each line for multiple lines)
+     *
+     * @param strList list of strings
+     * @return list of lists of doubles (doubles in each line for multiple
+     * lines)
      *
      * @see
-     * <a href ="https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string">https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string</a>
-     *
-     * @param strList - a list of strings
-     * @return - a 2D array of double
+     * <a href ="https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string">stackoverflow</a>
      *
      * @author lts010, ks061
      */
@@ -375,8 +420,20 @@ public class ANNClient {
     }
 
     /**
-     * Create a new neural net and either test w/in neural net, or create
-     * another function to control testing of the neural network
+     * Serves as the main runner for this neural net program. The program
+     * prompts which program mode the user would like the program to run in; the
+     * program has two program modes: classification mode, which predicts what
+     * the output will be based on given inputs and a pre-configured neural
+     * network, or training mode, which trains the neural network program based
+     * on given inputs and expected output. The program also gives options for
+     * reading in weights or randomly assigning them. If the user chooses not to
+     * read in a configuration of the neural network, including the weights,
+     * then the program asks the user how many input neurons, how many output
+     * neurons, how many hidden layers, how many neurons per hidden layer, and
+     * the highest allowable SSE (if in training mode) the neural network should
+     * be configured with. After, the program initializes a neural network with
+     * a configuration object containing the user's
+     * setup/configuration/preferences.
      *
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
@@ -393,20 +450,20 @@ public class ANNClient {
         ArrayList<ArrayList<Double>> thetas;
         ProgramMode programMode;
         WeightsMode inputMode;
-        inputMode = getInputMode();
+        inputMode = getWeightsMode();
         programMode = getProgramMode();
 
         if (inputMode == WeightsMode.CREATE) {
             numInputs = getNumInputs();
             numOutputs = getNumOutputs();
             numHiddenLayers = getNumHiddenLayers();
-            if (numHiddenLayers == 0) { //if there is no hidden layers we don't need to know the number of neurons per hidden layer
+            if (numHiddenLayers == 0) { // if there are no hidden layers, do not need to know number of neurons per hidden layer
                 numNeuronsPerHiddenLayer = 0;
             }
             else {
                 numNeuronsPerHiddenLayer = getNumNeuronsPerHiddenLayer();
             }
-            if (programMode != ProgramMode.TRAINING) { //if programMode is not training we don't need an SSE
+            if (programMode != ProgramMode.TRAINING) { // if programMode is not training, no need for SSE
                 highestSSE = 0;
             }
             else {
@@ -419,16 +476,16 @@ public class ANNClient {
         }
         else {
             ArrayList<String> configList = ConfigObject.readConfigFile();
-            int thetaIndex = configList.indexOf("THETAS"); //need to know which index the thetas start at
+            int thetaIndex = configList.indexOf("THETAS"); // indicates which index the thetas start at
             ArrayList<String> configListWeights = new ArrayList<>(
                     configList.subList(0,
-                                       thetaIndex)); //seperate the weights (and the numbers before the weights) into a list before the string "THETA"
-            ArrayList<String> configListThetas = new ArrayList<>( //seperate the thetas into a list after the string "THETA"
+                                       thetaIndex)); // seperates the weights (and the numbers before the weights) into a list before the string "THETA"
+            ArrayList<String> configListThetas = new ArrayList<>( // seperates the thetas into a list after the string "THETA"
                     configList.subList(
                             thetaIndex + 1, configList.size()));
-            ArrayList<ArrayList<Double>> weightList = strListToDoubleList( //turn the weight list into a list of list of doubles
+            ArrayList<ArrayList<Double>> weightList = strListToDoubleList( // turns the weight list into a list of list of doubles
                     configListWeights);
-            thetas = strListToDoubleList(configListThetas); //turn the theta list into a list of list of doubles
+            thetas = strListToDoubleList(configListThetas); // turns the theta list into a list of list of doubles
             thetas.add(0, new ArrayList<>()); // adds input layer without any weights
             numInputs = (int) Math.round(weightList.get(0).get(0));
             numOutputs = (int) Math.round(weightList.get(0).get(1));
@@ -448,88 +505,3 @@ public class ANNClient {
         myNet = new NeuralNet(trainingData, config);
     }
 }
-
-//    /**
-//     * Reads input data from the training file
-//     *
-//     * @param numInputs number of inputs
-//     * @return input data
-//     *
-//     * @author lts010, ks061
-//     */
-//    private static double[][] readInputData(int numInputs) {
-//        Scanner in = new Scanner(System.in);
-//        boolean fileFound = false;
-//        String filename = null;
-//        while (!fileFound) {
-//            // Get CSV filename from user
-//            System.out.print("Enter the name of the training data file: ");
-//            filename = in.nextLine();
-//            // Try to access CSV file
-//            File f = new File(filename);
-//            try {
-//                in = new Scanner(f);
-//                fileFound = true;
-//            } catch (FileNotFoundException ex) {
-//                System.out.println("The input data has not been found.");
-//            }
-//        }
-//        // Gets number of lines in file
-//        String line;
-//        String[] entriesInLine;
-//        long lineCountDouble = 0;
-//        try {
-//            lineCountDouble = Files.lines(Paths.get(filename)).count();
-//        } catch (IOException ex) {
-//            System.out.println(
-//                    "An unexpected input-output error occured when trying to "
-//                    + "count the number of lines in the training data file.");
-//            System.exit(0);
-//        }
-//        int lineCount = 0;
-//        if (-2147483647 <= lineCountDouble && lineCountDouble <= 2147483647) {
-//            lineCount = (int) lineCountDouble;
-//        }
-//        else {
-//            // NeuralNet.java has specified double[][], which implies that the
-//            // size of the array cannot be outside of the range of values an
-//            // int can hold.
-//            System.out.println(
-//                    "Number of lines in file is outside of the range of values "
-//                    + "an int can hold.");
-//            System.exit(0);
-//        }
-//
-//        // Initializes an array based on number of lines in CSV file
-//        double[][] inputs = new double[lineCount][];
-//        // Reads in input data from scanner
-//        for (int row = 0; in.hasNextLine(); row++) {
-//            line = in.nextLine();
-//            entriesInLine = line.split(",");
-//            inputs[row] = new double[entriesInLine.length - 1];
-//            for (int col = 0; col < inputs[row].length; col++) {
-//                inputs[row][col] = Double.parseDouble(
-//                        entriesInLine[col]);
-//            }
-//        }
-//        return inputs;
-//    }
-//    /**
-//     * Asks for a file containing input values and prints and writes them to a
-//     * file
-//     *
-//     * @param config - a configuration object containing all the important
-//     * variables for the neural network
-//     *
-//     * @author lts010, ks061
-//     */
-//    public static void classificationMode(ConfigObject config) {
-//    }
-//
-//    /**
-//     * Runs the training mode feature of the program.
-//     *
-//     * @author ks061, lts010
-//     */
-//    public static void trainingMode() {
-//    }

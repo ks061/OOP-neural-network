@@ -9,8 +9,8 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: InputLayer
- * Description: Represents the input layer of a neural net
- *
+ * Description: This file contains InputLayer, which represents an input layer
+ *              in a neural network
  * ****************************************
  */
 package hw1;
@@ -18,11 +18,15 @@ package hw1;
 import java.util.ArrayList;
 
 /**
+ * InputLayer represents an input layer in a neural network.
  *
  * @author cld028, ks061
  */
 public class InputLayer extends Layer {
 
+    /**
+     * Input values from the training data
+     */
     private double[] inputs;
 
     /**
@@ -36,25 +40,26 @@ public class InputLayer extends Layer {
     protected Layer nextLayer;
 
     /**
-     * Explicit constructor that creates the input layer with a particular
-     * number of neurons and an ID,
+     * Constructor that creates the input layer with a particular number of
+     * neurons, an ID, the index of this layer within the neural network, and a
+     * reference to the neural network this layer resides within
      *
      * @param numNeurons number of neurons to be generated in this layer
      * @param id identifier of the layer
      * @param layerNum the layer index number (always 0 for the input layer)
-     * @param nN the neuralNet
+     * @param nN the neural network this layer resides within
      *
      * @author ks061, lts010
      */
-    InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
+    public InputLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
         super(numNeurons, id, layerNum, nN);
     }
 
     /**
      * Creates and returns a list of input neurons
      *
-     * @param numNeurons - Total number of neurons to be created within layer
-     * @return - An array list of all newly created neurons
+     * @param numNeurons number of neurons to be created within the input layer
+     * @return list of all newly created neurons
      *
      * @author ks061
      */
@@ -93,9 +98,10 @@ public class InputLayer extends Layer {
     }
 
     /**
-     * Connects this layer to the next layer
+     * Connects this layer to the next layer; the next layer cannot be an input
+     * layer
      *
-     * @param nextLayer next layer
+     * @param nextLayer next layer this layer will be connected to
      *
      * @author ks061, lts010
      */
@@ -126,44 +132,23 @@ public class InputLayer extends Layer {
     }
 
     /**
-     * Sets set of input values
+     * Sets set of training input values
      *
-     * @param inputs set of input values
+     * @param inputs set of training input values
      */
     public void setInputs(double[] inputs) {
         this.inputs = inputs;
     }
 
     /**
-     * Does nothing; done learning once reached the input layer.
+     * Increments the number of edges in the layer and gets the ID for the next
+     * newly created edge
      *
-     * @author cld028
-     */
-    @Override
-    public void learn() {
-        throw new UnsupportedOperationException(
-                "Input layer shouldn't be learning!");
-    }
-
-    /**
-     * Throws an UnsupportedOperationException instance because the input layer
-     * should not be calculating errors.
-     *
-     * @author cld028
-     */
-    private void calculateErrors() {
-        throw new UnsupportedOperationException(
-                "Input layer shouldn't be calculating errors!");
-    }
-
-    /**
-     * increments the number of edges in the layer
-     *
-     * @return an int that is to be used as the ID for a newly created edge
+     * @return ID for the next newly created edge
      *
      * @author lts010, ks061
      */
-    protected int getNextEdgeNum() {
+    public int getNextEdgeNum() {
         return (numOutEdges++);
     }
 
@@ -172,21 +157,37 @@ public class InputLayer extends Layer {
      * this layer to the next layer.
      *
      * @return number of out edges
+     *
      * @author lts010, ks061
      */
-    protected int getNumOutEdges() {
+    public int getNumOutEdges() {
         return (this.numOutEdges);
     }
 
     /**
-     * Sets the next layer
+     * Sets a pointer to the next layer
      *
      * @param nextLayer next layer
      *
      * @author ks061, lts010
      */
-    protected void setNextLayer(Layer nextLayer) {
+    public void setNextLayer(Layer nextLayer) {
         this.nextLayer = nextLayer;
+    }
+
+    /**
+     * Throws an UnsupportedOperationException; the program is done learning
+     * once reaching the input layer.
+     *
+     * @throws UnsupportedOperationException program is done learning once
+     * reaching the input layer
+     *
+     * @author cld028
+     */
+    @Override
+    public void learn() {
+        throw new UnsupportedOperationException(
+                "Input layer shouldn't be learning!");
     }
 
 }

@@ -9,7 +9,8 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: NeuralNet
- * Description: Represents an artificial neural net
+ * Description: This file contains NeuralNet, which represents an artificial
+ *              neural network.
  *
  * ****************************************
  */
@@ -20,35 +21,50 @@ import java.io.PrintWriter;
 import java.util.*;
 
 /**
+ * NeuralNet represents an artificial neural network.
  *
  * @author cld028, ks061
  */
 public class NeuralNet {
 
-    private double[][] data;
-    private ConfigObject configuration;
-    private ArrayList<Layer> layers;
-    private double[] errors;
-
-    protected static double alpha = 0.2;
-
     /**
-     * A default learning rate if you decide to use this within the neurons
+     * Data that this neural network is fed, including input data and expected
+     * output data.
      */
-    public final static double DEFAULTALPHA = 0.2;
+    private double[][] data;
+    /**
+     * Configuration of the neural network, including information like the
+     * number of inputs (input neurons), the number of outputs (output neurons),
+     * the number of hidden layers, the number of neurons per hidden layer, the
+     * maximum allowed sum of squared error value (SSE), list of edge weights (a
+     * weight for each edge going to the next layer in each layer except the
+     * output layer), and program mode (classification or training mode) that
+     * neural net will run in
+     */
+    private ConfigObject configuration;
+    /**
+     * Layers in this neural network
+     */
+    private ArrayList<Layer> layers;
+    /**
+     * Learning rate of this neural network
+     */
+    public static final double alpha = 0.2;
 
     /**
-     * Explicit constructor that creates the input layer, any hidden layers, and
-     * output layer, along with creating connections among the layers.
+     * Constructor that creates the input layer, any hidden layers, and output
+     * layer, along with creating connections among the layers.
      *
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
-     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     * @see
+     * <a href src="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html">
+     * PrintWriter </a>
      *
      * @author cld028, ks061, lts010
      */
-    NeuralNet(double[][] data, ConfigObject config) throws FileNotFoundException {
+    public NeuralNet(double[][] data, ConfigObject config) throws FileNotFoundException {
         if (data.length == 0) {
             throw new NeuralNetConstructionException(
                     "No data has been provided.");
@@ -56,8 +72,6 @@ public class NeuralNet {
 
         int dataLength = data[0].length;
         for (double[] inputSet : data) {
-            // TODO remove
-//            System.out.println(Arrays.toString(inputSet));
             if (inputSet.length != dataLength) {
                 throw new NeuralNetConstructionException(
                         "Not all rows in data set have the same amount of entries.");
@@ -109,7 +123,11 @@ public class NeuralNet {
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
-     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     * @see
+     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
+     * PrintWriter </a>
+     *
+     * @author ks061
      */
     public void train() throws FileNotFoundException {
         double sseTotal;
@@ -144,6 +162,14 @@ public class NeuralNet {
         System.out.println("Thanks for using the program.");
     }
 
+    /**
+     * Gets the set of predicted outputs from the neurons in the output layer
+     *
+     * @param outputLayer output layer
+     * @return set of predicted outputs from the neurons in the output layer
+     *
+     * @author ks061
+     */
     private ArrayList<Double> getSetOfPredictedOutputs(OutputLayer outputLayer) {
         ArrayList<Double> setOfPredictedOutputs = new ArrayList<>();
         for (Neuron neuron : outputLayer.getNeurons()) {
@@ -153,12 +179,19 @@ public class NeuralNet {
     }
 
     /**
+     * Saves the set of predicted outputs from the neurons to an external .txt
+     * file; it prompts the user for the output filename, etc. as needed.
      *
-     * @param setsOfPredictedOutputs set of predicted outputs
+     * @param setsOfPredictedOutputs set of predicted outputs from the neurons
+     * in the output layer
      * @throws FileNotFoundException if the file for the configuration to be
      * written to as specified by the user cannot be written to or another error
      * occurs while opening or creating the file
-     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     * @see
+     * <a href src="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html">
+     * PrintWriter </a>
+     *
+     * @author ks061
      */
     private void saveSetsOfPredictedOutputs(
             ArrayList<ArrayList<Double>> setsOfPredictedOutputs) throws FileNotFoundException {
@@ -169,18 +202,26 @@ public class NeuralNet {
         PrintWriter out = new PrintWriter(outputFile);
         for (ArrayList<Double> setOfPredictedOutput : setsOfPredictedOutputs) {
             out.print(Arrays.toString(setOfPredictedOutput.toArray()));
+            // System.out.println("Output: " + Arrays.toString(
+            // setOfPredictedOutput.toArray()));
         }
+        out.flush();
         out.close();
     }
 
     /**
      * Runs the neural network in classification mode, which predicts output
-     * values based on training data.
+     * values based on a set of input values and an already configured neural
+     * network.
      *
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
-     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     * @see
+     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
+     * PrintWriter </a>
+     *
+     * @author ks061
      */
     public void classify() throws FileNotFoundException {
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));

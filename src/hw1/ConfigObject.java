@@ -10,7 +10,7 @@
 * Package: hw1
 * File: ConfigObject
 * Description: This file contains ConfigObject, which holds the configuration
-*              for a NeuralNet.
+*              for a neural network NeuralNet.
 *
 * ****************************************
  */
@@ -27,66 +27,79 @@ import java.util.Scanner;
  * ConfigObject holds the configuration for a NeuralNet, including the number of
  * inputs (input neurons), the number of outputs (output neurons), the number of
  * hidden layers, the number of neurons per hidden layer, the maximum allowed
- * sum of squared error value, list of edge weights (a weight for each edge
- * going to the next layer in each layer except the output layer), and program
- * mode (classification or training mode) that neural net will run in
+ * sum of squared error value (SSE), list of edge weights (a weight for each
+ * edge going to the next layer in each layer except the output layer), and
+ * program mode (classification or training mode) that neural net will run in
  *
  * @author lts010, ks061
  */
 public class ConfigObject {
 
     /**
-     * Number of inputs (input neurons)
+     * Number of inputs (input neurons) a neural network will be configured with
      */
     private int numInputs;
     /**
-     * Number of outputs (output neurons)
+     * Number of outputs (output neurons) a neural network will be configured
+     * with
      */
     private int numOutputs;
     /**
-     * Number of hidden layers
+     * Number of hidden layers a neural network will be configured with
      */
     private int numHiddenLayers;
     /**
-     * Number of neurons per hidden layer
+     * Number of neurons per hidden layer a neural network will be configured
+     * with
      */
     private int numNeuronsPerHiddenLayer;
     /**
-     * Maximum allowed sum of squared error value
+     * Maximum allowed sum of squared error value (SSE) a neural network will be
+     * configured with
      */
     private double highestSSE;
     /**
      * List of edge weights (a weight for each edge going to the next layer in
-     * each layer except the output layer)
+     * each layer except the output layer) a neural network will be configured
+     * with
      */
     private ArrayList<ArrayList<Double>> weights;
     /**
-     * List of thetas (a theta for each neuron that needs a theta)
+     * List of thetas (a theta for each neuron that needs a theta) a neural
+     * network will be configured with
      */
     private ArrayList<ArrayList<Double>> thetas;
     /**
-     * Run mode (classification or training mode) that neural net will run in
+     * Run mode (classification or training mode) that a neural net will run in
      */
     private ProgramMode programMode;
 
     /**
-     * Explicit parameter that initializes the number of inputs (input neurons),
-     * the number of outputs (output neurons), the number of hidden layers, the
-     * number of neurons per hidden layer, the maximum allowed sum of squared
-     * error value, list of edge weights (a weight for each edge going to the
-     * next layer in each layer except the output layer), and program mode
-     * (classification or training mode) that neural net will run in
+     * Explicit constructor that initializes the number of inputs (input
+     * neurons), the number of outputs (output neurons), the number of hidden
+     * layers, the number of neurons per hidden layer, the maximum allowed sum
+     * of squared error value, list of edge weights (a weight for each edge
+     * going to the next layer in each layer except the output layer), and
+     * program mode (classification or training mode) that neural net will run
+     * in
      *
-     * @param numInputs number of inputs (input neurons)
-     * @param numOutputs number of outputs (output neurons)
-     * @param numHiddenLayers number of hidden layers
-     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer
-     * @param highestSSE maximum allowed sum of squared error value
+     * @param numInputs number of inputs (input neurons) a neural network will
+     * be configured with
+     * @param numOutputs number of outputs (output neurons) a neural network
+     * will be configured with
+     * @param numHiddenLayers number of hidden layers a neural network will be
+     * configured with
+     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer a
+     * neural network will be configured with
+     * @param highestSSE maximum allowed sum of squared error value a neural
+     * network will be configured with
      * @param weights list of edge weights (a weight for each edge going to the
-     * next layer in each layer except the output layer)
-     * @param thetas list of thetas (a theta for each neuron that needs a theta)
-     * @param programMode program mode (classification or training mode) that
-     * neural net will run in
+     * next layer in each layer except the output layer) a neural network will
+     * be configured with
+     * @param thetas list of thetas (a theta for each neuron in a hidden layer
+     * or output layer) a neural network will be configured with
+     * @param programMode program mode (classification or training mode) that a
+     * neural network will be configured with neural net will run in
      *
      * @author lts010, ks061
      */
@@ -106,9 +119,11 @@ public class ConfigObject {
     }
 
     /**
-     * Gets the number of inputs (input neurons)
+     * Gets the number of inputs (input neurons) a neural network is configured
+     * with
      *
-     * @return number of inputs (input neurons)
+     * @return number of inputs (input neurons) a neural network is configured
+     * with
      *
      * @author lts010, ks061
      */
@@ -117,9 +132,11 @@ public class ConfigObject {
     }
 
     /**
-     * Sets the number of inputs (input neurons)
+     * Sets the number of inputs (input neurons) a neural network is configured
+     * with
      *
-     * @param numInputs number of inputs (input neurons)
+     * @param numInputs number of inputs (input neurons) a neural network is
+     * configured with
      *
      * @author lts010, ks061
      */
@@ -128,9 +145,11 @@ public class ConfigObject {
     }
 
     /**
-     * Gets the number of outputs (output neurons)
+     * Gets the number of outputs (output neurons) a neural network is
+     * configured with
      *
-     * @return number of outputs (output neurons)
+     * @return number of outputs (output neurons) a neural network is configured
+     * with
      *
      * @author lts010, ks061
      */
@@ -139,9 +158,11 @@ public class ConfigObject {
     }
 
     /**
-     * Sets the number of outputs (output neurons)
+     * Sets the number of outputs (output neurons) a neural network is
+     * configured with
      *
-     * @param numOutputs number of outputs (output neurons)
+     * @param numOutputs number of outputs (output neurons) a neural network is
+     * configured with
      *
      * @author lts010, ks061
      */
@@ -150,9 +171,9 @@ public class ConfigObject {
     }
 
     /**
-     * Gets the number of hidden layers
+     * Gets the number of hidden layers a neural network is configured with
      *
-     * @return number of hidden layers
+     * @return number of hidden layers a neural network is configured with
      *
      * @author lts010, ks061
      */
@@ -161,9 +182,10 @@ public class ConfigObject {
     }
 
     /**
-     * Sets the number of hidden layers
+     * Sets the number of hidden layers a neural network is configured with
      *
-     * @param numHiddenLayers number of hidden layers
+     * @param numHiddenLayers number of hidden layers a neural network is
+     * configured with
      *
      * @author lts010, ks061
      */
@@ -172,9 +194,11 @@ public class ConfigObject {
     }
 
     /**
-     * Gets the number of neurons per hidden layer
+     * Gets the number of neurons per hidden layer a neural network is
+     * configured with
      *
-     * @return number of neurons per hidden layer
+     * @return number of neurons per hidden layer a neural network is configured
+     * with
      *
      * @author lts010, ks061
      */
@@ -183,9 +207,11 @@ public class ConfigObject {
     }
 
     /**
-     * Sets the number of neurons per hidden layer
+     * Sets the number of neurons per hidden layer a neural network is
+     * configured with
      *
-     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer
+     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer a
+     * neural network is configured with
      *
      * @author lts010, ks061
      */
@@ -194,9 +220,11 @@ public class ConfigObject {
     }
 
     /**
-     * Gets the maximum allowable sum of squared error value
+     * Gets the maximum allowable sum of squared error value (SSE) a neural
+     * network is configured with
      *
-     * @return maximum allowable sum of squared error value
+     * @return maximum allowable sum of squared error value (SSE) a neural
+     * network is configured with
      *
      * @author lts010, ks061
      */
@@ -205,9 +233,11 @@ public class ConfigObject {
     }
 
     /**
-     * Sets the maximum allowable sum of squared error value
+     * Sets the maximum allowable sum of squared error value (SSE) a neural
+     * network is configured with
      *
-     * @param highestSSE maximum allowable sum of squared error value
+     * @param highestSSE maximum allowable sum of squared error value (SSE) a
+     * neural network is configured with
      *
      * @author lts010, ks061
      */
@@ -217,9 +247,10 @@ public class ConfigObject {
 
     /**
      * Gets the list of edge weights (a weight for each edge going to the next
-     * layer in each layer except the output layer)
+     * layer in each layer except the output layer) a neural network is
+     * configured with
      *
-     * @return list of edge weights
+     * @return list of edge weights a neural network is configured with
      *
      * @author lts010, ks061
      */
@@ -229,9 +260,10 @@ public class ConfigObject {
 
     /**
      * Sets the list of edge weights (a weight for each edge going to the next
-     * layer in each layer except the output layer)
+     * layer in each layer except the output layer) a neural network is
+     * configured with
      *
-     * @param weights list of edge weights
+     * @param weights list of edge weights a neural network is configured with
      *
      * @author lts010, ks061
      */
@@ -240,9 +272,10 @@ public class ConfigObject {
     }
 
     /**
-     * Gets the list of thetas (a theta for each neuron that needs a theta)
+     * Gets the list of thetas (a theta for each neuron in a hidden layer or
+     * output layer) a neural network is configured with
      *
-     * @return list of thetas
+     * @return list of thetas a neural network is configured with
      *
      * @author ks061, lts010
      */
@@ -251,9 +284,10 @@ public class ConfigObject {
     }
 
     /**
-     * Sets the list of thetas (a theta for each neuron that needs a theta)
+     * Sets the list of thetas (a theta for each neuron in a hidden layer or
+     * output layer) a neural network is configured with
      *
-     * @param thetas - list of thetas
+     * @param thetas list of thetas a neural network is configured with
      *
      * @author ks061, lts010
      */
@@ -263,10 +297,10 @@ public class ConfigObject {
 
     /**
      * Sets the program mode (classification or training mode) that neural net
-     * will run in
+     * is configured to run in
      *
      * @param programMode program mode mode (classification or training mode)
-     * that neural net will run in
+     * that neural net is configured to run in
      *
      * @author ks061, lts010
      */
@@ -276,10 +310,10 @@ public class ConfigObject {
 
     /**
      * Gets the program mode (classification or training mode) that neural net
-     * will run in
+     * is configured to run in
      *
-     * @return program mode (classification or training mode) that neural net
-     * will run in
+     * @return program mode (classification or training mode) that neural net is
+     * configured to run in
      *
      * @author ks061, lts010
      */
@@ -288,15 +322,15 @@ public class ConfigObject {
     }
 
     /**
-     * Reads a config file
+     * Reads a .txt file, a neural network configuration file, that can be read
+     * as a ConfigObject
      *
-     * @return a double array list that provides the number of inputs, outputs,
-     * and the weights
-     * @throws java.io.FileNotFoundException
+     * @return list of Strings that provides the number of inputs, outputs, and
+     * the weights
      *
      * @author lts010, ks061
      */
-    public static ArrayList<String> readConfigFile() throws FileNotFoundException {
+    public static ArrayList<String> readConfigFile() {
         Scanner in = new Scanner(System.in);
         Scanner fReader = new Scanner(System.in);
         boolean fileFound = false;
@@ -327,13 +361,15 @@ public class ConfigObject {
     }
 
     /**
-     * Saves all relevant information of a neural net to a file
+     * Saves all configuration information of a neural net to a .txt file
      *
-     * @param nN - a Neural Net
+     * @param nN neural network whose configuration will be exported
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
-     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     * @see
+     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
+     * PrintWriter </a>
      *
      * @author lts010, ks061
      */
@@ -369,6 +405,8 @@ public class ConfigObject {
             }
             out.printf("%s\n", thetaLayer);
         }
+        out.flush();
+        out.close();
     }
 
 }

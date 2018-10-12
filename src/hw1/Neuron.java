@@ -9,7 +9,8 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: Neuron
- * Description: Represents the neuron in a neural net
+ * Description: This file contains Neuron, which is an abstraction of a neuron
+ *              in a neural network.
  *
  * ****************************************
  */
@@ -18,20 +19,37 @@ package hw1;
 import java.util.ArrayList;
 
 /**
- * Class for individual neuron elements
+ * Neuron is an abstraction of a neuron in a neural network.
  *
  * @author cld028, ks061, lts010
- *
  */
 public abstract class Neuron {
 
+    /**
+     * Represents the index of the neuron within the input layer
+     */
     private final int neuronNum;
-    private final int layerNum; //the number for the layer that is neuron is in.
+    /**
+     * Represents the index of the input layer this neuron lies within
+     */
+    private final int layerNum;
+    /**
+     * Represents the neural network this neuron lies within
+     */
     private final NeuralNet neuralNet;
 
+    /**
+     * Represents the edges that serve as inputs to this neuron
+     */
     private final ArrayList<Edge> inEdges;
+    /**
+     * Represents the edges that serve as outputs to this neuron
+     */
     private final ArrayList<Edge> outEdges;
 
+    /**
+     * Represents the net value of this neuron
+     */
     private double netValue;
     private ActivationFunction activationFunction;
 
@@ -49,13 +67,13 @@ public abstract class Neuron {
      *
      * @author ks061, lts010
      */
-    Neuron(int neuronNum, int layerNum, NeuralNet nN) {
+    public Neuron(int neuronNum, int layerNum, NeuralNet nN) {
         this.neuronNum = neuronNum;
         this.layerNum = layerNum;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
-        this.activationFunction = new SigmoidActivationFunction();
         this.neuralNet = nN;
+        this.activationFunction = new SigmoidActivationFunction();
     }
 
     /**

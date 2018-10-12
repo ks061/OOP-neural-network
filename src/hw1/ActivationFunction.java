@@ -26,7 +26,7 @@ package hw1;
 public interface ActivationFunction {
 
     /**
-     * Calculates the output based on the activation function.
+     * Calculates the output based on the activation function
      *
      * @param netInput argument of the activation function, i.e. the net input
      * calculated for a neuron
@@ -37,7 +37,7 @@ public interface ActivationFunction {
     public double calcOutput(double netInput);
 
     /**
-     * Calculates the output based on the derivative of the activation function.
+     * Calculates the output based on the derivative of the activation function
      *
      * @param netInput argument of the activation function, i.e. the net input
      * calculated for a neuron

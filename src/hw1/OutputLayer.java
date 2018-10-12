@@ -44,7 +44,7 @@ public class OutputLayer extends Layer {
      *
      * @author cld028
      */
-    OutputLayer(int numNeurons, String id, int layerNumber, NeuralNet nN) {
+    public OutputLayer(int numNeurons, String id, int layerNumber, NeuralNet nN) {
         super(numNeurons, id, layerNumber, nN);
     }
 
@@ -154,7 +154,7 @@ public class OutputLayer extends Layer {
         }
     }
 
-    void setTargetOutputs(double[] targetOutputs) {
+    public void setTargetOutputs(double[] targetOutputs) {
         this.targetOutputs = targetOutputs;
         this.outputErrors = new double[this.targetOutputs.length];
     }
@@ -166,7 +166,7 @@ public class OutputLayer extends Layer {
      *
      * @author ks061, lts010
      */
-    protected void setPrevLayer(Layer prevLayer) {
+    public void setPrevLayer(Layer prevLayer) {
         this.prevLayer = prevLayer;
     }
 
