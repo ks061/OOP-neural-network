@@ -55,11 +55,20 @@ public class NeuralNet {
      * Constructor that creates the input layer, any hidden layers, and output
      * layer, along with creating connections among the layers.
      *
+     * @param data training data, including sets of input and output training
+     * data
+     * @param config configuration of the neural network, including the number
+     * of inputs (input neurons), the number of outputs (output neurons), the
+     * number of hidden layers, the number of neurons per hidden layer, the
+     * maximum allowed sum of squared error value (SSE), list of edge weights (a
+     * weight for each edge going to the next layer in each layer except the
+     * output layer), and program mode (classification or training mode) that
+     * neural net will run in
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
      * @see
-     * <a href src="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html">
+     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
      * PrintWriter </a>
      *
      * @author cld028, ks061, lts010
@@ -118,7 +127,7 @@ public class NeuralNet {
 
     /**
      * Runs the neural network in the training mode, which trains a neural
-     * network based on sets of input and corresponding out values.
+     * network based on sets of input and corresponding output values.
      *
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
@@ -127,7 +136,7 @@ public class NeuralNet {
      * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
      * PrintWriter </a>
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public void train() throws FileNotFoundException {
         double sseTotal;
@@ -168,7 +177,7 @@ public class NeuralNet {
      * @param outputLayer output layer
      * @return set of predicted outputs from the neurons in the output layer
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     private ArrayList<Double> getSetOfPredictedOutputs(OutputLayer outputLayer) {
         ArrayList<Double> setOfPredictedOutputs = new ArrayList<>();
@@ -191,7 +200,7 @@ public class NeuralNet {
      * <a href src="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html">
      * PrintWriter </a>
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     private void saveSetsOfPredictedOutputs(
             ArrayList<ArrayList<Double>> setsOfPredictedOutputs) throws FileNotFoundException {
@@ -221,7 +230,7 @@ public class NeuralNet {
      * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
      * PrintWriter </a>
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public void classify() throws FileNotFoundException {
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
@@ -250,7 +259,7 @@ public class NeuralNet {
     }
 
     /**
-     * Stores the weight of a particular edge in a particular layer.
+     * Stores the weight of a particular edge in a particular layer
      *
      * @param layerNum layer that the edge resides in
      * @param edgeNum numerical identifier of the edge
@@ -263,7 +272,7 @@ public class NeuralNet {
     }
 
     /**
-     * Gets the weight of a particular edge in a particular layer.
+     * Gets the weight of a particular edge in a particular layer
      *
      * @param layerNum layer that the edge resides in
      * @param edgeNum numerical identifier of the edge
@@ -278,7 +287,7 @@ public class NeuralNet {
     }
 
     /**
-     * Stores the theta of a particular neuron in a particular layer.
+     * Stores the theta of a particular neuron in a particular layer
      *
      * @param layerNum layer that the neuron resides in
      * @param neuronNum numerical identifier of the neuron
@@ -291,7 +300,7 @@ public class NeuralNet {
     }
 
     /**
-     * Gets the theta of a particular neuron in a particular layer.
+     * Gets the theta of a particular neuron in a particular layer
      *
      * @param layerNum layer that the neuron resides in
      * @param neuronNum numerical identifier of the neuron
@@ -309,16 +318,19 @@ public class NeuralNet {
      * Gets the configuration for this neural network
      *
      * @return configuration for this neural network
+     *
+     * @author ks061, lts010
      */
     public ConfigObject getConfiguration() {
         return this.configuration;
     }
 
     /**
-     * Gets list of layers
+     * Gets list of layers in the neural network
      *
-     * @return list of layers
-     * @author lts010
+     * @return list of layers in the neural network
+     *
+     * @author lts010, ks061
      */
     public ArrayList<Layer> getLayers() {
         return layers;

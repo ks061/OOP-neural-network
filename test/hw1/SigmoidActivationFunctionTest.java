@@ -21,10 +21,13 @@ import org.junit.Test;
 /**
  * JUnit tests for the SigmoidActivationFunction
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class SigmoidActivationFunctionTest extends TestCase {
 
+    /**
+     * Allowed deviation from the expected value
+     */
     private static final double EPSILON = 1.0E-12;
 
     @Override
@@ -37,6 +40,8 @@ public class SigmoidActivationFunctionTest extends TestCase {
 
     /**
      * Test of calcOutput method, of class SigmoidActivationFunction.
+     *
+     * @author lts010, ks061
      */
     @Test
     public void testCalcOutput() {
@@ -50,6 +55,8 @@ public class SigmoidActivationFunctionTest extends TestCase {
 
     /**
      * Test of calcDervOutput method, of class SigmoidActivationFunction.
+     *
+     * @author lts010, ks061
      */
     @Test
     public void testCalcDervOutput() {

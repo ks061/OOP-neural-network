@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * JUnit tests for the class OutputLayer
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class OutputLayerTest extends TestCase {
 
@@ -70,7 +70,7 @@ public class OutputLayerTest extends TestCase {
     /**
      * Test of createNeurons method, of class OutputLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testCreateNeurons() {
@@ -81,7 +81,7 @@ public class OutputLayerTest extends TestCase {
     /**
      * Test of calculateSumOfSquaredErrors method, of class OutputLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testCalculateSumOfSquaredErrors() {
@@ -94,7 +94,7 @@ public class OutputLayerTest extends TestCase {
     /**
      * Test of learn method, of class OutputLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testLearn() {

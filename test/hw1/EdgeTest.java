@@ -22,12 +22,21 @@ import org.junit.Test;
 /**
  * JUnit tests for the class Edge
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class EdgeTest extends TestCase {
 
+    /**
+     * Neural network
+     */
     private NeuralNet myNet;
+    /**
+     * An edge in the neural network connecting neurons in adjacent edges
+     */
     private Edge myEdge;
+    /**
+     * Allowed deviation from expected value
+     */
     private static final double EPSILON = 1.0E-6;
 
     @Override
@@ -66,7 +75,7 @@ public class EdgeTest extends TestCase {
     /**
      * Test of learn method, of class Edge.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testLearn() {

@@ -9,7 +9,7 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: NeuralNetTest
-* Description: Junit tests for the class NeuralNet
+* Description: JUnit tests for the class NeuralNet
 *
 * ****************************************
  */
@@ -22,10 +22,13 @@ import junit.framework.TestCase;
 /**
  * JUnit tests for the class NeuralNet
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class NeuralNetTest extends TestCase {
 
+    /**
+     * Configuration for the neural network
+     */
     private ConfigObject config;
 
     @Override
@@ -61,7 +64,7 @@ public class NeuralNetTest extends TestCase {
      * NeuralNetConstructionException
      *
      * @throws java.io.FileNotFoundException
-     * @author lts010
+     * @author lts010, ks061
      */
     public void testNoDataConstructionException() throws FileNotFoundException {
         try {
@@ -77,7 +80,7 @@ public class NeuralNetTest extends TestCase {
      * NeuralNetConstructionException
      *
      * @throws java.io.FileNotFoundException
-     * @author lts010
+     * @author lts010, ks061
      */
     public void testInconsistentDataException() throws FileNotFoundException {
         try {

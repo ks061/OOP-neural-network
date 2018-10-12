@@ -27,6 +27,8 @@ public interface WeightAssignment {
      * Provides weights to edge
      *
      * @return weight for edge
+     *
+     * @author ks061, lts010
      */
     public double assignWeight();
 }

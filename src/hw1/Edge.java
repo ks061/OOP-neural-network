@@ -32,12 +32,12 @@ public class Edge {
      * a layer to the second neuron in the next adjacent layer has an index of
      * 1, etc.
      */
-    private final int edgeNumber;
+    private final int edgeNum;
     /**
      * Represents the index of the layer within a neural network that the edge
      * receives input from, i.e. the input layer has an index of 0, etc.
      */
-    private final int layerNumber;
+    private final int layerNum;
     /**
      * Represents the neural network that this edge resides within
      */
@@ -80,8 +80,8 @@ public class Edge {
     public Edge(NeuralNet nN, int layerNum, int edgeNum) {
         this.neuralNet = nN;
         this.weight = neuralNet.getWeight(layerNum, edgeNum);
-        this.edgeNumber = edgeNum;
-        this.layerNumber = layerNum;
+        this.edgeNum = edgeNum;
+        this.layerNum = layerNum;
     }
 
     /**
@@ -157,6 +157,8 @@ public class Edge {
      * Gets the weight of the edge
      *
      * @return the weight of the edge
+     *
+     * @author ks061, lts010
      */
     public double getWeight() {
         return this.weight;
@@ -177,7 +179,7 @@ public class Edge {
     public void learn(double errorGradient) {
         this.weightTimesDelta = this.weight * errorGradient;
         this.weight = this.weight + NeuralNet.alpha * this.from.getNetValue() * errorGradient;
-        neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
+        neuralNet.storeWeight(layerNum, edgeNum, this.weight);
     }
 
 }

@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * JUnit tests for the class HiddenNeuron
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class HiddenNeuronTest extends TestCase {
 
@@ -64,7 +64,7 @@ public class HiddenNeuronTest extends TestCase {
     /**
      * Test of fire method, of class HiddenNeuron.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testFire() {

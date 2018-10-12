@@ -22,12 +22,21 @@ import org.junit.Test;
 /**
  * JUnit tests for the class HiddenLayer
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class HiddenLayerTest extends TestCase {
 
+    /**
+     * A neural network
+     */
     private NeuralNet myNet;
+    /**
+     * A layer in the neural network
+     */
     private HiddenLayer myLayer;
+    /**
+     * Allowed deviation from expected value
+     */
     private static final double EPSILON = 1.0E-4;
 
     @Override
@@ -71,7 +80,7 @@ public class HiddenLayerTest extends TestCase {
     /**
      * Test of createNeurons method, of class HiddenLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testCreateNeurons() {
@@ -83,7 +92,7 @@ public class HiddenLayerTest extends TestCase {
     /**
      * Test of connectLayer method, of class HiddenLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testConnectLayer() {
@@ -95,7 +104,7 @@ public class HiddenLayerTest extends TestCase {
     /**
      * Test of learn method, of class HiddenLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testLearn() {

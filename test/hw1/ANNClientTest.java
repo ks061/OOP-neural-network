@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * JUnit tests for the class ANNClient
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class ANNClientTest extends TestCase {
 
@@ -37,7 +37,7 @@ public class ANNClientTest extends TestCase {
     /**
      * Test of strListToDoubleList method, of class ANNClient.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testStrListToDoubleList() {

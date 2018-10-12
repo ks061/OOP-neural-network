@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * JUnit tests for the class RandomWeightAssignment
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class RandomWeightAssignmentTest extends TestCase {
 
@@ -37,7 +37,7 @@ public class RandomWeightAssignmentTest extends TestCase {
     /**
      * Test of assignWeight method, of class RandomWeightAssignment.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testAssignWeight() {
@@ -50,7 +50,7 @@ public class RandomWeightAssignmentTest extends TestCase {
     /**
      * Test of assignWeight method, of class RandomWeightAssignment.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testAssignWeight_int() {

@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * JUnit tests for the class StepActivationFunction
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class StepActivationFunctionTest extends TestCase {
 
@@ -36,7 +36,7 @@ public class StepActivationFunctionTest extends TestCase {
     /**
      * Test of calcOutput method, of class StepActivationFunction.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testCalcOutput() {
@@ -62,7 +62,7 @@ public class StepActivationFunctionTest extends TestCase {
     /**
      * Test of calcDervOutput method, of class StepActivationFunction.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testCalcDervOutput() {

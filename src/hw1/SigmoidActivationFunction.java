@@ -10,14 +10,15 @@
  * Package: hw01
  * File: Sigmoid Activation Function
  * Description: This file contains SigmoidActivationFunction, which represents
- *              the SigmoidActivationFunction.
+ *              a Sigmoid function used as an activation function.
  *
  * ****************************************
  */
 package hw1;
 
 /**
- * SigmoidActivationFunction represents the Sigmoid function
+ * SigmoidActivationFunction represents the Sigmoid function used as an
+ * activation function.
  *
  * @author cld028, lts010, ks061
  */
@@ -28,7 +29,7 @@ public class SigmoidActivationFunction implements ActivationFunction {
      *
      * @param netInput net input evaluated based off inputs from previous
      * neurons
-     * @return the value of the sigmoid function at <code>netInput</code>
+     * @return the value of the Sigmoid function at <code>netInput</code>
      *
      * @author lts010, ks061
      */
@@ -39,11 +40,11 @@ public class SigmoidActivationFunction implements ActivationFunction {
 
     /**
      * Gets the value of the derivative of the Sigmoid function evaluated at the
-     * inputted point
+     * net input
      *
      * @param netInput net input evaluated based off inputs from previous
      * neurons
-     * @return the value of the derivative of the sigmoid function at
+     * @return the value of the derivative of the Sigmoid function at
      * <code>netInput</code>
      *
      * @author ks061, ls010

@@ -9,24 +9,27 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: StepActivationFunction
- * Description: Activation Functions for the Input
+ * Description: This file contains StepActivationFunction, which represents a
+ *              step function used as an activation function.
  *
  * ****************************************
  */
 package hw1;
 
 /**
+ * StepActivationFunction represents a step function used as an activation
+ * function.
  *
  * @author cld028, ks061, lts010
  */
 public class StepActivationFunction implements ActivationFunction {
 
     /**
+     * Gets the value of the activation function evaluated at the net input
      *
-     * Calculate the output of a neuron given the input value
-     *
-     * @param netInput - total input from previous layer
-     * @return the output
+     * @param netInput net input evaluated based off inputs from previous
+     * neurons
+     * @return the value of the activation function at <code>netInput</code>
      *
      * @author lts010, ks061
      */
@@ -41,10 +44,15 @@ public class StepActivationFunction implements ActivationFunction {
     }
 
     /**
-     * Calculate the derivative for activation function
+     * Gets the value of the derivative of the activation function evaluated at
+     * the net input
      *
-     * @param netInput - total input from previous layer
-     * @return
+     * @param netInput net input evaluated based off inputs from previous
+     * neurons
+     * @return the value of the derivative of the activation function at
+     * <code>netInput</code>
+     *
+     * @author ks061, lts010
      */
     @Override
     public double calcDervOutput(double netInput) {

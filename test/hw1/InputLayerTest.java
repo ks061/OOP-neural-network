@@ -22,11 +22,17 @@ import org.junit.Test;
 /**
  * JUnit tests for the class InputLayer
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class InputLayerTest extends TestCase {
 
+    /**
+     * Neural network
+     */
     private NeuralNet myNet;
+    /**
+     * A layer in the neural network
+     */
     private InputLayer myLayer;
 
     @Override
@@ -63,7 +69,7 @@ public class InputLayerTest extends TestCase {
     /**
      * Test of createNeurons method, of class OutputLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testCreateNeurons() {
@@ -74,7 +80,7 @@ public class InputLayerTest extends TestCase {
     /**
      * Test of connectLayer method, of class InputLayer.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testConnectLayer() {

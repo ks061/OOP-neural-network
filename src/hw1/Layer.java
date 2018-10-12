@@ -56,6 +56,9 @@ public abstract class Layer {
      *
      * @param numNeurons number of neurons to create in this layer
      * @param layerID identifier for the layer
+     * @param layerNum index of the layer amongst all of the layers within the
+     * neural network
+     * @param neuralNet neural network this layer is within
      *
      * @author cld028
      */
@@ -118,7 +121,8 @@ public abstract class Layer {
      * Gets list of neurons within the layer
      *
      * @return list of neurons within the layer
-     * @author lts010
+     *
+     * @author lts010, ks061
      */
     public ArrayList<Neuron> getNeurons() {
         return neurons;

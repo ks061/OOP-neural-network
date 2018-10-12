@@ -19,7 +19,7 @@ package hw1;
 /**
  * InputNeuron represents a neuron in the input layer of a neural network.
  *
- * @author ks061
+ * @author ks061, lts010
  */
 public class InputNeuron extends Neuron {
 
@@ -29,6 +29,8 @@ public class InputNeuron extends Neuron {
      * @param neuronNum index of the neuron within the input layer
      * @param layerNum index of the input layer this neuron lies within
      * @param nN neural network this neuron lies within
+     *
+     * @author ks061, lts010
      */
     public InputNeuron(int neuronNum, int layerNum, NeuralNet nN) {
         super(neuronNum, layerNum, nN);
@@ -40,7 +42,7 @@ public class InputNeuron extends Neuron {
      *
      * @param netValue net value to set for the neuron
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public void setNetValue(double netValue) {
         super.setNetValue(netValue);

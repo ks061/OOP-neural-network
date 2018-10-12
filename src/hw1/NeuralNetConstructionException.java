@@ -31,7 +31,7 @@ public class NeuralNetConstructionException extends RuntimeException {
      *
      * @param message informative message for exception
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public NeuralNetConstructionException(String message) {
         super(message);

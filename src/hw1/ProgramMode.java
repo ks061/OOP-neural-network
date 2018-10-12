@@ -9,7 +9,10 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: ProgramMode
-* Description:
+* Description: This file contains the enumeration ProgramMode, which is an
+*              enumeration that that helps distinguish whether the user wants
+*              to run the neural network program in training mode or
+*              classification mode (a test mode is also available)
 *
 * ****************************************
  */
@@ -17,7 +20,10 @@ package hw1;
 
 /**
  * Enumeration that helps distinguish whether the user wants to run the neural
- * network program in training mode or classification mode
+ * network program in training mode or classification mode (a test mode is also
+ * available)
+ *
+ * @author ks061, lts010
  */
 public enum ProgramMode {
     TRAINING, CLASSIFICATION, TEST;

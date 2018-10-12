@@ -61,7 +61,7 @@ public class InputLayer extends Layer {
      * @param numNeurons number of neurons to be created within the input layer
      * @return list of all newly created neurons
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     @Override
     public ArrayList<Neuron> createNeurons(int numNeurons) {
@@ -135,6 +135,8 @@ public class InputLayer extends Layer {
      * Sets set of training input values
      *
      * @param inputs set of training input values
+     *
+     * @author ks061, lts010
      */
     public void setInputs(double[] inputs) {
         this.inputs = inputs;

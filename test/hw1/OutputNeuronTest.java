@@ -22,12 +22,21 @@ import org.junit.Test;
 /**
  * JUnit tests for the class OutputNeuron
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class OutputNeuronTest extends TestCase {
 
+    /**
+     * Neural network
+     */
     private NeuralNet myNet;
+    /**
+     * Output neuron
+     */
     private OutputNeuron myNeuron;
+    /**
+     * Allowed deviation from the expected value
+     */
     private static final double EPSILON = 1.0E-12;
 
     @Override
@@ -64,7 +73,7 @@ public class OutputNeuronTest extends TestCase {
     /**
      * Test of fire method, of class OutputNeuron.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     @Test
     public void testFire() {

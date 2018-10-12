@@ -51,6 +51,10 @@ public abstract class Neuron {
      * Represents the net value of this neuron
      */
     private double netValue;
+    /**
+     * Represents the activation function used by the neuron to calculate its
+     * net output
+     */
     private ActivationFunction activationFunction;
 
     /**
@@ -59,11 +63,11 @@ public abstract class Neuron {
     public final static double DEFAULTTHETA = 0.1;
 
     /**
-     * Explicit constructor that creates a neuron with a particular identifier
+     * Constructor that creates a neuron with a particular identifier
      *
-     * @param neuronNum - numerical identifier for the neuron
-     * @param layerNum - numerical identifier for the layer it's in
-     * @param nN - the neural net the neuron is in
+     * @param neuronNum numerical identifier for the neuron
+     * @param layerNum numerical identifier for the layer it is in
+     * @param nN the neural net the neuron is in
      *
      * @author ks061, lts010
      */
@@ -80,15 +84,21 @@ public abstract class Neuron {
      * Gets the index of this neuron within its layer
      *
      * @return index of this neuron within its layer
+     *
+     * @author ks061, lts010
      */
     public int getNeuronNum() {
         return neuronNum;
     }
 
     /**
-     * Gets the index of the layer within the neural network
+     * Gets the index of the layer that this neuron lies within in the neural
+     * network
      *
-     * @return index of the layer within the neural network
+     * @return index of the layer that this neuron lies within in the neural
+     * network
+     *
+     * @author ks061, lts010
      */
     public int getLayerNum() {
         return layerNum;
@@ -98,6 +108,8 @@ public abstract class Neuron {
      * Gets the neural network that this neuron lies within
      *
      * @return neural network that this neuron lies within
+     *
+     * @author ks061, lts010
      */
     public NeuralNet getNeuralNet() {
         return neuralNet;
@@ -108,7 +120,7 @@ public abstract class Neuron {
      *
      * @return list of edges serving as input channels to the neuron
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public ArrayList<Edge> getInEdges() {
         return inEdges;
@@ -119,7 +131,7 @@ public abstract class Neuron {
      *
      * @return list of edges serving as output channels to the neuron
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public ArrayList<Edge> getOutEdges() {
         return outEdges;
@@ -131,7 +143,7 @@ public abstract class Neuron {
      *
      * @param netValue net value to set for this neuron
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public void setNetValue(double netValue) {
         this.netValue = netValue;
@@ -142,7 +154,7 @@ public abstract class Neuron {
      *
      * @return net value of the neuron
      *
-     * @author ks061
+     * @author ks061, lts010
      */
     public double getNetValue() {
         return this.netValue;
@@ -152,6 +164,8 @@ public abstract class Neuron {
      * Gets the activation function this neuron will use to get its net value
      *
      * @return activation function this neuron will use to get its net value
+     *
+     * @author ks061, lts010
      */
     public ActivationFunction getActivationFunction() {
         return activationFunction;
@@ -162,6 +176,8 @@ public abstract class Neuron {
      *
      * @param activationFunction activation function this neuron will use to get
      * its net value
+     *
+     * @author ks061, lts010
      */
     public void setActivationFunction(ActivationFunction activationFunction) {
         this.activationFunction = activationFunction;

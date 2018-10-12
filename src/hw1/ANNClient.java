@@ -436,7 +436,12 @@ public class ANNClient {
      * setup/configuration/preferences.
      *
      * @param args the command line arguments
-     * @throws java.io.FileNotFoundException
+     * @throws java.io.FileNotFoundException if the file for the configuration
+     * to be written to as specified by the user cannot be written to or another
+     * error occurs while opening or creating the file
+     * @see
+     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
+     * PrintWriter </a>
      *
      * @author lts010, ks061
      */

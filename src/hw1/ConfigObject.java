@@ -75,13 +75,12 @@ public class ConfigObject {
     private ProgramMode programMode;
 
     /**
-     * Explicit constructor that initializes the number of inputs (input
-     * neurons), the number of outputs (output neurons), the number of hidden
-     * layers, the number of neurons per hidden layer, the maximum allowed sum
-     * of squared error value, list of edge weights (a weight for each edge
-     * going to the next layer in each layer except the output layer), and
-     * program mode (classification or training mode) that neural net will run
-     * in
+     * Constructor that initializes the number of inputs (input neurons), the
+     * number of outputs (output neurons), the number of hidden layers, the
+     * number of neurons per hidden layer, the maximum allowed sum of squared
+     * error value, list of edge weights (a weight for each edge going to the
+     * next layer in each layer except the output layer), and program mode
+     * (classification or training mode) that neural net will run in
      *
      * @param numInputs number of inputs (input neurons) a neural network will
      * be configured with

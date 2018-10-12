@@ -35,6 +35,8 @@ public class HiddenNeuron extends Neuron {
      * @param neuronNum index of the neuron within a hidden layer
      * @param layerNum index of the hidden layer this neuron lies within
      * @param nN neural network this neuron lies within
+     *
+     * @author ks061, lts010
      */
     public HiddenNeuron(int neuronNum, int layerNum, NeuralNet nN) {
         super(neuronNum, layerNum, nN);
@@ -87,6 +89,8 @@ public class HiddenNeuron extends Neuron {
      * Gets the theta value for this neuron
      *
      * @return theta value for this neuron
+     *
+     * @author ks061, lts010
      */
     public double getTheta() {
         return this.theta;
@@ -96,6 +100,8 @@ public class HiddenNeuron extends Neuron {
      * Sets the theta value for this neuron
      *
      * @param theta theta value to set for this neuron
+     *
+     * @author ks061, lts010
      */
     public void setTheta(double theta) {
         this.theta = theta;
