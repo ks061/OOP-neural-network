@@ -271,11 +271,6 @@ public class NeuralNet {
      * @author lts010, ks061
      */
     public void storeTheta(int layerNum, int neuronNum, double newTheta) {
-//        System.out.println("layerNum: " + layerNum);
-//        System.out.println("neuronNum: " + neuronNum);
-//        System.out.println("newTheta: " + newTheta);
-//        System.out.println(Arrays.toString(
-//                this.configuration.getThetas().toArray()));
         this.configuration.getThetas().get(layerNum).set(neuronNum, newTheta);
     }
 
@@ -313,58 +308,51 @@ public class NeuralNet {
         return layers;
     }
 
-//    /**
-//     * Explicit constructor used for JUnit testing that creates the input layer,
-//     * any hidden layers, and output layer, along with creating connections
-//     * among the layers.
-//     *
-//     * @author lts010
-//     */
-//    NeuralNet() {
-//        ArrayList<ArrayList<Double>> weights = new ArrayList<ArrayList<Double>>();
-//        weights.add(new ArrayList<Double>());
-//        weights.add(new ArrayList<Double>());
-//        weights.get(0).add(-0.3);
-//        weights.get(0).add(0.2);
-//        weights.get(0).add(0.1);
-//        weights.get(0).add(-0.2);
-//        weights.get(1).add(-0.1);
-//        weights.get(1).add(-0.5);
-//        ArrayList<ArrayList<Double>> thetas = new ArrayList<ArrayList<Double>>();
-//        thetas.add(new ArrayList<Double>());
-//        thetas.add(new ArrayList<Double>());
-//        thetas.get(0).add(0.1);
-//        thetas.get(0).add(0.1);
-//        thetas.get(1).add(0.1);
-//        ConfigObject config = new ConfigObject(2, 1, 1, 2, 0.001, weights,
-//                                               thetas, ProgramMode.TRAINING);
-//        double[][] data = {{1, 1, 1}};
-//
-//        this.data = data;
-//        this.configuration = config;
-//        ArrayList<Layer> layers = new ArrayList<>();
-//        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-", 0,
-//                                               this);
-//        layers.add(inputLayer);
-//        for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
-//            layers.add(new HiddenLayer(
-//                    this.configuration.getNumNeuronsPerHiddenLayer(),
-//                    "H" + i + "-",
-//                    i, this));
-//        }
-//
-//        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(), "O1-",
-//                                                  layers.size(), this);
-//        layers.add(outputLayer);
-//        Iterator it = layers.iterator();
-//        Layer currentLayer = (Layer) it.next();
-//        Layer nextLayer;
-//        while (it.hasNext()) {
-//            nextLayer = (Layer) it.next();
-//            currentLayer.connectLayer(nextLayer);
-//            currentLayer = nextLayer;
-//
-//        }
-//        this.layers = layers;
-//    }
+    /**
+     * Explicit constructor used for JUnit testing that creates the input layer,
+     * any hidden layers, and output layer, along with creating connections
+     * among the layers.
+     *
+     * @author lts010
+     */
+    NeuralNet(ConfigObject config, double[][] data) {
+        if (data.length == 0) {
+            throw new NeuralNetConstructionException(
+                    "No data has been provided.");
+        }
+
+        int dataLength = data[0].length;
+        for (double[] inputSet : data) {
+            if (inputSet.length != dataLength) {
+                throw new NeuralNetConstructionException(
+                        "Not all rows in data set have the same amount of entries.");
+            }
+        }
+        this.data = data;
+        this.configuration = config;
+        ArrayList<Layer> layers = new ArrayList<>();
+        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-", 0,
+                                               this);
+        layers.add(inputLayer);
+        for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
+            layers.add(new HiddenLayer(
+                    this.configuration.getNumNeuronsPerHiddenLayer(),
+                    "H" + i + "-", i, this));
+        }
+
+        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(), "O1-",
+                                                  layers.size(), this);
+        layers.add(outputLayer);
+        Iterator it = layers.iterator();
+        Layer currentLayer = (Layer) it.next();
+        Layer nextLayer;
+        while (it.hasNext()) {
+            nextLayer = (Layer) it.next();
+            currentLayer.connectLayer(nextLayer);
+            currentLayer = nextLayer;
+
+        }
+        this.layers = layers;
+    }
+
 }

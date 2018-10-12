@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * @author cld028, ks061, lts010
  *
  */
-abstract class Neuron {
+public abstract class Neuron {
 
     private final int neuronNum;
     private final int layerNum; //the number for the layer that is neuron is in.

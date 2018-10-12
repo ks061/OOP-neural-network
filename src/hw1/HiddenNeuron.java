@@ -34,12 +34,7 @@ public class HiddenNeuron extends Neuron {
      */
     public HiddenNeuron(int neuronNum, int layerNum, NeuralNet nN) {
         super(neuronNum, layerNum, nN);
-        if (layerNum == 0) {
-            this.theta = DEFAULTTHETA;
-        }
-        else {
-            this.theta = super.getNeuralNet().getTheta(layerNum, neuronNum);
-        }
+        this.theta = super.getNeuralNet().getTheta(layerNum, neuronNum);
     }
 
     /**
