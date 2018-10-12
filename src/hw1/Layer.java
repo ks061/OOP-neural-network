@@ -17,7 +17,6 @@ package hw1;
 
 import java.util.ArrayList;
 
-// TODO: move methods from layer subclasses
 /**
  * Layer is an abstraction of columns of neurons within a neural network;
  * neurons within a layer have similar functionality.
@@ -52,15 +51,16 @@ public abstract class Layer {
     protected NeuralNet neuralNet;
 
     /**
-     * Explicit constructor that creates a layer with a particular number of
-     * neurons
+     * Constructor that creates a layer with a particular number of neurons and
+     * an identifier for the layer.
      *
      * @param numNeurons number of neurons to create in this layer
      * @param layerID identifier for the layer
      *
      * @author cld028
      */
-    Layer(int numNeurons, String layerID, int layerNum, NeuralNet neuralNet) {
+    public Layer(int numNeurons, String layerID, int layerNum,
+                 NeuralNet neuralNet) {
         this.numNeurons = numNeurons;
         this.layerID = layerID;
         this.layerNum = layerNum;
@@ -71,7 +71,7 @@ public abstract class Layer {
     /**
      * Create neurons that will reside in layer
      *
-     * @param numNeurons - total number of neurons to create
+     * @param numNeurons total number of neurons to create
      * @return list of neurons in the layer
      *
      * @author cld028
@@ -82,31 +82,32 @@ public abstract class Layer {
      * Connect the current layer to another layer (with this layer being on the
      * left)
      *
-     * @param nextLayer - The right layer to which to connect
+     * @param nextLayer right layer to which to connect
      *
      * @author cld028
      */
     public abstract void connectLayer(Layer nextLayer);
 
     /**
-     * Fires all neurons in the layer
+     * Fires all neurons in the layer to calculate their net input values
      *
      * @author lts010, ks061
      */
     public abstract void fireNeurons();
 
     /**
-     * Adjusts weights for nodes connecting to layer and then calls the learn
-     * method of the previous layer
+     * Adjusts weights for nodes connecting to layer through error calculation
+     * and then calls the learn method of the previous layer (back propagation)
      *
      * @author ks061, lts010
      */
     public abstract void learn();
 
     /**
-     * Gets the neural net
+     * Gets a pointer to the neural network
      *
-     * @return the neural net
+     * @return neural network
+     *
      * @author lts010, ks061
      */
     public NeuralNet getNeuralNet() {
@@ -114,9 +115,9 @@ public abstract class Layer {
     }
 
     /**
-     * Get list of neurons
+     * Gets list of neurons within the layer
      *
-     * @return list of neurons
+     * @return list of neurons within the layer
      * @author lts010
      */
     public ArrayList<Neuron> getNeurons() {
@@ -124,46 +125,3 @@ public abstract class Layer {
     }
 
 }
-
-//    /**
-//     * Explicit constructor that creates a layer with a particular number of
-//     * neurons.
-//     *
-//     * @param numNeurons number of neurons to create in this layer
-//     *
-//     * @author cld028
-//     */
-//    Layer(int numNeurons) {
-//        this.neurons = this.createNeurons(numNeurons);
-//    }
-//    /**
-//     * Create neurons that will reside in layer
-//     *
-//     * @param numNeurons - total number of neurons to create
-//     * @param layerID - string identifier for layer
-//     * @param LayerNumber
-//     * @return list of neurons in the layer
-//     *
-//     * @author cld028
-//     */
-//    public abstract ArrayList<Neuron> createNeurons(int numNeurons,
-//                                                    String layerID,
-//                                                    int LayerNumber);
-//    /**
-//     * Fires all neurons in the layer
-//     *
-//     * @param inputVals provides input for the neuron to be used when firing
-//     *
-//     * @author ks061, lts010
-//     */
-//    public abstract void fireNeurons(double[] inputVals);
-//    /**
-//     * update the weights in the layer to the
-//     *
-//     * @param oldEdges
-//     * @param deltaWeight
-//     *
-//     * @author cld028
-//     */
-//    protected abstract void updateWeights(ArrayList<Edge> oldEdges,
-//                                          double deltaWeight);

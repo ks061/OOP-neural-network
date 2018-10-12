@@ -23,10 +23,14 @@ package hw1;
  */
 public class HiddenNeuron extends Neuron {
 
+    /**
+     * Represents the theta value serving as a threshold and part of the input
+     * to this neuron
+     */
     private double theta;
 
     /**
-     * Constructor for a neuron in a hidden layer of a neural network.
+     * Constructor for a neuron in a hidden layer of a neural network
      *
      * @param neuronNum index of the neuron within a hidden layer
      * @param layerNum index of the hidden layer this neuron lies within
@@ -38,9 +42,9 @@ public class HiddenNeuron extends Neuron {
     }
 
     /**
-     * Fire the neuron (essentially calculate the net input of neuron based on
-     * weighted inputs from incoming edges and using an activation function)
-     *
+     * Fires the neuron; calculates the net input of the neuron based on
+     * weighted inputs from incoming edges and obtaining the value of this net
+     * input from the activation function defined in the Neuron class.
      *
      * @author lts010, ks061
      */
@@ -54,8 +58,8 @@ public class HiddenNeuron extends Neuron {
     }
 
     /**
-     * Calculates error gradient by weighting the error gradients back
-     * propagated by its output edges, adjusts the neuron's theta, back
+     * Calculates the error gradient by weighting the error gradients back
+     * propagated by its output edges, adjusts the neuron's theta value, back
      * propagates the error gradient to edges connecting to it, and stores its
      * own theta within the neural network.
      *
@@ -68,21 +72,8 @@ public class HiddenNeuron extends Neuron {
             weightedErrorGradients += edge.getWeightTimesDelta();
         }
 
-        //String strNetVal = Double.toString(super.getNetValue());
-        // System.out.println("netValue: " + strNetVal);
-        // System.out.println("weightedErrorGradient: " + weightedErrorGradients);
         errorGradient = super.getNetValue() * (1 - super.getNetValue()) * weightedErrorGradients;
-        // System.out.println("errorGradient: " + errorGradient);
-        // TODO: remove
-        //String strNeuronNum = Integer.toString((super.getNeuronNum() + 1));
-        // TODO: remove
-        //String strErrorGradient = Double.toString(errorGradient);
-        // TODO: remove
-        // System.out.println(
-        //       "delta_h" + strNeuronNum + "(0) = " + strErrorGradient);
         setTheta(getTheta() + NeuralNet.alpha * -1 * errorGradient);
-        // System.out.println(
-        //       "theta_h" + strNeuronNum + "(1) = " + getTheta());
 
         for (Edge edge : super.getInEdges()) {
             edge.learn(errorGradient);

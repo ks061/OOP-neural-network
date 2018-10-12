@@ -9,7 +9,8 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: HiddenLayer
- * Description: Represents the hidden layer of an artificial neural net
+ * Description: This file contains HiddenLayer, which represents a hidden layer
+ *              in a neural network.
  *
  * ****************************************
  */
@@ -18,8 +19,7 @@ package hw1;
 import java.util.ArrayList;
 
 /**
- * Class used to create hidden layers. You may want to use a variable to store
- * which learning algorithm you are using.
+ * HiddenLayer represents a hidden layer in a neural network.
  *
  * @author cld028, lts010, ks061
  */
@@ -41,9 +41,9 @@ public class HiddenLayer extends Layer {
     protected Layer nextLayer;
 
     /**
-     * Explicit constructor that initializes the hidden layer with a particular
-     * number of neurons, a string identifier for the layer, the index of the
-     * layer, and the neural network the layer is within
+     * Constructor that initializes a hidden layer with a particular number of
+     * neurons, a string identifier for the layer, the index of the layer, and
+     * the neural network the layer is within
      *
      * @param numNeurons number of neurons in the hidden layer
      * @param id string identifier for layer
@@ -52,9 +52,8 @@ public class HiddenLayer extends Layer {
      *
      * @author cld028
      */
-    HiddenLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
+    public HiddenLayer(int numNeurons, String id, int layerNum, NeuralNet nN) {
         super(numNeurons, id, layerNum, nN);
-        // this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
     }
 
     /**
@@ -79,9 +78,10 @@ public class HiddenLayer extends Layer {
     }
 
     /**
-     * Connects this layer to the next layer
+     * Connects this layer to the next layer such that this layer and the next
+     * layer have next and previous pointers respectively to one another
      *
-     * @param nextLayer next layer
+     * @param nextLayer next adjacent layer within the neural network
      *
      * @author ks061, lts010
      */
@@ -112,31 +112,17 @@ public class HiddenLayer extends Layer {
     }
 
     /**
-     * Runs the weight delta calculation for each neuron
-     *
-     * @author ks061, lts010
-     */
-    public void calculateWeightDeltas() {
-    }
-
-    /**
-     * Given a set of output, use learn to actually update parameters in NN
+     * Each neuron is called to learn, i.e. calculate and back propagate its
+     * error data. Then, if the previous layer pointer of this layer refers to a
+     * layer that is a hidden layer (rather than an input layer), it will call
+     * the next layer to learn.
      *
      * @author ks061, lts010
      */
     public void learn() {
-//        calculateErrors();
-//        double deltaWeight = this.neurons.get(0).getValue()
-//                             * (1 - this.neurons.get(0).getValue())
-//                             * this.outputErrors[this.t];
-//        updateWeights(this.neurons.get(0).getInEdges(), deltaWeight);
         for (Neuron neuron : this.neurons) {
             ((HiddenNeuron) neuron).learn();
         }
-//        Iterator it = this.neurons.iterator();
-//        while (it.hasNext()) {
-//            ((Neuron) it.next()).learn();
-//        }
         if (prevLayer instanceof HiddenLayer) {
             ((HiddenLayer) prevLayer).learn();
         }
@@ -156,105 +142,47 @@ public class HiddenLayer extends Layer {
     }
 
     /**
-     * increments the number of edges in the layer
+     * Increments the number of edges in the layer
      *
-     * @return an int that is to be used as the ID for a newly created edge
+     * @return index to be used as the ID for a newly created edge
      *
      * @author lts010, ks061
      */
-    protected int getNextEdgeNum() {
+    public int getNextEdgeNum() {
         return (numOutEdges++);
     }
 
     /**
-     * Gets the number out edges in the layer, i.e. the number of edges from
+     * Gets the number output edges in the layer, i.e. the number of edges from
      * this layer to the next layer.
      *
-     * @return number of out edges
+     * @return number of output edges in this layer
+     *
      * @author lts010, ks061
      */
-    protected int getNumOutEdges() {
+    public int getNumOutEdges() {
         return (this.numOutEdges);
     }
 
     /**
-     * Sets the previous layer
+     * Sets a pointer to the previous layer
      *
      * @param prevLayer previous layer
      *
      * @author ks061, lts010
      */
-    protected void setPrevLayer(Layer prevLayer) {
+    public void setPrevLayer(Layer prevLayer) {
         this.prevLayer = prevLayer;
     }
 
     /**
-     * Sets the next layer
+     * Sets a pointer to the next layer
      *
      * @param nextLayer next layer
      *
      * @author ks061, lts010
      */
-    protected void setNextLayer(Layer nextLayer) {
+    public void setNextLayer(Layer nextLayer) {
         this.nextLayer = nextLayer;
     }
 }
-
-//    /**
-//     * Creates a particular number of neurons in the hidden layer with a string
-//     * identifier for the layer
-//     *
-//     * @param numNeurons number of neurons to be created within the layer
-//     * @param layerID string identifier for the layer
-//     * @return list of neurons created within the layer
-//     *
-//     * @author lts010, ks061
-//     */
-//    public ArrayList<Neuron> createNeurons(int numNeurons, String layerID) {
-//        ArrayList<Neuron> neurons = new ArrayList<>();
-//        for (int i = 0; i < numNeurons; i++) {
-//            neurons.add(new Neuron(i));
-//        }
-//        return neurons;
-//    }
-//    /**
-//     * Explicit constructor that initializes the hidden layer with a particular
-//     * number of neurons
-//     *
-//     * @param numNeurons
-//     *
-//     * @author cld028
-//     */
-//    HiddenLayer(int numNeurons) {
-//        super(numNeurons);
-//        // this.learnAlg = HiddenLayer.DEFAULTLEARNINGALG;
-//    }
-// /**
-//     * Updates the weights of all of the prior weights
-//     *
-//     * @param oldEdges edges coming to output neuron in this layer
-//     * @param deltaWeight change in weight
-//     *
-//     * @author ks061
-//     */
-//    protected void updateWeights(ArrayList<Edge> oldEdges, double deltaWeight) {
-//        for (Edge edge : oldEdges) {
-//            edge.changeWeight(NeuralNet.alpha, deltaWeight);
-//        }
-//        if (this.prevLayer instanceof HiddenLayer) {
-//            this.prevLayer.learn(deltaWeight);
-//        }
-//    }
-//    /**
-//     * Throws UnsupportedOperationException because the hidden layer does not
-//     * assign input values to its neurons
-//     *
-//     * @param inputVals input values
-//     *
-//     * @author ks061, lts010
-//     */
-//    @Override
-//    public void fireNeurons(double[] inputVals) {
-//        throw new UnsupportedOperationException(
-//                "Hidden layer does not assign input values to its neurons."); //To change body of generated methods, choose Tools | Templates.
-//    }

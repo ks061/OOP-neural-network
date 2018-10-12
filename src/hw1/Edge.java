@@ -9,37 +9,75 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: Edge
- * Description: Represents an edge in a neural net
+ * Description: This file contains Edge, which represents the connection between
+ *              neurons in adjacent layers within a neural network.
  *
  * ****************************************
  */
 package hw1;
 
 /**
- * Class to hold properties associated with edges between nodes
+ * Edge represents the connection between neurons in adjacent layers within a
+ * neural network.
  *
  * @author lts010, ks061
  */
 public class Edge {
 
-    private double weight;
-    private final double errorGradient = 0;
-    private final double weightDelta = 0;
-    private double weightTimesDelta = 0;
-    private Neuron to;
-    private Neuron from;
+    /**
+     * Represents the index of this edge amongst the edges connecting from the
+     * layer that has neurons that this edge receives input from, i.e. the edge
+     * connecting the first neuron in a layer to the first neuron in the next
+     * adjacent layer has an index of 0, the edge connecting the first neuron in
+     * a layer to the second neuron in the next adjacent layer has an index of
+     * 1, etc.
+     */
     private final int edgeNumber;
+    /**
+     * Represents the index of the layer within a neural network that the edge
+     * receives input from, i.e. the input layer has an index of 0, etc.
+     */
     private final int layerNumber;
+    /**
+     * Represents the neural network that this edge resides within
+     */
     private final NeuralNet neuralNet;
 
     /**
-     * Explicit constructor for creating an edge
+     * Represents the weights of each edge
+     */
+    private double weight;
+    /**
+     * Represents the weight applied to the delta that this edge receives from
+     * its output neuron during back propagation
+     */
+    private double weightTimesDelta = 0;
+    /**
+     * Represents the neuron that this edge connects to or delivers output to
+     */
+    private Neuron to;
+    /**
+     * Represents the neuron that this edge connects from or receives input from
+     */
+    private Neuron from;
+
+    /**
+     * Constructor for creating an edge
      *
-     * @param edgeNum is a ID number for this edge, and is unique within the
-     * layer. It is used a an index in the \\weight table.
+     * @param nN represents the neural network that this edge resides within
+     * @param edgeNum represents the index of this edge amongst the edges
+     * connecting from the layer that has neurons that this edge receives input
+     * from, i.e. the edge connecting the first neuron in a layer to the first
+     * neuron in the next adjacent layer has an index of 0, the edge connecting
+     * the first neuron in a layer to the second neuron in the next adjacent
+     * layer has an index of 1, etc.
+     * @param layerNum represents the index of the layer within a neural network
+     * that the edge receives input from, i.e. the input layer has an index of
+     * 0, etc.
+     *
      * @author ks061, lts010
      */
-    Edge(NeuralNet nN, int layerNum, int edgeNum) {
+    public Edge(NeuralNet nN, int layerNum, int edgeNum) {
         this.neuralNet = nN;
         this.weight = neuralNet.getWeight(layerNum, edgeNum);
         this.edgeNumber = edgeNum;
@@ -47,9 +85,10 @@ public class Edge {
     }
 
     /**
-     * Gives the weighted value
+     * Gets the weight applied to the net value of the neuron this edge receives
+     * input from
      *
-     * @return the weighted value
+     * @return weighted net value of input neuron
      *
      * @author lts010, ks061
      */
@@ -64,7 +103,7 @@ public class Edge {
      *
      * @author ks061, lts010
      */
-    protected void setFrom(Neuron neuron) {
+    public void setFrom(Neuron neuron) {
         this.from = neuron;
     }
 
@@ -75,7 +114,7 @@ public class Edge {
      *
      * @author ks061, lts010
      */
-    protected void setTo(Neuron neuron) {
+    public void setTo(Neuron neuron) {
         this.to = neuron;
     }
 
@@ -86,7 +125,7 @@ public class Edge {
      *
      * @author ks061, lts010
      */
-    protected Neuron getFrom() {
+    public Neuron getFrom() {
         return this.from;
     }
 
@@ -97,14 +136,16 @@ public class Edge {
      *
      * @author ks061, lts010
      */
-    protected Neuron getTo() {
+    public Neuron getTo() {
         return this.to;
     }
 
     /**
-     * Gets the weight times the delta
+     * Gets the weight applied to the delta that this edge receives from its
+     * output neuron during back propagation
      *
-     * @return weight times delta
+     * @return the weight applied to the delta that this edge receives from its
+     * output neuron during back propagation
      *
      * @author ks061, lts010
      */
@@ -112,49 +153,21 @@ public class Edge {
         return weightTimesDelta;
     }
 
-    // TODO: ASK PROF make everything protected (should they be public or protected)
     /**
-     * Updates the weight for the edge
+     * Stores the value of the weight applied to the error gradient received
+     * from the output neuron of this edge, updates the weight for the edge by
+     * adding the product of the learning rate, the net value of the neuron this
+     * edge receives input from, and the error gradient received from the output
+     * neuron of this edge
      *
      * @param errorGradient the value of delta, the error gradient
      *
      * @author lts010, ks061
      */
-    protected void learn(double errorGradient) {
+    public void learn(double errorGradient) {
         this.weightTimesDelta = this.weight * errorGradient;
         this.weight = this.weight + NeuralNet.alpha * this.from.getNetValue() * errorGradient;
-        //System.out.println(
-        //      "w " + "layerNumber: " + layerNumber + " edgeNumber: " + edgeNumber + "is" + this.weight
-        //);
         neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
     }
 
 }
-
-//    /**
-//     * Changes the weight
-//     *
-//     * @param alpha - the learning rate
-//     * @param error - the difference between the desired output and the actual
-//     * output
-//     *
-//     * @author lts010, ks061
-//     */
-//    public void changeWeight(double alpha, double error) {
-//        this.prevWeightDelta = this.weightDelta;
-//        this.weightDelta = alpha * from.getValue() * error;
-//        this.weight += weightDelta;
-//        neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
-//    }
-//    /**
-//     * Explicit constructor for creating an edge
-//     *
-//     * @param weight weight applied to data transferred to neuron
-//     *
-//     * @author ks061, lts010
-//     */
-//    Edge(double weight) {
-//        this.to = to;
-//        this.from = from;
-//        this.weight = weight;
-//    }

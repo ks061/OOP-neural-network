@@ -21,7 +21,7 @@ package hw1;
  *
  * @author lts010, ks061
  */
-interface WeightAssignment {
+public interface WeightAssignment {
 
     /**
      * Provides weights to edge

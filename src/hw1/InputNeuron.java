@@ -35,10 +35,10 @@ public class InputNeuron extends Neuron {
     }
 
     /**
-     * Sets the net value for the neuron (used assign input values to neurons in
-     * the input layer)
+     * Sets the net value for the neuron (used to assign input values to neurons
+     * in the input layer)
      *
-     * @param netValue value to set the neuron to
+     * @param netValue net value to set for the neuron
      *
      * @author ks061
      */

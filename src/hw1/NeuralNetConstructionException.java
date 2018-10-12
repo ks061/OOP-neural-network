@@ -9,7 +9,9 @@
  * Project: 205-FA18Class
  * Package: hw01
  * File: NeuralNetConstructionException
- * Description: Exception thrown during the construction of a neural net
+ * Description: This file contains NeuralNetConstructionException, which is a
+ *              RuntimeException that is thrown when there is an issue in
+ *              creating the neural network.
  *
  * ****************************************
  */
@@ -24,7 +26,7 @@ package hw1;
 public class NeuralNetConstructionException extends RuntimeException {
 
     /**
-     * Explicit constructor for NeuralNetConstructionException that takes in an
+     * Constructor for NeuralNetConstructionException that takes in an
      * informative message
      *
      * @param message informative message for exception
