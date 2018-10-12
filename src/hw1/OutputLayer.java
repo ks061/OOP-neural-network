@@ -80,9 +80,10 @@ public class OutputLayer extends Layer {
         int neuronIndex = 0;
         for (Neuron neuron : this.neurons) {
             ((OutputNeuron) neuron).fire();
-            neuronIndex = neuron.getNeuronNum();
-
-            this.outputErrors[neuronIndex] = this.targetOutputs[neuronIndex] - neuron.getNetValue();
+            if (super.getNeuralNet().getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
+                neuronIndex = neuron.getNeuronNum();
+                this.outputErrors[neuronIndex] = this.targetOutputs[neuronIndex] - neuron.getNetValue();
+            }
             //System.out.println("neuronIndex = " + neuronIndex);
             //System.out.print(
             //       "Output Errors = " + Arrays.toString(outputErrors));
@@ -90,7 +91,9 @@ public class OutputLayer extends Layer {
             //       targetOutputs));
             // System.out.println(" Output Errors = " + Arrays.toString(outputErrors));
         }
-        learn();
+        if (super.getNeuralNet().getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
+            learn();
+        }
     }
 
     public double calculateSumOfSquaredErrors() {
@@ -137,8 +140,8 @@ public class OutputLayer extends Layer {
             int neuronID = neuron.getNeuronNum();
             this.outputErrors[neuronID] = targetOutputs[neuronID] - this.neurons.get(
                     neuronID).getNetValue();
-            System.out.println(
-                    "E(0) = " + this.outputErrors[neuronID]);
+//            System.out.println(
+//                    "E(0) = " + this.outputErrors[neuronID]);
             ((OutputNeuron) neuron).learn(this.outputErrors[neuronID]);
         }
 //        Iterator it = this.neurons.iterator();

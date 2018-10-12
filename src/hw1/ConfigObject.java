@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -300,15 +301,22 @@ public class ConfigObject {
         Scanner fReader = new Scanner(System.in);
         boolean fileFound = false;
         while (!fileFound) {
-            try {
+
+            System.out.print(
+                    "Enter the filename of the configuration file: ");
+            String filename = in.nextLine();
+            if (filename.substring(filename.lastIndexOf('.') + 1).equals("txt")) {
+                try {
+                    File f = new File(filename);
+                    fReader = new Scanner(f);
+                    fileFound = true;
+                } catch (FileNotFoundException ex) {
+                    System.out.println("File not found. Try again.");
+                }
+            }
+            else {
                 System.out.println(
-                        "Enter the filename of the configuration file: ");
-                String filename = in.nextLine();
-                File f = new File(filename);
-                fReader = new Scanner(f);
-                fileFound = true;
-            } catch (FileNotFoundException ex) {
-                System.out.println("File not found. Try again.");
+                        "The file entered is not a .txt file. ");
             }
         }
         ArrayList<String> configList = new ArrayList<>();
@@ -322,14 +330,17 @@ public class ConfigObject {
      * Saves all relevant information of a neural net to a file
      *
      * @param nN - a Neural Net
-     * @throws java.io.FileNotFoundException
+     * @throws java.io.FileNotFoundException if the file for the configuration
+     * to be written to as specified by the user cannot be written to or another
+     * error occurs while opening or creating the file
+     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
      *
      * @author lts010, ks061
      */
     public static void exportConfig(NeuralNet nN) throws FileNotFoundException {
         Scanner in = new Scanner(System.in);
         String prompt = "What .txt file would you like to save the configuration to? ";
-        System.out.println(prompt);
+        System.out.print(prompt);
         String outputFile = in.next();
         PrintWriter out = new PrintWriter(outputFile);
         out.printf("%d.0 %d.0 %d.0 %d.0 %f\n",
@@ -348,8 +359,8 @@ public class ConfigObject {
             out.printf("%s\n", weightLayer);
         }
         out.printf("%s\n", "THETAS");
-        ArrayList<ArrayList<Double>> thetas = nN.getConfiguration().getThetas();
-        thetas = (ArrayList<ArrayList<Double>>) thetas.subList(1, thetas.size());
+        List<ArrayList<Double>> thetas = nN.getConfiguration().getThetas().subList(
+                1, nN.getConfiguration().getThetas().size());
         String thetaLayer;
         for (ArrayList<Double> thetaList : thetas) {
             thetaLayer = "";
@@ -358,7 +369,6 @@ public class ConfigObject {
             }
             out.printf("%s\n", thetaLayer);
         }
-        out.close();
     }
 
 }

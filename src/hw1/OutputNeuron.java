@@ -72,11 +72,11 @@ public class OutputNeuron extends Neuron {
     public void learn(double outputError) {
         double errorGradient = 0;
         errorGradient = super.getNetValue() * (1 - super.getNetValue()) * outputError;
-        System.out.println(
-                "delta_y1(0) = " + errorGradient);
+        //System.out.println(
+        //       "delta_y1(0) = " + errorGradient);
         setTheta(getTheta() + NeuralNet.alpha * -1 * errorGradient);
-        System.out.println(
-                "theta_y1(1) = " + this.theta);
+        //System.out.println(
+        //    "theta_y1(1) = " + this.theta);
         for (Edge edge : super.getInEdges()) {
             edge.learn(errorGradient);
         }

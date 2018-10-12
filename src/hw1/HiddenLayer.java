@@ -143,15 +143,6 @@ public class HiddenLayer extends Layer {
     }
 
     /**
-     * Calculates output errors after forward propagation complete
-     *
-     * @author ks061
-     */
-    private void calculateErrors() {
-        // TODO outputErrors[this.t] = this.neurons.get(0).getValue() - targetOutput[this.t];
-    }
-
-    /**
      * Computes net input values for each neuron in the layer
      *
      * @author ks061, lts010

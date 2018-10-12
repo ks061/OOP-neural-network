@@ -125,16 +125,25 @@ public class ANNClient {
         String filename = null;
         while (!csvFound) {
             // Get CSV filename from user
-            System.out.print("Enter the name of the training data file: ");
+            System.out.print(
+                    "Enter the name of the training data file (.csv file): ");
             filename = scanner.nextLine();
-            // Try to access CSV file
-            File csv = new File(filename);
-            try {
-                scanner = new Scanner(csv);
-                csvFound = true;
-            } catch (FileNotFoundException ex) {
-                System.out.println("The training data file has not been found. ");
+            if (filename.substring(filename.lastIndexOf('.') + 1).equals("csv")) {
+                File csv = new File(filename);
+                try {
+                    // Try to access CSV file
+                    scanner = new Scanner(csv);
+                    csvFound = true;
+                } catch (FileNotFoundException ex) {
+                    System.out.println(
+                            "The training data file has not been found. ");
+                }
             }
+            else {
+                System.out.println(
+                        "The file entered is not a .csv file. ");
+            }
+
         }
 
         // Gets number of lines in file
@@ -267,7 +276,6 @@ public class ANNClient {
         for (int i = 0; i < numOutputs; i++) {
             listOfThetas.get(listOfThetas.size() - 1).add(Neuron.DEFAULTTHETA);
         }
-        System.out.println(listOfThetas);
         return listOfThetas;
     }
 
@@ -354,7 +362,7 @@ public class ANNClient {
      */
     public static ArrayList<ArrayList<Double>> strListToDoubleList(
             ArrayList<String> strList) {
-        Scanner strReader;
+        Scanner strReader = null;
         ArrayList<ArrayList<Double>> doubleList = new ArrayList<>();
         for (int i = 0; i < strList.size(); i++) {
             doubleList.add(new ArrayList<>());
@@ -363,7 +371,6 @@ public class ANNClient {
                 doubleList.get(i).add(strReader.nextDouble());
             }
         }
-
         return doubleList;
     }
 
@@ -427,7 +434,7 @@ public class ANNClient {
             numOutputs = (int) Math.round(weightList.get(0).get(1));
             numHiddenLayers = (int) Math.round(weightList.get(0).get(2));
             numNeuronsPerHiddenLayer = (int) Math.round(weightList.get(0).get(3));
-            highestSSE = (int) Math.round(weightList.get(0).get(4));
+            highestSSE = weightList.get(0).get(4);
             weights = new ArrayList<>(weightList.subList(1,
                                                          configListWeights.size()));
         }
