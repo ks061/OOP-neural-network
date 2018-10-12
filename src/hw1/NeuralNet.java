@@ -15,6 +15,8 @@
  */
 package hw1;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -39,9 +41,14 @@ public class NeuralNet {
      * Explicit constructor that creates the input layer, any hidden layers, and
      * output layer, along with creating connections among the layers.
      *
+     * @throws java.io.FileNotFoundException if the file for the configuration
+     * to be written to as specified by the user cannot be written to or another
+     * error occurs while opening or creating the file
+     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     *
      * @author cld028, ks061, lts010
      */
-    NeuralNet(double[][] data, ConfigObject config) {
+    NeuralNet(double[][] data, ConfigObject config) throws FileNotFoundException {
         if (data.length == 0) {
             throw new NeuralNetConstructionException(
                     "No data has been provided.");
@@ -56,6 +63,7 @@ public class NeuralNet {
                         "Not all rows in data set have the same amount of entries.");
             }
         }
+
         this.data = data;
         this.configuration = config;
 
@@ -85,37 +93,60 @@ public class NeuralNet {
 
         }
 
-        System.out.println("initial weights are:  ");
-        for (ArrayList<Double> layer : config.getWeights()) {
-            System.out.println(layer);
+        if (this.configuration.getProgramMode() == ProgramMode.TRAINING) {
+            train();
         }
 
+        if (this.configuration.getProgramMode() == ProgramMode.CLASSIFICATION) {
+            classify();
+        }
+    }
+
+    /**
+     * Runs the neural network in the training mode, which trains a neural
+     * network based on sets of input and corresponding out values.
+     *
+     * @throws java.io.FileNotFoundException if the file for the configuration
+     * to be written to as specified by the user cannot be written to or another
+     * error occurs while opening or creating the file
+     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     */
+    public void train() throws FileNotFoundException {
+        double sseTotal;
+        InputLayer inputLayer = ((InputLayer) this.layers.get(0));
+        OutputLayer outputLayer = ((OutputLayer) this.layers.get(
+                                   this.layers.size() - 1));
         do {
+            sseTotal = 0;
             for (double[] inputOutputSet : this.data) {
                 inputLayer.setInputs(
                         Arrays.copyOfRange(inputOutputSet, 0,
-                                           config.getNumInputs()));
-                outputLayer.setTargetOutputs(Arrays.copyOfRange(
-                        inputOutputSet,
-                        config.getNumInputs(),
-                        inputOutputSet.length));
+                                           this.configuration.getNumInputs()));
+                outputLayer.setTargetOutputs(
+                        Arrays.copyOfRange(
+                                inputOutputSet,
+                                this.configuration.getNumInputs(),
+                                inputOutputSet.length));
                 inputLayer.fireNeurons();
-                System.out.println(
-                        "x_1: " + inputLayer.getNeurons().get(0).getNetValue());
-                System.out.println(
-                        "x_2: " + inputLayer.getNeurons().get(1).getNetValue());
-                System.out.println(
-                        "h_1: " + this.layers.get(1).getNeurons().get(0).getNetValue());
-                System.out.println(
-                        "h_2: " + this.layers.get(1).getNeurons().get(1).getNetValue());
-                System.out.println(
-                        "y_1: " + outputLayer.getNeurons().get(0).getNetValue());
-                System.out.println(outputLayer.calculateSumOfSquaredErrors());
-                // Read output layer
-                // Back propogate
-                // etc.
+                //System.out.println("initial weights are:  ");
+                //for (ArrayList<Double> layer : config.getWeights()) {
+                //System.out.println(layer);
+                //}
+
+//                System.out.println(
+//                        "x_1: " + inputLayer.getNeurons().get(0).getNetValue());
+//                System.out.println(
+//                        "x_2: " + inputLayer.getNeurons().get(1).getNetValue());
+//                System.out.println(
+//                        "h_1: " + this.layers.get(1).getNeurons().get(0).getNetValue());
+//                System.out.println(
+//                        "h_2: " + this.layers.get(1).getNeurons().get(1).getNetValue());
+//                System.out.println(
+//                        "y_1: " + outputLayer.getNeurons().get(0).getNetValue());
+                sseTotal += outputLayer.calculateSumOfSquaredErrors();
             }
-        } while (false);
+            // System.out.println(sseTotal);
+        } while (sseTotal > this.configuration.getHighestSSE());
         // TODO: change while back to below line
         // outputLayer.calculateSumOfSquaredErrors() > config.getHighestSSE();
 
@@ -125,6 +156,81 @@ public class NeuralNet {
         //            System.out.println(layer);
         //        }
         //Test your network here
+        Scanner in = new Scanner(System.in);
+        System.out.println(
+                "Neural network has been trained successfully with a sum of squared errors of " + sseTotal
+                + ".");
+        System.out.print(
+                "Would you like to save the configuration of this neural network to a file? (enter y for yes; anything else for no) ");
+        String willSaveToFile = in.nextLine();
+        if (willSaveToFile.equalsIgnoreCase("y")) {
+            ConfigObject.exportConfig(this);
+        }
+        System.out.println("Thanks for using the program.");
+    }
+
+    private ArrayList<Double> getSetOfPredictedOutputs(OutputLayer outputLayer) {
+        ArrayList<Double> setOfPredictedOutputs = new ArrayList<>();
+        for (Neuron neuron : outputLayer.getNeurons()) {
+            setOfPredictedOutputs.add(neuron.getNetValue());
+        }
+        return setOfPredictedOutputs;
+    }
+
+    /**
+     *
+     * @param setsOfPredictedOutputs set of predicted outputs
+     * @throws FileNotFoundException if the file for the configuration to be
+     * written to as specified by the user cannot be written to or another error
+     * occurs while opening or creating the file
+     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     */
+    private void saveSetsOfPredictedOutputs(
+            ArrayList<ArrayList<Double>> setsOfPredictedOutputs) throws FileNotFoundException {
+        Scanner in = new Scanner(System.in);
+        String prompt = "What .txt file would you like to save the configuration to? ";
+        System.out.print(prompt);
+        String outputFile = in.next();
+        PrintWriter out = new PrintWriter(outputFile);
+        for (ArrayList<Double> setOfPredictedOutput : setsOfPredictedOutputs) {
+            out.print(Arrays.toString(setOfPredictedOutput.toArray()));
+        }
+        out.close();
+    }
+
+    /**
+     * Runs the neural network in classification mode, which predicts output
+     * values based on training data.
+     *
+     * @throws java.io.FileNotFoundException if the file for the configuration
+     * to be written to as specified by the user cannot be written to or another
+     * error occurs while opening or creating the file
+     * @see https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+     */
+    public void classify() throws FileNotFoundException {
+        InputLayer inputLayer = ((InputLayer) this.layers.get(0));
+        OutputLayer outputLayer = ((OutputLayer) this.layers.get(
+                                   this.layers.size() - 1));
+        ArrayList<ArrayList<Double>> setsOfPredictedOutputs = new ArrayList<>();
+        for (double[] inputOutputSet : this.data) {
+            inputLayer.setInputs(
+                    Arrays.copyOfRange(inputOutputSet, 0,
+                                       this.configuration.getNumInputs()));
+            inputLayer.fireNeurons();
+            System.out.println("For the set of inputs " + Arrays.toString(
+                    Arrays.copyOfRange(inputOutputSet, 0,
+                                       this.configuration.getNumInputs())) + ", the set of outputs is: " + Arrays.toString(
+                    getSetOfPredictedOutputs(outputLayer).toArray()));
+            setsOfPredictedOutputs.add(getSetOfPredictedOutputs(outputLayer));
+        }
+        Scanner in = new Scanner(System.in);
+        System.out.print(
+                "Would you like to save the predicted outputs to a file? (enter y for yes; anything else for no) ");
+        String willSaveToFile = in.nextLine();
+        if (willSaveToFile.equalsIgnoreCase("y")) {
+            saveSetsOfPredictedOutputs(setsOfPredictedOutputs);
+        }
+        System.out.println("Thanks for using the program.");
     }
 
     /**

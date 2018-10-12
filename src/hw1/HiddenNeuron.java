@@ -68,22 +68,21 @@ public class HiddenNeuron extends Neuron {
             weightedErrorGradients += edge.getWeightTimesDelta();
         }
 
-        String strNetVal = Double.toString(super.getNetValue());
-        System.out.println("netValue: " + strNetVal);
+        //String strNetVal = Double.toString(super.getNetValue());
+        // System.out.println("netValue: " + strNetVal);
+        // System.out.println("weightedErrorGradient: " + weightedErrorGradients);
         errorGradient = super.getNetValue() * (1 - super.getNetValue()) * weightedErrorGradients;
+        // System.out.println("errorGradient: " + errorGradient);
         // TODO: remove
-        String strNeuronNum = Integer.toString((super.getNeuronNum() + 1));
+        //String strNeuronNum = Integer.toString((super.getNeuronNum() + 1));
         // TODO: remove
-        String strErrorGradient = Double.toString(errorGradient);
+        //String strErrorGradient = Double.toString(errorGradient);
         // TODO: remove
-        String strTheta = Double.toString(this.theta);
-        // TODO: remove
-        System.out.println(
-                "delta_h" + strNeuronNum + "(0) = " + strErrorGradient);
+        // System.out.println(
+        //       "delta_h" + strNeuronNum + "(0) = " + strErrorGradient);
         setTheta(getTheta() + NeuralNet.alpha * -1 * errorGradient);
-        // TODO: remove
-        System.out.println(
-                "theta_h" + strNeuronNum + "(1) = " + strTheta);
+        // System.out.println(
+        //       "theta_h" + strNeuronNum + "(1) = " + getTheta());
 
         for (Edge edge : super.getInEdges()) {
             edge.learn(errorGradient);

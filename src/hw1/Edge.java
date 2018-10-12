@@ -117,16 +117,15 @@ public class Edge {
      * Updates the weight for the edge
      *
      * @param errorGradient the value of delta, the error gradient
-     * @param toOutputLayer true if this edge is connected to the output layer.
      *
      * @author lts010, ks061
      */
     protected void learn(double errorGradient) {
         this.weightTimesDelta = this.weight * errorGradient;
         this.weight = this.weight + NeuralNet.alpha * this.from.getNetValue() * errorGradient;
-        System.out.println(
-                "w " + "layerNumber: " + layerNumber + " edgeNumber: " + edgeNumber + "is" + this.weight
-        );
+        //System.out.println(
+        //      "w " + "layerNumber: " + layerNumber + " edgeNumber: " + edgeNumber + "is" + this.weight
+        //);
         neuralNet.storeWeight(layerNumber, edgeNumber, this.weight);
     }
 
