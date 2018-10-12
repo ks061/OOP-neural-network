@@ -112,6 +112,15 @@ public class Edge {
         return weightTimesDelta;
     }
 
+    /**
+     * Gets the weight of the edge
+     *
+     * @return the weight of the edge
+     */
+    public double getWeight() {
+        return this.weight;
+    }
+
     // TODO: ASK PROF make everything protected (should they be public or protected)
     /**
      * Updates the weight for the edge

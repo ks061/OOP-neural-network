@@ -9,7 +9,7 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: InputLayerTest
-* Description:
+* Description: JUnit tests for the class InputLayer
 *
 * ****************************************
  */
@@ -20,8 +20,9 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
+ * JUnit tests for the class InputLayer
  *
- * @author logan
+ * @author lts010
  */
 public class InputLayerTest extends TestCase {
 
@@ -30,7 +31,6 @@ public class InputLayerTest extends TestCase {
 
     @Override
     public void setUp() throws Exception {
-        super.setUp();
         ArrayList<ArrayList<Double>> weights = new ArrayList<>();
         weights.add(new ArrayList<>());
         weights.add(new ArrayList<>());
@@ -48,10 +48,11 @@ public class InputLayerTest extends TestCase {
         thetas.get(1).add(0.1);
         thetas.get(2).add(0.1);
         ConfigObject config = new ConfigObject(2, 1, 1, 2, 0.001, weights,
-                                               thetas, ProgramMode.TRAINING);
+                                               thetas, ProgramMode.TEST);
         double[][] data = {{1, 1, 1}};
-        myNet = new NeuralNet(config, data);
+        myNet = new NeuralNet(data, config); //create the neural net
         myLayer = (InputLayer) myNet.getLayers().get(0);
+
     }
 
     @Override
@@ -61,19 +62,23 @@ public class InputLayerTest extends TestCase {
 
     /**
      * Test of createNeurons method, of class OutputLayer.
+     *
+     * @author lts010
      */
     @Test
     public void testCreateNeurons() {
         System.out.println("createNeurons");
-        assertTrue(myLayer.getNeurons().size() == 2);
+        assertTrue(myLayer.getNeurons().size() == 2); //Input layer was constructed with two neurons
     }
 
     /**
      * Test of connectLayer method, of class InputLayer.
+     *
+     * @author lts010
      */
     @Test
     public void testConnectLayer() {
-        assertTrue(myLayer.nextLayer == myNet.getLayers().get(1));
+        assertTrue(myLayer.nextLayer == myNet.getLayers().get(1)); //if the layers connected properly then we should be able to refer to the next layer in the net this way
     }
 
 }

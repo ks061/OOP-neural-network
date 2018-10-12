@@ -9,18 +9,20 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: NeuralNetTest
-* Description:
+* Description: Junit tests for the class NeuralNet
 *
 * ****************************************
  */
 package hw1;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 
 /**
+ * JUnit tests for the class NeuralNet
  *
- * @author logan
+ * @author lts010
  */
 public class NeuralNetTest extends TestCase {
 
@@ -46,7 +48,7 @@ public class NeuralNetTest extends TestCase {
         thetas.get(1).add(0.1);
         thetas.get(2).add(0.1);
         this.config = new ConfigObject(2, 1, 1, 2, 0.001, weights,
-                                       thetas, ProgramMode.TRAINING);
+                                       thetas, ProgramMode.TEST); //create the config object, but not the data
     }
 
     @Override
@@ -54,19 +56,34 @@ public class NeuralNetTest extends TestCase {
         super.tearDown();
     }
 
-    public void testNoDataConstructionException() {
+    /**
+     * Test of a thrown exception in NeuralNet called
+     * NeuralNetConstructionException
+     *
+     * @throws java.io.FileNotFoundException
+     * @author lts010
+     */
+    public void testNoDataConstructionException() throws FileNotFoundException {
         try {
             double[][] data = {};
-            NeuralNet myNet = new NeuralNet(config, data);
+            NeuralNet myNet = new NeuralNet(data, config); //create the neural net with no data, which should throw an exception
             fail("Improper checking for lack of data");
         } catch (NeuralNetConstructionException expected) {
         }
     }
 
-    public void testInconsistentDataException() {
+    /**
+     * Test of a thrown exception in NeuralNet called
+     * NeuralNetConstructionException
+     *
+     * @throws java.io.FileNotFoundException
+     * @author lts010
+     */
+    public void testInconsistentDataException() throws FileNotFoundException {
         try {
-            double[][] data = {{0.0, 1.0}, {1.0}};
-            NeuralNet myNet = new NeuralNet(config, data);
+            double[][] data = {{0.0, 1.0}, {1.0}}; //create the neural net with inconsistent amounts of data for each epoch, which should throw an exception
+
+            NeuralNet myNet = new NeuralNet(data, config);
             fail("Improper checking for mismatched rows of data");
         } catch (NeuralNetConstructionException expected) {
         }

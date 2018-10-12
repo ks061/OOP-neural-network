@@ -109,5 +109,4 @@ public class HiddenNeuron extends Neuron {
     public void setTheta(double theta) {
         this.theta = theta;
     }
-
 }

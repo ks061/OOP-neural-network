@@ -9,25 +9,26 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: HiddenLayerTest
-* Description:
+* Description: JUnit tests for the class HiddenLayer
 *
 * ****************************************
  */
 package hw1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
+ * JUnit tests for the class HiddenLayer
  *
- * @author logan
+ * @author lts010
  */
 public class HiddenLayerTest extends TestCase {
 
     private NeuralNet myNet;
     private HiddenLayer myLayer;
+    private static final double EPSILON = 1.0E-4;
 
     @Override
     public void setUp() throws Exception {
@@ -45,21 +46,21 @@ public class HiddenLayerTest extends TestCase {
         thetas.add(new ArrayList<>());
         thetas.add(new ArrayList<>());
         thetas.add(new ArrayList<>());
-        thetas.get(1).add(0.1);
-        thetas.get(1).add(0.1);
-        thetas.get(2).add(0.1);
+        thetas.get(1).add(0.0);
+        thetas.get(1).add(0.0);
+        thetas.get(2).add(0.0);
         ConfigObject config = new ConfigObject(2, 1, 1, 2, 0.001, weights,
-                                               thetas, ProgramMode.TRAINING);
+                                               thetas, ProgramMode.TEST);
         double[][] data = {{1, 1, 1}};
-        myNet = new NeuralNet(config, data);
+        double[] inputs = {1.0, 1.0};
+        double[] outputs = {1.0};
+        myNet = new NeuralNet(data, config); //create the neural net
         myLayer = (HiddenLayer) myNet.getLayers().get(1);
         InputLayer inputLayer = (InputLayer) myNet.getLayers().get(0);
-        inputLayer.setInputs(Arrays.copyOfRange(data, 0, config.getNumInputs()));
-        OutputLayer outputLayer = (OutputLayer) myNet.getLayers().get(1);
-        outputLayer.setTargetOutputs(Arrays.copyOfRange(
-                data,
-                config.getNumInputs(),
-                data.length));
+        inputLayer.setInputs(inputs); //give inputs
+        OutputLayer outputLayer = (OutputLayer) myNet.getLayers().get(2);
+        outputLayer.setTargetOutputs(outputs); //give outputs
+
     }
 
     @Override
@@ -69,31 +70,44 @@ public class HiddenLayerTest extends TestCase {
 
     /**
      * Test of createNeurons method, of class HiddenLayer.
+     *
+     * @author lts010
      */
     @Test
     public void testCreateNeurons() {
         System.out.println("createNeurons");
-        assertTrue(myLayer.getNeurons().size() == 2);
+        assertTrue(myLayer.getNeurons().size() == 2); //the layer was constructed with two neurons
 
     }
 
     /**
      * Test of connectLayer method, of class HiddenLayer.
+     *
+     * @author lts010
      */
     @Test
     public void testConnectLayer() {
         System.out.println("connectLayer");
-        assertTrue(myLayer.nextLayer == myNet.getLayers().get(2));
+        assertTrue(myLayer.nextLayer == myNet.getLayers().get(2)); //if the layers connected this should be true
 
     }
 
     /**
      * Test of learn method, of class HiddenLayer.
+     *
+     * @author lts010
      */
     @Test
     public void testLearn() {
-        myNet.getLayers().get(0).fireNeurons();
-        fail("lol");
+        System.out.println("learn");
+        myNet.getLayers().get(0).fireNeurons(); //fire the neurons in the input layer
+        myNet.getLayers().get(2).learn(); //make the output layer learn
+        assertEquals(-0.3006, myNet.getWeight(0, 0), EPSILON); //on page 13 of hw1, the results of one round of backwards propagation were this
+        assertEquals(0.1964, myNet.getWeight(0, 1), EPSILON);
+        assertEquals(0.0994, myNet.getWeight(0, 2), EPSILON);
+        assertEquals(-0.2036, myNet.getWeight(0, 3), EPSILON);
+        assertEquals(0.0006, myNet.getTheta(1, 0), EPSILON);
+        assertEquals(0.0036, myNet.getTheta(1, 1), EPSILON);
     }
 
 }

@@ -9,36 +9,34 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: StepActivationFunctionTest
-* Description:
+* Description: JUnit tests for the class StepActivationFunction
 *
 * ****************************************
  */
 package hw1;
 
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
+ * JUnit tests for the class StepActivationFunction
  *
- * @author logan
+ * @author lts010
  */
-public class StepActivationFunctionTest {
+public class StepActivationFunctionTest extends TestCase {
 
-    public StepActivationFunctionTest() {
-    }
-
-    @Before
+    @Override
     public void setUp() {
     }
 
-    @After
+    @Override
     public void tearDown() {
     }
 
     /**
      * Test of calcOutput method, of class StepActivationFunction.
+     *
+     * @author lts010
      */
     @Test
     public void testCalcOutput() {
@@ -47,22 +45,24 @@ public class StepActivationFunctionTest {
 
         double netInput = 1.0;
         double expResult = 1.0;
-        double result = instance.calcOutput(netInput);
+        double result = instance.calcOutput(netInput); //returns 1 if netInput > 0
         assertEquals(expResult, result, 0.0);
 
         netInput = 0.0;
         expResult = 1.0;
-        result = instance.calcOutput(netInput);
+        result = instance.calcOutput(netInput); //returns 1 if netInput = 0
         assertEquals(expResult, result, 0.0);
 
         netInput = -1.0;
         expResult = 0.0;
-        result = instance.calcOutput(netInput);
+        result = instance.calcOutput(netInput); //returns 0 if netInput < 0
         assertEquals(expResult, result, 0.0);
     }
 
     /**
      * Test of calcDervOutput method, of class StepActivationFunction.
+     *
+     * @author lts010
      */
     @Test
     public void testCalcDervOutput() {
@@ -70,7 +70,7 @@ public class StepActivationFunctionTest {
         double netInput = 0.0;
         StepActivationFunction instance = new StepActivationFunction();
         double expResult = 0.0;
-        double result = instance.calcDervOutput(netInput);
+        double result = instance.calcDervOutput(netInput); //should always return 0
         assertEquals(expResult, result, 0.0);
     }
 

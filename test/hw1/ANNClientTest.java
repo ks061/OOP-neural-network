@@ -9,52 +9,50 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: ANNClientTest
-* Description:
+* Description: JUnit tests for the class ANNClient
 *
 * ****************************************
  */
 package hw1;
 
 import java.util.ArrayList;
-import org.junit.After;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
+ * JUnit tests for the class ANNClient
  *
- * @author logan
+ * @author lts010
  */
-public class ANNClientTest {
+public class ANNClientTest extends TestCase {
 
-    public ANNClientTest() {
-    }
-
-    @Before
+    @Override
     public void setUp() {
     }
 
-    @After
+    @Override
     public void tearDown() {
     }
 
     /**
      * Test of strListToDoubleList method, of class ANNClient.
+     *
+     * @author lts010
      */
     @Test
     public void testStrListToDoubleList() {
         System.out.println("strListToDoubleList");
-        ArrayList<String> strList = new ArrayList<>();
-        strList.add("2 1 1 2 0.0001");
-        strList.add("-0.3 0.2 0.1 -0.2");
-        strList.add("-0.1 -0.5");
+        ArrayList<String> strList = new ArrayList<>(); //constructing a list of strings
+        strList.add("2 1 1 2 0.0001"); //will be index 0 in result, has 5 doubles
+        strList.add("-0.3 0.2 0.1 -0.2"); //will be index 1, has 4 doubles
+        strList.add("-0.1 -0.5"); //will be index 2, has 2 doubles
         ArrayList<ArrayList<Double>> result = ANNClient.strListToDoubleList(
                 strList);
-        assertTrue(result.size() == 3);
-        assertTrue(result.get(0).size() == 5);
-        assertTrue(result.get(1).size() == 4);
-        assertTrue(result.get(2).size() == 2);
-        assertTrue(result.get(1).get(3) == -0.2);
+        assertTrue(result.size() == 3); //there should be 3 lists
+        assertTrue(result.get(0).size() == 5); //first index should have 5 doubles
+        assertTrue(result.get(1).size() == 4); //should have 4
+        assertTrue(result.get(2).size() == 2); //should have 2
+        assertTrue(result.get(1).get(3) == -0.2); //the 4th double in index 2 should be this
     }
 
 }

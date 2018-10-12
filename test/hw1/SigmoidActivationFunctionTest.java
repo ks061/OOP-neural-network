@@ -9,31 +9,29 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: SigmoidActivationFunctionTest
-* Description:
+* Description: JUnit tests for the SigmoidActivationFunction
 *
 * ****************************************
  */
 package hw1;
 
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
+ * JUnit tests for the SigmoidActivationFunction
  *
- * @author logan
+ * @author lts010
  */
-public class SigmoidActivationFunctionTest {
+public class SigmoidActivationFunctionTest extends TestCase {
 
-    public SigmoidActivationFunctionTest() {
-    }
+    private static final double EPSILON = 1.0E-12;
 
-    @Before
+    @Override
     public void setUp() {
     }
 
-    @After
+    @Override
     public void tearDown() {
     }
 
@@ -45,10 +43,9 @@ public class SigmoidActivationFunctionTest {
         System.out.println("calcOutput");
         double netInput = 2;
         SigmoidActivationFunction instance = new SigmoidActivationFunction();
-        double expResult = 1 / (1 + Math.exp(-1 * 2));
+        double expResult = 1 / (1 + Math.exp(-1 * netInput)); //the method should always equal this value
         double result = instance.calcOutput(netInput);
-        double error = 1.0E-12;
-        assertEquals(expResult, result, error);
+        assertEquals(expResult, result, EPSILON);
     }
 
     /**
@@ -59,10 +56,10 @@ public class SigmoidActivationFunctionTest {
         System.out.println("calcDervOutput");
         double netInput = 2;
         SigmoidActivationFunction instance = new SigmoidActivationFunction();
-        double expResult = instance.calcOutput(2) * (1 - instance.calcOutput(2));
+        double expResult = instance.calcOutput(netInput) * (1 - instance.calcOutput(
+                                                            netInput)); //the method should always equal this value
         double result = instance.calcDervOutput(netInput);
-        double error = 1.0E-12;
-        assertEquals(expResult, result, error);
+        assertEquals(expResult, result, EPSILON);
 
     }
 

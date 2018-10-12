@@ -20,5 +20,5 @@ package hw1;
  * network program in training mode or classification mode
  */
 public enum ProgramMode {
-    TRAINING, CLASSIFICATION;
+    TRAINING, CLASSIFICATION, TEST;
 }

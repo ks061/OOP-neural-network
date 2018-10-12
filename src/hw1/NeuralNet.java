@@ -128,34 +128,9 @@ public class NeuralNet {
                                 this.configuration.getNumInputs(),
                                 inputOutputSet.length));
                 inputLayer.fireNeurons();
-                //System.out.println("initial weights are:  ");
-                //for (ArrayList<Double> layer : config.getWeights()) {
-                //System.out.println(layer);
-                //}
-
-//                System.out.println(
-//                        "x_1: " + inputLayer.getNeurons().get(0).getNetValue());
-//                System.out.println(
-//                        "x_2: " + inputLayer.getNeurons().get(1).getNetValue());
-//                System.out.println(
-//                        "h_1: " + this.layers.get(1).getNeurons().get(0).getNetValue());
-//                System.out.println(
-//                        "h_2: " + this.layers.get(1).getNeurons().get(1).getNetValue());
-//                System.out.println(
-//                        "y_1: " + outputLayer.getNeurons().get(0).getNetValue());
                 sseTotal += outputLayer.calculateSumOfSquaredErrors();
             }
-            // System.out.println(sseTotal);
         } while (sseTotal > this.configuration.getHighestSSE());
-        // TODO: change while back to below line
-        // outputLayer.calculateSumOfSquaredErrors() > config.getHighestSSE();
-
-        // } while (i < 10);
-        //        System.out.println("finial weights are:  ");
-        //        for (ArrayList<Double> layer : config.getWeights()) {
-        //            System.out.println(layer);
-        //        }
-        //Test your network here
         Scanner in = new Scanner(System.in);
         System.out.println(
                 "Neural network has been trained successfully with a sum of squared errors of " + sseTotal
@@ -306,53 +281,6 @@ public class NeuralNet {
      */
     public ArrayList<Layer> getLayers() {
         return layers;
-    }
-
-    /**
-     * Explicit constructor used for JUnit testing that creates the input layer,
-     * any hidden layers, and output layer, along with creating connections
-     * among the layers.
-     *
-     * @author lts010
-     */
-    NeuralNet(ConfigObject config, double[][] data) {
-        if (data.length == 0) {
-            throw new NeuralNetConstructionException(
-                    "No data has been provided.");
-        }
-
-        int dataLength = data[0].length;
-        for (double[] inputSet : data) {
-            if (inputSet.length != dataLength) {
-                throw new NeuralNetConstructionException(
-                        "Not all rows in data set have the same amount of entries.");
-            }
-        }
-        this.data = data;
-        this.configuration = config;
-        ArrayList<Layer> layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-", 0,
-                                               this);
-        layers.add(inputLayer);
-        for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
-            layers.add(new HiddenLayer(
-                    this.configuration.getNumNeuronsPerHiddenLayer(),
-                    "H" + i + "-", i, this));
-        }
-
-        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(), "O1-",
-                                                  layers.size(), this);
-        layers.add(outputLayer);
-        Iterator it = layers.iterator();
-        Layer currentLayer = (Layer) it.next();
-        Layer nextLayer;
-        while (it.hasNext()) {
-            nextLayer = (Layer) it.next();
-            currentLayer.connectLayer(nextLayer);
-            currentLayer = nextLayer;
-
-        }
-        this.layers = layers;
     }
 
 }

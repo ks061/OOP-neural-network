@@ -9,7 +9,7 @@
 * Project: csci205_proj_hw
 * Package: hw1
 * File: EdgeTest
-* Description:
+* Description: JUnit tests for the class Edge
 *
 * ****************************************
  */
@@ -20,13 +20,15 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
+ * JUnit tests for the class Edge
  *
- * @author logan
+ * @author lts010
  */
 public class EdgeTest extends TestCase {
 
     private NeuralNet myNet;
     private Edge myEdge;
+    private static final double EPSILON = 1.0E-6;
 
     @Override
     public void setUp() throws Exception {
@@ -48,9 +50,9 @@ public class EdgeTest extends TestCase {
         thetas.get(1).add(0.1);
         thetas.get(2).add(0.1);
         ConfigObject config = new ConfigObject(2, 1, 1, 2, 0.001, weights,
-                                               thetas, ProgramMode.TRAINING);
+                                               thetas, ProgramMode.TEST);
         double[][] data = {{1, 1, 1}};
-        myNet = new NeuralNet(config, data);
+        myNet = new NeuralNet(data, config); //construct the neural net
         myEdge = myNet.getLayers().get(1).getNeurons().get(1).getOutEdges().get(
                 0);
         myEdge.getFrom().setNetValue(2);
@@ -62,33 +64,22 @@ public class EdgeTest extends TestCase {
     }
 
     /**
-     * Test of getWeightedValue method, of class Edge.
-     */
-    @Test
-    public void testGetWeightedValue() {
-        System.out.println("getWeightedValue");
-        double result = myEdge.getWeightedValue();
-        double expResult = -1.0;
-        double error = 1.0E-12;
-        assertEquals(expResult, result, error);
-    }
-
-    /**
      * Test of learn method, of class Edge.
+     *
+     * @author lts010
      */
     @Test
     public void testLearn() {
         System.out.println("learn");
-        double errorGradient = 2.0;
-        double expResult = 0.30000000000000004;
-        double error = 1.0E-12;
-        myEdge.learn(errorGradient);
-        double weight = (myEdge.getWeightedValue() / myEdge.getFrom().getNetValue());
-        assertEquals(0.30000000000000004, weight, error);
+        double errorGradient = 0.1;
+        double expResult = -.459999;
+        myEdge.learn(errorGradient); //run the method
+        double weight = (myEdge.getWeight());
+        assertEquals(expResult, weight, EPSILON); // check to see if the weight changed properly
 
         double weightTimesDelta = myEdge.getWeightTimesDelta();
-        expResult = -1.0;
-        assertEquals(expResult, weightTimesDelta, error);
+        expResult = -0.05;
+        assertEquals(expResult, weightTimesDelta, EPSILON); //check to see if weightTimesDelta changed properly
 
         assertEquals(weight, myNet.getWeight(1, 1));
     }
