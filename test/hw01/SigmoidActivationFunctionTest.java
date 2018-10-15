@@ -15,7 +15,6 @@
  */
 package hw01;
 
-import hw01.SigmoidActivationFunction;
 import junit.framework.TestCase;
 import org.junit.Test;
 

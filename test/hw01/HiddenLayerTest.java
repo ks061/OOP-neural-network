@@ -15,12 +15,6 @@
  */
 package hw01;
 
-import hw01.InputLayer;
-import hw01.NeuralNet;
-import hw01.HiddenLayer;
-import hw01.OutputLayer;
-import hw01.ConfigObject;
-import hw01.ProgramMode;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;

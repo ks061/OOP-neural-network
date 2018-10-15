@@ -15,7 +15,6 @@
  */
 package hw01;
 
-import hw01.ANNClient;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;

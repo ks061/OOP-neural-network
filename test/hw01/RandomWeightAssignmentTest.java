@@ -15,7 +15,6 @@
  */
 package hw01;
 
-import hw01.RandomWeightAssignment;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertTrue;
 import org.junit.Test;

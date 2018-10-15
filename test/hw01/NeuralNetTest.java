@@ -15,10 +15,6 @@
  */
 package hw01;
 
-import hw01.NeuralNet;
-import hw01.ConfigObject;
-import hw01.ProgramMode;
-import hw01.NeuralNetConstructionException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
