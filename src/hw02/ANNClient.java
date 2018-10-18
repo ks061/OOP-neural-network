@@ -7,7 +7,7 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: ANNClient
  * Description: Main file that interacts with the user to either run the neural
  *              network program in classification mode, which predicts what the
@@ -18,12 +18,21 @@
  */
 package hw02;
 
+import hw02.WeightAssignment.RandomWeightAssignment;
+import hw02.Neuron.Neuron;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -37,13 +46,14 @@ import java.util.Scanner;
 public class ANNClient {
 
     /**
-     * Enumeration that helps distinguish whether the program will generate
-     * neural net edge weights from a configuration file or randomly assign them
+     * Enumeration that helps distinguish whether the program will read in
+     * neural net edge weights from a configuration file, read in edge weights
+     * from a serialized file, or randomly assign them
      *
      * @author ks061, lts010
      */
-    enum WeightsMode {
-        READ, CREATE;
+    enum InputMode {
+        READCONFIG, READANN, CREATE;
     }
 
     /**
@@ -53,23 +63,26 @@ public class ANNClient {
 
     /**
      * Gets the mode that the user wishes the neural network program to assign
-     * the weights with; either read them from a file or randomly create them.
+     * the weights with; either read them from a configuration file (.txt), read
+     * them in from a serialized file (.ser), or randomly create them.
      *
      * @return mode that the user wishes the neural network program to assign
-     * the weights with; either read them from a file or randomly create them.
+     * the weights with; either read them from a configuration file (.txt), read
+     * them in from a serialized file (.ser), or randomly create them.
      *
      * @author lts010, ks061
      */
-    private static WeightsMode getWeightsMode() {
+    private static InputMode getInputMode() {
         int response = -1;
         boolean invalidResponse = true;
-        WeightsMode mode = WeightsMode.READ;
-        String prompt = "Enter 1 or 2 for the desired method of creating the "
-                        + "neural network\n\n"
-                        + "1 -- Read a config file\n2 -- Create a new ANN\n";
+        InputMode mode = InputMode.CREATE;
+        String prompt = "Enter 1, 2, or 3 for the desired method of creating the "
+                        + "neural network\n\n" + "\n1 -- Create a new ANN"
+                        + "\n2 -- Read a config file\n3 -- Load a saved ANN\n\n";
+
         while (invalidResponse) {
-            response = getIntInput(prompt);
-            if (response != 1 && response != 2) {
+            response = ANNUtility.getIntInput(prompt);
+            if (response < 1 || response > 3) {
                 System.out.println("INVALID INPUT\n\n.");
             }
             else {
@@ -77,8 +90,14 @@ public class ANNClient {
             }
         }
         if (response == 2) {
-            mode = WeightsMode.CREATE;
+            mode = InputMode.READCONFIG;
         }
+        if (response == 3) {
+            mode = InputMode.READANN;
+        }
+
+        System.out.println();
+
         return mode;
     }
 
@@ -97,9 +116,10 @@ public class ANNClient {
         boolean invalidResponse = true;
         ProgramMode mode = ProgramMode.TRAINING;
         String prompt = "Enter 1 or 2 for the desired mode of operation\n\n";
-        prompt += "1 -- training mode\n2 -- classification mode\n";
+        prompt += "1 -- training mode\n2 -- classification mode\n\n";
+
         while (invalidResponse) {
-            response = getIntInput(prompt);
+            response = ANNUtility.getIntInput(prompt);
             if (response != 1 && response != 2) {
                 System.out.println("INVALID INPUT\n\n.");
             }
@@ -107,9 +127,13 @@ public class ANNClient {
                 invalidResponse = false;
             }
         }
+
         if (response == 2) {
             mode = ProgramMode.CLASSIFICATION;
         }
+
+        System.out.println();
+
         return mode;
     }
 
@@ -124,7 +148,7 @@ public class ANNClient {
      *
      * @author ks061, lts010
      */
-    private static double[][] getTrainingData() {
+    private static double[][] getData() {
         Scanner scanner = new Scanner(System.in);
         boolean csvFound = false;
         String filename = null;
@@ -133,7 +157,7 @@ public class ANNClient {
             System.out.print(
                     "Enter the name of the training data file (.csv file): ");
             filename = scanner.nextLine();
-            if (filename.substring(filename.lastIndexOf('.') + 1).equals("csv")) {
+            if (filename.endsWith(".csv")) {
                 File csv = new File(filename);
                 try {
                     // Try to access CSV file
@@ -177,41 +201,21 @@ public class ANNClient {
         }
 
         // Initializes an array based on number of lines in CSV file
-        double[][] trainingData = new double[lineCount][];
+        double[][] data = new double[lineCount][];
         for (int row = 0; scanner.hasNextLine(); row++) {
             line = scanner.nextLine();
             entriesInLine = line.split(",");
-            trainingData[row] = new double[entriesInLine.length];
-            for (int col = 0; col < trainingData[row].length; col++) {
-                trainingData[row][col] = Double.parseDouble(
-                        entriesInLine[col]);
-            }
-        }
-        return trainingData;
-    }
-
-    /**
-     * Gives the end user the provided prompt and requests an integer
-     *
-     * @param prompt prompt given to end user
-     * @return the integer entered by end user
-     *
-     * @author lts010, ks061
-     */
-    private static int getIntInput(String prompt) {
-        Scanner in = new Scanner(System.in);
-        int result = -1;
-        while (true) {
-            System.out.println(prompt);
-            if (in.hasNextInt()) {
-                result = in.nextInt();
-                if (result >= 0) {
+            data[row] = new double[entriesInLine.length];
+            for (int col = 0; col < data[row].length; col++) {
+                try {
+                    data[row][col] = Double.parseDouble(
+                            entriesInLine[col]);
+                } catch (NumberFormatException ex) {
                     break;
                 }
             }
-            System.out.println("INVALID INPUT\n\n." + prompt);
         }
-        return (result);
+        return data;
     }
 
     /**
@@ -285,9 +289,10 @@ public class ANNClient {
      *
      * @author ks061, lts010
      */
-    private static ArrayList<ArrayList<Double>> getListOfThetas(int numOutputs,
-                                                                int numHiddenLayers,
-                                                                int numNeuronsPerHiddenLayer) {
+    private static ArrayList<ArrayList<Double>> getDefaultListOfThetas(
+            int numOutputs,
+            int numHiddenLayers,
+            int numNeuronsPerHiddenLayer) {
         ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<>();
         listOfThetas.add(new ArrayList<>());
         for (int i = 1; i < numHiddenLayers + 1; i++) {
@@ -313,8 +318,8 @@ public class ANNClient {
      * @author lts010, ks061
      */
     private static int getNumInputs() {
-        return getIntInput(
-                "What should the number of inputs be (as an integer)?: ");
+        return ANNUtility.getIntInput(
+                "What should be the number of inputs (as an integer)?: ");
     }
 
     /**
@@ -327,8 +332,8 @@ public class ANNClient {
      * @author lts010, ks061
      */
     private static int getNumOutputs() {
-        return getIntInput(
-                "What should the number of outputs be (as an integer)?");
+        return ANNUtility.getIntInput(
+                "What should be the number of outputs (as an integer)?: ");
     }
 
     /**
@@ -341,8 +346,8 @@ public class ANNClient {
      * @author lts010, ks061
      */
     private static int getNumHiddenLayers() {
-        return getIntInput(
-                "What should the number of hidden layers be (as an integer)?");
+        return ANNUtility.getIntInput(
+                "What should be the number of hidden layers (as an integer)?: ");
     }
 
     /**
@@ -355,8 +360,8 @@ public class ANNClient {
      * @author lts010, ks061
      */
     private static int getNumNeuronsPerHiddenLayer() {
-        return getIntInput(
-                "What should the number of neurons per hidden layer be (as an integer)?");
+        return ANNUtility.getIntInput(
+                "What should be the number of neurons per hidden layer (as an integer)?: ");
     }
 
     /**
@@ -372,69 +377,70 @@ public class ANNClient {
      * @author lts010, ks061
      */
     private static double getHighestSSE() {
-        Scanner in = new Scanner(System.in);
-        boolean invalidInput = true;
-        String prompt = "What is the highest acceptable SSE, i.e. sum of squared errors, (as a double)?";
-        double result = -1;
-        while (invalidInput) {
-            System.out.println(prompt);
-
-            if (in.hasNextDouble()) {
-                result = in.nextDouble();
-                invalidInput = false;
-            }
-            else {
-                System.out.println(
-                        "INVALID INPUT\n\n." + prompt);
-            }
-        }
-        return (result);
+        return ANNUtility.getDoubleInput(
+                "What should be the highest acceptable SSE, i.e. sum of squared errors, (as a double)?: ");
     }
 
     /**
-     * Parses doubles from each string in a list of strings and returns a list
-     * of lists of doubles (doubles in each line for multiple lines)
+     * Prompts the user for and gets the maximum number of epochs, i.e. the
+     * number of times the neural network will train itself on the training data
+     * if the sum of squared errors calculated by the neural network is less
+     * than or equal to the set maximum sum of squared errors for the neural
+     * network; this is only used if the user selects training mode, where the
+     * neural network goes through multiple iterations of training itself
+     * against the training data until its SSE is below this maximum allowed
+     * SSE.
      *
-     * @param strList list of strings
-     * @return list of lists of doubles (doubles in each line for multiple
-     * lines)
+     * @return maximum number of epochs, i.e. the number of times the neural
+     * network will train itself on the training data if the sum of squared
+     * errors calculated by the neural network is less than or equal to the set
+     * maximum sum of squared errors for the neural network
+     */
+    private static int getNumMaxEpochs() {
+        return ANNUtility.getIntInput(
+                "What should be the maximum number of epochs that training mode runs (as an integer)?: ");
+    }
+
+    /**
+     * Reads a .txt file, a neural network configuration file, that can be read
+     * as a ANNConfig
      *
-     * @see
-     * <a href ="https://stackoverflow.com/questions/11009818/how-to-get-list-of-integer-from-string">stackoverflow</a>
+     * @return list of Strings that provides the number of inputs, outputs, and
+     * the weights
      *
      * @author lts010, ks061
      */
-    public static ArrayList<ArrayList<Double>> strListToDoubleList(
-            ArrayList<String> strList) {
-        Scanner strReader = null;
-        ArrayList<ArrayList<Double>> doubleList = new ArrayList<>();
-        for (int i = 0; i < strList.size(); i++) {
-            doubleList.add(new ArrayList<>());
-            strReader = new Scanner(strList.get(i));
-            while (strReader.hasNextDouble()) {
-                doubleList.get(i).add(strReader.nextDouble());
+    public static ArrayList<String> readConfigFile() {
+        Scanner in = new Scanner(System.in);
+        Scanner fReader = new Scanner(System.in);
+        boolean fileFound = false;
+        while (!fileFound) {
+            System.out.print("Enter the filename of the configuration file: ");
+            String filename = in.nextLine();
+            if (filename.endsWith(".txt")) {
+                try {
+                    File f = new File(filename);
+                    fReader = new Scanner(f);
+                    fileFound = true;
+                } catch (FileNotFoundException ex) {
+                    System.out.println("File not found. Try again.");
+                }
+            }
+            else {
+                System.out.println("The file entered is not a .txt file.");
             }
         }
-        return doubleList;
+        ArrayList<String> configList = new ArrayList<>();
+        while (fReader.hasNextLine()) {
+            configList.add(fReader.nextLine());
+        }
+        return configList;
     }
 
     /**
-     * Serves as the main runner for this neural net program. The program
-     * prompts which program mode the user would like the program to run in; the
-     * program has two program modes: classification mode, which predicts what
-     * the output will be based on given inputs and a pre-configured neural
-     * network, or training mode, which trains the neural network program based
-     * on given inputs and expected output. The program also gives options for
-     * reading in weights or randomly assigning them. If the user chooses not to
-     * read in a configuration of the neural network, including the weights,
-     * then the program asks the user how many input neurons, how many output
-     * neurons, how many hidden layers, how many neurons per hidden layer, and
-     * the highest allowable SSE (if in training mode) the neural network should
-     * be configured with. After, the program initializes a neural network with
-     * a configuration object containing the user's
-     * setup/configuration/preferences.
+     * Saves all configuration information of a neural net to a .txt file
      *
-     * @param args the command line arguments
+     * @param nN neural network whose configuration will be exported
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
@@ -444,20 +450,223 @@ public class ANNClient {
      *
      * @author lts010, ks061
      */
-    public static void main(String[] args) throws FileNotFoundException {
-        int numInputs;
-        int numOutputs;
-        int numHiddenLayers;
-        int numNeuronsPerHiddenLayer;
-        double highestSSE;
-        ArrayList<ArrayList<Double>> weights;
-        ArrayList<ArrayList<Double>> thetas;
+    public static void exportConfig(NeuralNet nN) throws FileNotFoundException {
+        String prompt = "What .txt file would you like to save the configuration to? ";
+        String outputFile = ANNUtility.getOutputFilename(".txt", prompt);
+        PrintWriter out = new PrintWriter(outputFile);
+        out.printf("%d.0 %d.0 %d.0 %d.0 %f %d.0\n",
+                   nN.getConfiguration().getNumInputs(),
+                   nN.getConfiguration().getNumOutputs(),
+                   nN.getConfiguration().getNumHiddenLayers(),
+                   nN.getConfiguration().getNumNeuronsPerHiddenLayer(),
+                   nN.getConfiguration().getHighestSSE(),
+                   nN.getConfiguration().getNumMaxEpochs());
+        ArrayList<ArrayList<Double>> weights = nN.getConfiguration().getWeights();
+        String weightLayer;
+        for (ArrayList<Double> weightList : weights) {
+            weightLayer = "";
+            for (double weight : weightList) {
+                weightLayer += weight + " ";
+            }
+            out.printf("%s\n", weightLayer);
+        }
+        out.printf("%s\n", "THETAS");
+        List<ArrayList<Double>> thetas = nN.getConfiguration().getThetas().subList(
+                1,
+                nN.getConfiguration().getThetas().size());
+        String thetaLayer;
+        for (ArrayList<Double> thetaList : thetas) {
+            thetaLayer = "";
+            for (double theta : thetaList) {
+                thetaLayer += theta + " ";
+            }
+            out.printf("%s\n", thetaLayer);
+        }
+        out.flush();
+        out.close();
+    }
+
+    /**
+     * Reads in a serializable file (.ser) and returns the serialized neural
+     * network within the file.
+     *
+     * @param filename name of the file containing the serialized ANN
+     * @throws java.io.FileNotFoundException if filename represents a directory
+     * rather than a regular file, the file does not exist, or the serializable
+     * file could not be read for some other reason
+     * @throws java.lang.ClassNotFoundException if classes needed to
+     * de-serialize the neural network could not be found, such as NeuralNet and
+     * ANNConfig
+     * @return neural network de-serialized from the file
+     *
+     * @see
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/io/FileInputStream.html#FileInputStream-java.lang.String-">
+     * FileInputStream </a>
+     * @see
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/io/ObjectInputStream.html#readObject--">
+     * ObjectInputStream </a>
+     *
+     * @author lts010, ks061
+     *
+     */
+    public static NeuralNet deserializeANN(String filename) throws FileNotFoundException, IOException, ClassNotFoundException {
+        String aNNFilename = filename;
+        if (!aNNFilename.endsWith(".ser")) {
+            throw new NeuralNetConstructionException(
+                    "Filename for loading Neural Network must end in .ser");
+        }
+        FileInputStream inputStream = new FileInputStream(aNNFilename);
+        ObjectInputStream configStream = new ObjectInputStream(inputStream);
+        NeuralNet nN = (NeuralNet) configStream.readObject();
+
+        configStream.close();
+        inputStream.close();
+
+        return nN;
+    }
+
+    /**
+     * Saves serialized version of the neural network to the specified filename.
+     * Adds .ser to fileName if it doesn't already end in .ser.
+     *
+     * @param filename name of the file to serialize the ANN to
+     * @throws java.io.FileNotFoundException if the specified filename
+     * represents a directory or cannot be created for some other reason
+     *
+     * @see
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/io/FileOutputStream.html#FileOutputStream-java.lang.String-">
+     * FileOutputStream </a>
+     * @see
+     * <a href="https://stackoverflow.com/questions/10433214/file-extension-for-a-serialized-object">
+     * stackoverflow </a>
+     *
+     * @author lts010, ks061
+     */
+    public static void serializeANN(String filename) throws FileNotFoundException, IOException {
+        String aNNFileame = filename;
+        if (!aNNFileame.endsWith(".ser")) {
+            aNNFileame += ".ser";
+        }
+        FileOutputStream aNNfile = new FileOutputStream(filename);
+        ObjectOutputStream outputStream = new ObjectOutputStream(aNNfile);
+        outputStream.writeObject(myNet);
+        outputStream.close();
+        aNNfile.close();
+    }
+
+    /**
+     * Saves the set of predicted outputs from the neurons to an external .txt
+     * file; it prompts the user for the output filename, etc. as needed.
+     *
+     * @param setsOfPredictedOutputs set of predicted outputs from the neurons
+     * in the output layer
+     * @throws FileNotFoundException if the file for the configuration to be
+     * written to as specified by the user cannot be written to or another error
+     * occurs while opening or creating the file
+     * @see
+     * <a href src="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html">
+     * PrintWriter </a>
+     *
+     * @author ks061, lts010
+     */
+    private static void saveSetsOfPredictedOutputs(
+            ArrayList<ArrayList<Double>> setsOfPredictedOutputs) throws FileNotFoundException {
+        String prompt = "What .txt file would you like to save the configuration to?: ";
+        String outputFilename = ANNUtility.getOutputFilename(".txt", prompt);
+        PrintWriter out = new PrintWriter(outputFilename);
+        for (ArrayList<Double> setOfPredictedOutput : setsOfPredictedOutputs) {
+            out.print(Arrays.toString(setOfPredictedOutput.toArray()) + "\n");
+        }
+        out.flush();
+        out.close();
+    }
+
+    /**
+     * Prompts the user whether the neural network training session should be
+     * saved to a serialized file, saved to a configuration file, or neither and
+     * processes the user's request; the user will be asked for a .ser filename
+     * or .txt filename if it has been specified that the neural network should
+     * be saved to a serialized file or configuration file respectively.
+     *
+     * @throws IOException
+     *
+     * @author ks061, lts010
+     */
+    private static void outputTrainingConfiguration() throws IOException {
+        Scanner in = new Scanner(System.in);
+        System.out.print(
+                "Do you want to save a serialized version or save a configuration file of this neural network? "
+                + "\n(enter serial for serialized; config for configuration file; anything else for neither): ");
+        String saveToFileChoice = in.nextLine();
+        if (saveToFileChoice.equalsIgnoreCase("serial")) {
+            String prompt = "Please select a filename (with .ser) to serialize to: ";
+            serializeANN(ANNUtility.getOutputFilename(".ser", prompt));
+        }
+        else if (saveToFileChoice.equalsIgnoreCase("config")) {
+            exportConfig(myNet);
+        }
+        System.out.println("Thanks for using the program.");
+    }
+
+    private static void outputPredictedOutputs(
+            ArrayList<ArrayList<Double>> setsOfPredictedOutputs) throws FileNotFoundException {
+        Scanner in = new Scanner(System.in);
+        System.out.print(
+                "Would you like to save the predicted outputs to a file? (enter y or yes for yes; anything else for no): ");
+        String willSaveToFile = in.nextLine();
+        if (willSaveToFile.equalsIgnoreCase("y") || willSaveToFile.equalsIgnoreCase(
+                "yes")) {
+            saveSetsOfPredictedOutputs(setsOfPredictedOutputs);
+        }
+        System.out.println("Thanks for using the program.");
+    }
+
+    /**
+     * Serves as the main runner for this neural net program. The program
+     * prompts which program mode the user would like the program to run in; the
+     * program has two program modes: classification mode, which predicts what
+     * the output will be based on given inputs and a pre-configured neural
+     * network, or training mode, which trains the neural network program based
+     * on given inputs and expected output. The program also gives options for
+     * reading in weights (from either a .txt configuration file or .ser
+     * serialized file) or randomly assigning them. If the user chooses not to
+     * read in a configuration of the neural network, including the weights and
+     * theta values, then the program asks the user how many input neurons, how
+     * many output neurons, how many hidden layers, how many neurons per hidden
+     * layer, the highest allowable SSE (if in training mode) the neural
+     * network, and the maximum number of epochs to run (if in training mode)
+     * should be configured with; the weights are then randomly assigned and
+     * theta values are set to the default theta value specified as a field in
+     * Neuron. After, the program initializes a neural network with a
+     * configuration object containing the user's
+     * setup/configuration/preferences.
+     *
+     * @param args the command line arguments
+     * @throws java.io.FileNotFoundException if the file for the configuration
+     * to be written to as specified by the user cannot be written to or another
+     * error occurs while opening or creating the file
+     * @throws java.lang.ClassNotFoundException
+     * @see
+     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
+     * PrintWriter </a>
+     *
+     * @author lts010, ks061
+     */
+    public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException {
+        int numInputs = 0;
+        int numOutputs = 0;
+        int numHiddenLayers = 0;
+        int numNeuronsPerHiddenLayer = 0;
+        double highestSSE = 0;
+        int numMaxEpochs = 0;
+        ArrayList<ArrayList<Double>> weights = null;
+        ArrayList<ArrayList<Double>> thetas = null;
         ProgramMode programMode;
-        WeightsMode inputMode;
-        inputMode = getWeightsMode();
+        InputMode inputMode;
+        inputMode = getInputMode();
         programMode = getProgramMode();
 
-        if (inputMode == WeightsMode.CREATE) {
+        if (inputMode == InputMode.CREATE) {
             numInputs = getNumInputs();
             numOutputs = getNumOutputs();
             numHiddenLayers = getNumHiddenLayers();
@@ -468,18 +677,23 @@ public class ANNClient {
                 numNeuronsPerHiddenLayer = getNumNeuronsPerHiddenLayer();
             }
             if (programMode != ProgramMode.TRAINING) { // if programMode is not training, no need for SSE
-                highestSSE = 0;
+                highestSSE = Double.MAX_VALUE;
             }
             else {
                 highestSSE = getHighestSSE();
+                numMaxEpochs = getNumMaxEpochs();
+                if (numMaxEpochs == 0) {
+                    numMaxEpochs = 1000000;
+                }
             }
+
             weights = getRandomWeights(numInputs, numOutputs, numHiddenLayers,
                                        numNeuronsPerHiddenLayer);
-            thetas = getListOfThetas(numOutputs, numHiddenLayers,
-                                     numNeuronsPerHiddenLayer);
+            thetas = getDefaultListOfThetas(numOutputs, numHiddenLayers,
+                                            numNeuronsPerHiddenLayer);
         }
-        else {
-            ArrayList<String> configList = ConfigObject.readConfigFile();
+        else if (inputMode == InputMode.READCONFIG) {
+            ArrayList<String> configList = readConfigFile();
             int thetaIndex = configList.indexOf("THETAS"); // indicates which index the thetas start at
             ArrayList<String> configListWeights = new ArrayList<>(
                     configList.subList(0,
@@ -487,25 +701,54 @@ public class ANNClient {
             ArrayList<String> configListThetas = new ArrayList<>( // seperates the thetas into a list after the string "THETA"
                     configList.subList(
                             thetaIndex + 1, configList.size()));
-            ArrayList<ArrayList<Double>> weightList = strListToDoubleList( // turns the weight list into a list of list of doubles
+            ArrayList<ArrayList<Double>> weightList = ANNUtility.strListToDoubleList( // turns the weight list into a list of list of doubles
                     configListWeights);
-            thetas = strListToDoubleList(configListThetas); // turns the theta list into a list of list of doubles
+            thetas = ANNUtility.strListToDoubleList(configListThetas); // turns the theta list into a list of list of doubles
             thetas.add(0, new ArrayList<>()); // adds input layer without any weights
             numInputs = (int) Math.round(weightList.get(0).get(0));
             numOutputs = (int) Math.round(weightList.get(0).get(1));
             numHiddenLayers = (int) Math.round(weightList.get(0).get(2));
             numNeuronsPerHiddenLayer = (int) Math.round(weightList.get(0).get(3));
             highestSSE = weightList.get(0).get(4);
+            numMaxEpochs = (int) Math.round(weightList.get(0).get(5));
             weights = new ArrayList<>(weightList.subList(1,
                                                          configListWeights.size()));
         }
-        ConfigObject config = new ConfigObject(numInputs, numOutputs,
-                                               numHiddenLayers,
-                                               numNeuronsPerHiddenLayer,
-                                               highestSSE, weights, thetas,
-                                               programMode);
 
-        double[][] trainingData = getTrainingData();
-        myNet = new NeuralNet(trainingData, config);
+        double[][] data = getData();
+
+        if (inputMode == InputMode.CREATE || inputMode == InputMode.READCONFIG) {
+            ANNConfig config = new ANNConfig(numInputs, numOutputs,
+                                             numHiddenLayers,
+                                             numNeuronsPerHiddenLayer,
+                                             highestSSE, numMaxEpochs,
+                                             weights, thetas,
+                                             programMode);
+
+            myNet = new NeuralNet(data, config);
+        }
+        else {
+            String filename = ANNUtility.getInputFilename(".ser",
+                                                          "Enter the name of the serialized ANN file (.ser file): ");
+            myNet = deserializeANN(filename);
+
+            myNet.setData(data);
+            myNet.initializeLayers();
+            myNet.getConfiguration().setProgramMode(programMode);
+        }
+
+        if (myNet.getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
+            myNet.train();
+
+            outputTrainingConfiguration();
+        }
+
+        if (myNet.getConfiguration().getProgramMode() == ProgramMode.CLASSIFICATION) {
+            ArrayList<ArrayList<Double>> setsOfPredictedOutputs = myNet.classify();
+
+            outputPredictedOutputs(setsOfPredictedOutputs);
+        }
+
     }
+
 }

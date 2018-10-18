@@ -164,7 +164,6 @@ public class Edge {
         return this.weight;
     }
 
-    // TODO: ASK PROF make everything protected (should they be public or protected)
     /**
      * Stores the value of the weight applied to the error gradient received
      * from the output neuron of this edge, updates the weight for the edge by

@@ -7,7 +7,7 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: RandomWeightAssignment
  * Description: This file contains RandomWeightAssignment, which is a utility
  *              that contains different algorithms for generating random
@@ -15,7 +15,7 @@
  *
  * ****************************************
  */
-package hw02;
+package hw02.WeightAssignment;
 
 import java.util.Random;
 

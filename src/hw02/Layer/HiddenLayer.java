@@ -7,15 +7,20 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: HiddenLayer
  * Description: This file contains HiddenLayer, which represents a hidden layer
  *              in a neural network.
  *
  * ****************************************
  */
-package hw02;
+package hw02.Layer;
 
+import hw02.Edge;
+import hw02.NeuralNet;
+import hw02.NeuralNetConstructionException;
+import hw02.Neuron.Neuron;
+import hw02.Neuron.HiddenNeuron;
 import java.util.ArrayList;
 
 /**

@@ -7,14 +7,16 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: Layer
  * Description: Layer is an abstraction of a neural network layer
  *
  * ****************************************
  */
-package hw02;
+package hw02.Layer;
 
+import hw02.NeuralNet;
+import hw02.Neuron.Neuron;
 import java.util.ArrayList;
 
 /**

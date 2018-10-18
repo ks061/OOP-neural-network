@@ -7,14 +7,17 @@
 * Time: 10:48:30 AM
 *
 * Project: csci205_proj_hw
-* Package: hw1
+* Package: hw02
 * File: OutputNeuron
 * Description: This file contains OutputNeuron, which represents a neuron in
 *              the output layer of a neural network.
 *
 * ****************************************
  */
-package hw02;
+package hw02.Neuron;
+
+import hw02.Edge;
+import hw02.NeuralNet;
 
 /**
  * OutputNeuron represents a neuron in the output layer of a neural network.

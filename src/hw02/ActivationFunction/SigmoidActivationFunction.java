@@ -7,14 +7,14 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: Sigmoid Activation Function
  * Description: This file contains SigmoidActivationFunction, which represents
  *              a Sigmoid function used as an activation function.
  *
  * ****************************************
  */
-package hw02;
+package hw02.ActivationFunction;
 
 /**
  * SigmoidActivationFunction represents the Sigmoid function used as an

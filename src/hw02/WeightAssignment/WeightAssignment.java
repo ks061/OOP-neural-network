@@ -7,14 +7,14 @@
 * Time: 10:16:57 PM
 *
 * Project: csci205_proj_hw
-* Package: hw1
+* Package: hw02
 * File: WeightAssignment
 * Description: This file contains WeightAssignment, which is an
 *              interface/generalization of classes that provides weights for edges.
 *
 * ****************************************
  */
-package hw02;
+package hw02.WeightAssignment;
 
 /**
  * WeightAssignment generalizes classes that provide weights to edges.

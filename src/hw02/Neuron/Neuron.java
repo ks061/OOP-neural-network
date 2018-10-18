@@ -7,15 +7,19 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: Neuron
  * Description: This file contains Neuron, which is an abstraction of a neuron
  *              in a neural network.
  *
  * ****************************************
  */
-package hw02;
+package hw02.Neuron;
 
+import hw02.ActivationFunction.ActivationFunction;
+import hw02.Edge;
+import hw02.NeuralNet;
+import hw02.ActivationFunction.SigmoidActivationFunction;
 import java.util.ArrayList;
 
 /**

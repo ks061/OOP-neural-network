@@ -7,14 +7,19 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: InputLayer
  * Description: This file contains InputLayer, which represents an input layer
  *              in a neural network
  * ****************************************
  */
-package hw02;
+package hw02.Layer;
 
+import hw02.Edge;
+import hw02.NeuralNet;
+import hw02.NeuralNetConstructionException;
+import hw02.Neuron.Neuron;
+import hw02.Neuron.InputNeuron;
 import java.util.ArrayList;
 
 /**

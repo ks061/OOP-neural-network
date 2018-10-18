@@ -7,19 +7,22 @@
 * Time: 10:50:17 AM
 *
 * Project: csci205_proj_hw
-* Package: hw1
+* Package: hw02
 * File: HiddenNeuron
 * Description: The file contains HiddenNeuron, which represents a neuron in a
 *              hidden layer of a neural network.
 *
 * ****************************************
  */
-package hw02;
+package hw02.Neuron;
+
+import hw02.Edge;
+import hw02.NeuralNet;
 
 /**
  * HiddenNeuron represents a neuron in a hidden layer of a neural network.
  *
- * @author ks061
+ * @author ks061, lts010
  */
 public class HiddenNeuron extends Neuron {
 
@@ -71,7 +74,7 @@ public class HiddenNeuron extends Neuron {
         double errorGradient = 0;
         double weightedErrorGradients = 0;
         for (Edge edge : super.getOutEdges()) {
-            weightedErrorGradients += edge.getWeightTimesDelta();
+            weightedErrorGradients += edge.getWeightTimesErrorGradient();
         }
 
         errorGradient = super.getNetValue() * (1 - super.getNetValue()) * weightedErrorGradients;

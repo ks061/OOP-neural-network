@@ -7,7 +7,7 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: Edge
  * Description: This file contains Edge, which represents the connection between
  *              neurons in adjacent layers within a neural network.
@@ -16,6 +16,8 @@
  */
 package hw02;
 
+import hw02.Neuron.Neuron;
+
 /**
  * Edge represents the connection between neurons in adjacent layers within a
  * neural network.
@@ -23,6 +25,11 @@ package hw02;
  * @author lts010, ks061
  */
 public class Edge {
+
+    /**
+     * A default mu (momentum constant) value
+     */
+    public final static double DEFAULTMU = 0.5;
 
     /**
      * Represents the index of this edge amongst the edges connecting from the
@@ -47,11 +54,17 @@ public class Edge {
      * Represents the weights of each edge
      */
     private double weight;
+
+    /**
+     * Represents the change in weight during the current learn cycle
+     */
+    private double deltaWeight;
+
     /**
      * Represents the weight applied to the delta that this edge receives from
      * its output neuron during back propagation
      */
-    private double weightTimesDelta = 0;
+    private double weightTimesErrorGradient = 0;
     /**
      * Represents the neuron that this edge connects to or delivers output to
      */
@@ -149,8 +162,8 @@ public class Edge {
      *
      * @author ks061, lts010
      */
-    public double getWeightTimesDelta() {
-        return weightTimesDelta;
+    public double getWeightTimesErrorGradient() {
+        return weightTimesErrorGradient;
     }
 
     /**
@@ -164,12 +177,12 @@ public class Edge {
         return this.weight;
     }
 
-    // TODO: ASK PROF make everything protected (should they be public or protected)
     /**
      * Stores the value of the weight applied to the error gradient received
      * from the output neuron of this edge, updates the weight for the edge by
-     * adding the product of the learning rate, the net value of the neuron this
-     * edge receives input from, and the error gradient received from the output
+     * adding the product of the momentum term, change in weight for the last
+     * set of inputs, learning rate, the net value of the neuron this edge
+     * receives input from, and the error gradient received from the output
      * neuron of this edge
      *
      * @param errorGradient the value of delta, the error gradient
@@ -177,9 +190,18 @@ public class Edge {
      * @author lts010, ks061
      */
     public void learn(double errorGradient) {
-        this.weightTimesDelta = this.weight * errorGradient;
-        this.weight = this.weight + NeuralNet.alpha * this.from.getNetValue() * errorGradient;
+        double previousDeltaWeight = this.deltaWeight;
+        this.deltaWeight = NeuralNet.alpha * this.from.getNetValue() * errorGradient;
+
+        if ((this.deltaWeight < 0 && previousDeltaWeight < 0)
+            || (this.deltaWeight > 0 && previousDeltaWeight > 0)) {
+            this.deltaWeight += DEFAULTMU * previousDeltaWeight;
+        }
+
+        this.weight += this.deltaWeight;
+        this.weightTimesErrorGradient = this.weight * errorGradient;
         neuralNet.storeWeight(layerNum, edgeNum, this.weight);
+        this.weight += this.deltaWeight;
     }
 
 }

@@ -7,7 +7,7 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: NeuralNetConstructionException
  * Description: This file contains NeuralNetConstructionException, which is a
  *              RuntimeException that is thrown when there is an issue in

@@ -7,33 +7,31 @@
 * Time: 11:36:53 AM
 *
 * Project: csci205_proj_hw
-* Package: hw1
-* File: ConfigObject
-* Description: This file contains ConfigObject, which holds the configuration
+* Package: hw02
+* File: ANNConfig
+* Description: This file contains ANNConfig, which holds the configuration
 *              for a neural network NeuralNet.
 *
 * ****************************************
  */
 package hw02;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 /**
- * ConfigObject holds the configuration for a NeuralNet, including the number of
+ * ANNConfig holds the configuration for a NeuralNet, including the number of
  * inputs (input neurons), the number of outputs (output neurons), the number of
  * hidden layers, the number of neurons per hidden layer, the maximum allowed
- * sum of squared error value (SSE), list of edge weights (a weight for each
- * edge going to the next layer in each layer except the output layer), and
- * program mode (classification or training mode) that neural net will run in
+ * sum of squared error value (SSE), the maximum number of epochs neural network
+ * will train before terminating the training session, list of edge weights (a
+ * weight for each edge going to the next layer in each layer except the output
+ * layer), and program mode (classification or training mode) that neural net
+ * will run in
  *
  * @author lts010, ks061
  */
-public class ConfigObject {
+public class ANNConfig implements Serializable {
 
     /**
      * Number of inputs (input neurons) a neural network will be configured with
@@ -55,9 +53,14 @@ public class ConfigObject {
     private int numNeuronsPerHiddenLayer;
     /**
      * Maximum allowed sum of squared error value (SSE) a neural network will be
-     * configured with
+     * configured with (only relevant in training mode)
      */
     private double highestSSE;
+    /**
+     * Maximum number of epochs neural network will train before terminating the
+     * training session (only relevant in training mode)
+     */
+    private int numMaxEpochs;
     /**
      * List of edge weights (a weight for each edge going to the next layer in
      * each layer except the output layer) a neural network will be configured
@@ -72,15 +75,17 @@ public class ConfigObject {
     /**
      * Run mode (classification or training mode) that a neural net will run in
      */
-    private ProgramMode programMode;
+    private transient ProgramMode programMode;
 
     /**
      * Constructor that initializes the number of inputs (input neurons), the
      * number of outputs (output neurons), the number of hidden layers, the
      * number of neurons per hidden layer, the maximum allowed sum of squared
-     * error value, list of edge weights (a weight for each edge going to the
-     * next layer in each layer except the output layer), and program mode
-     * (classification or training mode) that neural net will run in
+     * error value, the maximum number of epochs neural network will train
+     * before terminating the training session, list of edge weights (a weight
+     * for each edge going to the next layer in each layer except the output
+     * layer), and program mode (classification or training mode) that neural
+     * net will run in
      *
      * @param numInputs number of inputs (input neurons) a neural network will
      * be configured with
@@ -92,6 +97,8 @@ public class ConfigObject {
      * neural network will be configured with
      * @param highestSSE maximum allowed sum of squared error value a neural
      * network will be configured with
+     * @param numMaxEpochs maximum number of epochs neural network will train
+     * before terminating the training session
      * @param weights list of edge weights (a weight for each edge going to the
      * next layer in each layer except the output layer) a neural network will
      * be configured with
@@ -102,16 +109,18 @@ public class ConfigObject {
      *
      * @author lts010, ks061
      */
-    public ConfigObject(int numInputs, int numOutputs, int numHiddenLayers,
-                        int numNeuronsPerHiddenLayer, double highestSSE,
-                        ArrayList<ArrayList<Double>> weights,
-                        ArrayList<ArrayList<Double>> thetas,
-                        ProgramMode programMode) {
+    public ANNConfig(int numInputs, int numOutputs, int numHiddenLayers,
+                     int numNeuronsPerHiddenLayer, double highestSSE,
+                     int numMaxEpochs,
+                     ArrayList<ArrayList<Double>> weights,
+                     ArrayList<ArrayList<Double>> thetas,
+                     ProgramMode programMode) {
         this.numInputs = numInputs;
         this.numOutputs = numOutputs;
         this.numHiddenLayers = numHiddenLayers;
         this.numNeuronsPerHiddenLayer = numNeuronsPerHiddenLayer;
         this.highestSSE = highestSSE;
+        this.numMaxEpochs = numMaxEpochs;
         this.weights = weights;
         this.thetas = thetas;
         this.programMode = programMode;
@@ -321,91 +330,28 @@ public class ConfigObject {
     }
 
     /**
-     * Reads a .txt file, a neural network configuration file, that can be read
-     * as a ConfigObject
+     * Sets the maximum number of epochs that the neural network will train
+     * before terminating its training session of the network
      *
-     * @return list of Strings that provides the number of inputs, outputs, and
-     * the weights
+     * @param numMaxEpochs maximum number of epochs that the neural network will
+     * train before terminating its training session of the network
      *
      * @author lts010, ks061
      */
-    public static ArrayList<String> readConfigFile() {
-        Scanner in = new Scanner(System.in);
-        Scanner fReader = new Scanner(System.in);
-        boolean fileFound = false;
-        while (!fileFound) {
-
-            System.out.print(
-                    "Enter the filename of the configuration file: ");
-            String filename = in.nextLine();
-            if (filename.substring(filename.lastIndexOf('.') + 1).equals("txt")) {
-                try {
-                    File f = new File(filename);
-                    fReader = new Scanner(f);
-                    fileFound = true;
-                } catch (FileNotFoundException ex) {
-                    System.out.println("File not found. Try again.");
-                }
-            }
-            else {
-                System.out.println(
-                        "The file entered is not a .txt file. ");
-            }
-        }
-        ArrayList<String> configList = new ArrayList<>();
-        while (fReader.hasNextLine()) {
-            configList.add(fReader.nextLine());
-        }
-        return configList;
+    public void setNumMaxEpochs(int numMaxEpochs) {
+        this.numMaxEpochs = numMaxEpochs;
     }
 
     /**
-     * Saves all configuration information of a neural net to a .txt file
+     * Gets the maximum number of epochs that the neural network will train
+     * before terminating its training session of the network
      *
-     * @param nN neural network whose configuration will be exported
-     * @throws java.io.FileNotFoundException if the file for the configuration
-     * to be written to as specified by the user cannot be written to or another
-     * error occurs while opening or creating the file
-     * @see
-     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
-     * PrintWriter </a>
+     * @return maximum number of epochs that the neural network will train
+     * before terminating its training session of the network
      *
      * @author lts010, ks061
      */
-    public static void exportConfig(NeuralNet nN) throws FileNotFoundException {
-        Scanner in = new Scanner(System.in);
-        String prompt = "What .txt file would you like to save the configuration to? ";
-        System.out.print(prompt);
-        String outputFile = in.next();
-        PrintWriter out = new PrintWriter(outputFile);
-        out.printf("%d.0 %d.0 %d.0 %d.0 %f\n",
-                   nN.getConfiguration().getNumInputs(),
-                   nN.getConfiguration().getNumOutputs(),
-                   nN.getConfiguration().getNumHiddenLayers(),
-                   nN.getConfiguration().getNumNeuronsPerHiddenLayer(),
-                   nN.getConfiguration().getHighestSSE());
-        ArrayList<ArrayList<Double>> weights = nN.getConfiguration().getWeights();
-        String weightLayer;
-        for (ArrayList<Double> weightList : weights) {
-            weightLayer = "";
-            for (double weight : weightList) {
-                weightLayer += weight + " ";
-            }
-            out.printf("%s\n", weightLayer);
-        }
-        out.printf("%s\n", "THETAS");
-        List<ArrayList<Double>> thetas = nN.getConfiguration().getThetas().subList(
-                1, nN.getConfiguration().getThetas().size());
-        String thetaLayer;
-        for (ArrayList<Double> thetaList : thetas) {
-            thetaLayer = "";
-            for (double theta : thetaList) {
-                thetaLayer += theta + " ";
-            }
-            out.printf("%s\n", thetaLayer);
-        }
-        out.flush();
-        out.close();
+    public int getNumMaxEpochs() {
+        return numMaxEpochs;
     }
-
 }

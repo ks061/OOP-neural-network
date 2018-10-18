@@ -7,14 +7,16 @@
 * Time: 10:50:11 AM
 *
 * Project: csci205_proj_hw
-* Package: hw1
+* Package: hw02
 * File: InputNeuron
 * Description: This file contains InputNeuron, which represents a neuron in the
 *              the input layer of a neural network.
 *
 * ****************************************
  */
-package hw02;
+package hw02.Neuron;
+
+import hw02.NeuralNet;
 
 /**
  * InputNeuron represents a neuron in the input layer of a neural network.

@@ -7,14 +7,14 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: StepActivationFunction
  * Description: This file contains StepActivationFunction, which represents a
  *              step function used as an activation function.
  *
  * ****************************************
  */
-package hw02;
+package hw02.ActivationFunction;
 
 /**
  * StepActivationFunction represents a step function used as an activation

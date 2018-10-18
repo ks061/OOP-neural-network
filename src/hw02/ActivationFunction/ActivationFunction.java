@@ -7,7 +7,7 @@
 * Time: 11:14:46 AM
 *
 * Project: csci205_proj_hw
-* Package: hw1
+* Package: hw02
 * File: ActivationFunction
 * Description: This file contains ActivationFunction, which is an interface
 *              that defines what functionalities each activation function used
@@ -15,7 +15,7 @@
 *
 * ****************************************
  */
-package hw02;
+package hw02.ActivationFunction;
 
 /**
  * ActivationFunction is an interface that defines what functionalities each

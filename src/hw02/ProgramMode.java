@@ -7,7 +7,7 @@
 * Time: 7:30:48 PM
 *
 * Project: csci205_proj_hw
-* Package: hw1
+* Package: hw02
 * File: ProgramMode
 * Description: This file contains the enumeration ProgramMode, which is an
 *              enumeration that that helps distinguish whether the user wants

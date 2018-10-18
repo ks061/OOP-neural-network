@@ -7,15 +7,19 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: OutputLayer
  * Description: This file contains OutputLayer, which represents the last
  *              column of neurons within a neural network.
  *
  * ****************************************
  */
-package hw02;
+package hw02.Layer;
 
+import hw02.NeuralNet;
+import hw02.Neuron.Neuron;
+import hw02.Neuron.OutputNeuron;
+import hw02.ProgramMode;
 import java.util.ArrayList;
 
 /**

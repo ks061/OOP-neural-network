@@ -7,7 +7,7 @@
  * Time: 5:00:00 PM
  *
  * Project: 205-FA18Class
- * Package: hw01
+ * Package: hw02
  * File: NeuralNet
  * Description: This file contains NeuralNet, which represents an artificial
  *              neural network.
@@ -16,8 +16,13 @@
  */
 package hw02;
 
+import hw02.Layer.HiddenLayer;
+import hw02.Layer.InputLayer;
+import hw02.Layer.OutputLayer;
+import hw02.Layer.Layer;
+import hw02.Neuron.Neuron;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -25,45 +30,62 @@ import java.util.*;
  *
  * @author cld028, ks061
  */
-public class NeuralNet {
+public class NeuralNet implements Serializable {
 
     /**
      * Data that this neural network is fed, including input data and expected
      * output data.
      */
-    private double[][] data;
+    private transient double[][] data;
+
     /**
-     * Configuration of the neural network, including information like the
-     * number of inputs (input neurons), the number of outputs (output neurons),
-     * the number of hidden layers, the number of neurons per hidden layer, the
-     * maximum allowed sum of squared error value (SSE), list of edge weights (a
-     * weight for each edge going to the next layer in each layer except the
-     * output layer), and program mode (classification or training mode) that
-     * neural net will run in
+     * Configuration of the neural network
      */
-    private ConfigObject configuration;
+    private ANNConfig configuration;
+
     /**
      * Layers in this neural network
      */
-    private ArrayList<Layer> layers;
+    private transient ArrayList<Layer> layers;
+
     /**
      * Learning rate of this neural network
      */
     public static final double alpha = 0.2;
 
     /**
-     * Constructor that creates the input layer, any hidden layers, and output
-     * layer, along with creating connections among the layers.
+     * Length of time to train this network
+     */
+    private double trainingTime;
+
+    /**
+     * The average sum of squared errors over all epochs
+     */
+    private double trainingAverageSSE;
+
+    /**
+     * The sum of squared errors for the last epoch
+     */
+    private double trainingFinalSSE;
+
+    /**
+     * The number of epochs used to train this network
+     */
+    private int trainingNumberOfEpochs;
+
+    /**
+     * The maximum number of epochs before the training session terminates
+     */
+    private int maxTrainingEpochs;
+
+    /**
+     * Constructor that sets pointers to the input and/or output data array and
+     * configuration and creates the input layer, any hidden layers, and output
+     * layer based on preferences stored in the configuration, along with
+     * creating connections between adjacent layers
      *
-     * @param data training data, including sets of input and output training
-     * data
-     * @param config configuration of the neural network, including the number
-     * of inputs (input neurons), the number of outputs (output neurons), the
-     * number of hidden layers, the number of neurons per hidden layer, the
-     * maximum allowed sum of squared error value (SSE), list of edge weights (a
-     * weight for each edge going to the next layer in each layer except the
-     * output layer), and program mode (classification or training mode) that
-     * neural net will run in
+     * @param data input and/or output data to be used by the neural network
+     * @param configuration configuration of the neural network
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
@@ -73,7 +95,7 @@ public class NeuralNet {
      *
      * @author cld028, ks061, lts010
      */
-    public NeuralNet(double[][] data, ConfigObject config) throws FileNotFoundException {
+    public NeuralNet(double[][] data, ANNConfig configuration) throws FileNotFoundException {
         if (data.length == 0) {
             throw new NeuralNetConstructionException(
                     "No data has been provided.");
@@ -88,13 +110,38 @@ public class NeuralNet {
         }
 
         this.data = data;
-        this.configuration = config;
+        this.configuration = configuration;
 
+        initializeLayers();
+    }
+
+    /**
+     * Sets the input and/or output data array to be used by the neural network
+     *
+     * @param data input and/or output data array to be used by the neural
+     * network
+     *
+     * @author ks061, lts010
+     */
+    public void setData(double[][] data) {
+        this.data = data;
+    }
+
+    /**
+     * Creates the input layer, any hidden layers, and output layer based on the
+     * preferences stored in the configuration, along with creating connections
+     * between adjacent layers
+     *
+     * @author ks061, lts010
+     */
+    public void initializeLayers() {
         layers = new ArrayList<>();
-        InputLayer inputLayer = new InputLayer(config.getNumInputs(), "I1-",
+        InputLayer inputLayer = new InputLayer(this.configuration.getNumInputs(),
+                                               "I1-",
                                                0,
                                                this);
         layers.add(inputLayer);
+
         for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
             layers.add(new HiddenLayer(
                     this.configuration.getNumNeuronsPerHiddenLayer(),
@@ -102,10 +149,21 @@ public class NeuralNet {
                     i, this));
         }
 
-        OutputLayer outputLayer = new OutputLayer(config.getNumOutputs(),
-                                                  "O1-",
-                                                  layers.size(), this);
+        OutputLayer outputLayer = new OutputLayer(
+                this.configuration.getNumOutputs(),
+                "O1-",
+                layers.size(), this);
         layers.add(outputLayer);
+
+        connectLayers();
+    }
+
+    /**
+     * Creates connections between adjacent layers
+     *
+     * @author ks061, lts010
+     */
+    private void connectLayers() {
         Iterator it = layers.iterator();
         Layer currentLayer = (Layer) it.next();
         Layer nextLayer;
@@ -113,21 +171,12 @@ public class NeuralNet {
             nextLayer = (Layer) it.next();
             currentLayer.connectLayer(nextLayer);
             currentLayer = nextLayer;
-
-        }
-
-        if (this.configuration.getProgramMode() == ProgramMode.TRAINING) {
-            train();
-        }
-
-        if (this.configuration.getProgramMode() == ProgramMode.CLASSIFICATION) {
-            classify();
         }
     }
 
     /**
      * Runs the neural network in the training mode, which trains a neural
-     * network based on sets of input and corresponding output values.
+     * network based on sets of input and corresponding output values
      *
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
@@ -139,12 +188,17 @@ public class NeuralNet {
      * @author ks061, lts010
      */
     public void train() throws FileNotFoundException {
-        double sseTotal;
+        double sseTotal = 0;
+        double sseEpochTotal;
+        int maxEpochs = configuration.getNumMaxEpochs();
+        long startTime = System.nanoTime();
+        int numTrainingIterations = 0;
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
         OutputLayer outputLayer = ((OutputLayer) this.layers.get(
                                    this.layers.size() - 1));
         do {
-            sseTotal = 0;
+            sseEpochTotal = 0;
+            numTrainingIterations++;
             for (double[] inputOutputSet : this.data) {
                 inputLayer.setInputs(
                         Arrays.copyOfRange(inputOutputSet, 0,
@@ -155,67 +209,29 @@ public class NeuralNet {
                                 this.configuration.getNumInputs(),
                                 inputOutputSet.length));
                 inputLayer.fireNeurons();
-                sseTotal += outputLayer.calculateSumOfSquaredErrors();
+                sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
             }
-        } while (sseTotal > this.configuration.getHighestSSE());
-        Scanner in = new Scanner(System.in);
+            sseTotal += sseEpochTotal;
+        } while (sseEpochTotal > this.configuration.getHighestSSE() && numTrainingIterations <= maxEpochs);
+
+        if (numTrainingIterations > maxEpochs) {
+            System.out.println(
+                    "\nUnable to train neural network in " + maxEpochs + " iterations.\n");
+            System.out.println("Thanks for using the program.");
+            return;
+        }
+
+        this.trainingTime = (System.nanoTime() - startTime) / 1000000000.0;
+        this.trainingFinalSSE = sseEpochTotal;
+        this.trainingAverageSSE = sseTotal / numTrainingIterations;
+        this.trainingNumberOfEpochs = numTrainingIterations;
+        System.out.println("Neural network has been trained successfully");
+        System.out.println("with the following perfomance peramenters:");
+        System.out.println("\tFinal sum of squared errors: " + sseEpochTotal);
         System.out.println(
-                "Neural network has been trained successfully with a sum of squared errors of " + sseTotal
-                + ".");
-        System.out.print(
-                "Would you like to save the configuration of this neural network to a file? (enter y for yes; anything else for no) ");
-        String willSaveToFile = in.nextLine();
-        if (willSaveToFile.equalsIgnoreCase("y")) {
-            ConfigObject.exportConfig(this);
-        }
-        System.out.println("Thanks for using the program.");
-    }
-
-    /**
-     * Gets the set of predicted outputs from the neurons in the output layer
-     *
-     * @param outputLayer output layer
-     * @return set of predicted outputs from the neurons in the output layer
-     *
-     * @author ks061, lts010
-     */
-    private ArrayList<Double> getSetOfPredictedOutputs(OutputLayer outputLayer) {
-        ArrayList<Double> setOfPredictedOutputs = new ArrayList<>();
-        for (Neuron neuron : outputLayer.getNeurons()) {
-            setOfPredictedOutputs.add(neuron.getNetValue());
-        }
-        return setOfPredictedOutputs;
-    }
-
-    /**
-     * Saves the set of predicted outputs from the neurons to an external .txt
-     * file; it prompts the user for the output filename, etc. as needed.
-     *
-     * @param setsOfPredictedOutputs set of predicted outputs from the neurons
-     * in the output layer
-     * @throws FileNotFoundException if the file for the configuration to be
-     * written to as specified by the user cannot be written to or another error
-     * occurs while opening or creating the file
-     * @see
-     * <a href src="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html">
-     * PrintWriter </a>
-     *
-     * @author ks061, lts010
-     */
-    private void saveSetsOfPredictedOutputs(
-            ArrayList<ArrayList<Double>> setsOfPredictedOutputs) throws FileNotFoundException {
-        Scanner in = new Scanner(System.in);
-        String prompt = "What .txt file would you like to save the configuration to? ";
-        System.out.print(prompt);
-        String outputFile = in.next();
-        PrintWriter out = new PrintWriter(outputFile);
-        for (ArrayList<Double> setOfPredictedOutput : setsOfPredictedOutputs) {
-            out.print(Arrays.toString(setOfPredictedOutput.toArray()));
-            // System.out.println("Output: " + Arrays.toString(
-            // setOfPredictedOutput.toArray()));
-        }
-        out.flush();
-        out.close();
+                "\tAverage sum of squared errors: " + sseTotal / numTrainingIterations);
+        System.out.println("\tNumber of epochs used: " + numTrainingIterations);
+        System.out.println("\tTraining time (seconds): " + this.trainingTime);
     }
 
     /**
@@ -223,6 +239,8 @@ public class NeuralNet {
      * values based on a set of input values and an already configured neural
      * network.
      *
+     * @return set of predicted outputs for each output field and for each input
+     * set
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
@@ -232,7 +250,7 @@ public class NeuralNet {
      *
      * @author ks061, lts010
      */
-    public void classify() throws FileNotFoundException {
+    public ArrayList<ArrayList<Double>> classify() throws FileNotFoundException {
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
         OutputLayer outputLayer = ((OutputLayer) this.layers.get(
                                    this.layers.size() - 1));
@@ -248,14 +266,24 @@ public class NeuralNet {
                     getSetOfPredictedOutputs(outputLayer).toArray()));
             setsOfPredictedOutputs.add(getSetOfPredictedOutputs(outputLayer));
         }
-        Scanner in = new Scanner(System.in);
-        System.out.print(
-                "Would you like to save the predicted outputs to a file? (enter y for yes; anything else for no) ");
-        String willSaveToFile = in.nextLine();
-        if (willSaveToFile.equalsIgnoreCase("y")) {
-            saveSetsOfPredictedOutputs(setsOfPredictedOutputs);
+        return setsOfPredictedOutputs;
+    }
+
+    /**
+     * Gets the set of predicted outputs from the neurons in the output layer
+     *
+     * @param outputLayer output layer
+     *
+     * @return set of predicted outputs from the neurons in the output layer
+     *
+     * @author ks061, lts010
+     */
+    private ArrayList<Double> getSetOfPredictedOutputs(OutputLayer outputLayer) {
+        ArrayList<Double> setOfPredictedOutputs = new ArrayList<>();
+        for (Neuron neuron : outputLayer.getNeurons()) {
+            setOfPredictedOutputs.add(neuron.getNetValue());
         }
-        System.out.println("Thanks for using the program.");
+        return setOfPredictedOutputs;
     }
 
     /**
@@ -277,8 +305,8 @@ public class NeuralNet {
      * @param layerNum layer that the edge resides in
      * @param edgeNum numerical identifier of the edge
      *
-     * @return weight of an edge in layerNumth layer and has a numerical
-     * identifier of edgeNum
+     * @return weight of an edge in the <code>layerNum</code>-th layer and has a
+     * numerical identifier of edgeNum
      *
      * @author lts010, ks061
      */
@@ -321,7 +349,7 @@ public class NeuralNet {
      *
      * @author ks061, lts010
      */
-    public ConfigObject getConfiguration() {
+    public ANNConfig getConfiguration() {
         return this.configuration;
     }
 
