@@ -164,7 +164,7 @@ public class ANNClient {
      *
      * @author ks061, lts010
      */
-    private static double[][] getData() {
+    public static double[][] getData() {
         Scanner scanner = new Scanner(System.in);
         boolean csvFound = false;
         String filename = null;
@@ -254,10 +254,10 @@ public class ANNClient {
      *
      * @author lts010, ks061
      */
-    private static ArrayList<ArrayList<Double>> getRandomWeights(int numInputs,
-                                                                 int numOutputs,
-                                                                 int numHiddenLayers,
-                                                                 int numNeuronsPerHiddenLayer) {
+    public static ArrayList<ArrayList<Double>> getRandomWeights(int numInputs,
+                                                                int numOutputs,
+                                                                int numHiddenLayers,
+                                                                int numNeuronsPerHiddenLayer) {
         ArrayList<ArrayList<Double>> weights = new ArrayList<>();
         RandomWeightAssignment weightAssign = new RandomWeightAssignment();
         weights.add(new ArrayList<>());
@@ -306,7 +306,7 @@ public class ANNClient {
      *
      * @author ks061, lts010
      */
-    private static ArrayList<ArrayList<Double>> getDefaultListOfThetas(
+    public static ArrayList<ArrayList<Double>> getDefaultListOfThetas(
             int numOutputs,
             int numHiddenLayers,
             int numNeuronsPerHiddenLayer) {
