@@ -16,6 +16,7 @@
  */
 package hw02.Neuron;
 
+import hw02.ActivationFunction.ActivationFunction;
 import hw02.Edge;
 import hw02.NeuralNet;
 
@@ -38,11 +39,14 @@ public class OutputNeuron extends Neuron {
      * @param neuronNum index of this neuron within the output layer
      * @param layerNum index of the output layer the neuron is within
      * @param nN neural network that this neuron is within
+     * @param activationFunction activation function this neuron will use to
+     * calculate its net value
      *
      * @author ks061, lts010
      */
-    public OutputNeuron(int neuronNum, int layerNum, NeuralNet nN) {
-        super(neuronNum, layerNum, nN);
+    public OutputNeuron(int neuronNum, int layerNum, NeuralNet nN,
+                        ActivationFunction activationFunction) {
+        super(neuronNum, layerNum, nN, activationFunction);
         if (layerNum == 0) {
             this.theta = DEFAULTTHETA;
         }

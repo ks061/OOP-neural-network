@@ -16,10 +16,11 @@
  */
 package hw02;
 
+import static hw02.ANNUtility.validateInputSet;
 import hw02.Layer.HiddenLayer;
 import hw02.Layer.InputLayer;
-import hw02.Layer.OutputLayer;
 import hw02.Layer.Layer;
+import hw02.Layer.OutputLayer;
 import hw02.Neuron.Neuron;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
@@ -192,29 +193,34 @@ public class NeuralNet implements Serializable {
         double sseEpochTotal;
         int maxEpochs = configuration.getNumMaxEpochs();
         long startTime = System.nanoTime();
-        int numTrainingIterations = 0;
+        int numEpoch = 0;
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
         OutputLayer outputLayer = ((OutputLayer) this.layers.get(
                                    this.layers.size() - 1));
         do {
             sseEpochTotal = 0;
-            numTrainingIterations++;
             for (double[] inputOutputSet : this.data) {
-                inputLayer.setInputs(
-                        Arrays.copyOfRange(inputOutputSet, 0,
-                                           this.configuration.getNumInputs()));
-                outputLayer.setTargetOutputs(
-                        Arrays.copyOfRange(
-                                inputOutputSet,
-                                this.configuration.getNumInputs(),
-                                inputOutputSet.length));
-                inputLayer.fireNeurons();
-                sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
+                if (validateInputSet(Arrays.copyOfRange(inputOutputSet, 0,
+                                                        this.configuration.getNumInputs()))) {
+                    inputLayer.setInputs(
+                            Arrays.copyOfRange(inputOutputSet, 0,
+                                               this.configuration.getNumInputs()));
+                    outputLayer.setTargetOutputs(
+                            Arrays.copyOfRange(
+                                    inputOutputSet,
+                                    this.configuration.getNumInputs(),
+                                    inputOutputSet.length));
+                    inputLayer.fireNeurons();
+                    sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
+
+                    ANNUtility.logEpochAndWeights(numEpoch, inputOutputSet, this);
+                }
             }
             sseTotal += sseEpochTotal;
-        } while (sseEpochTotal > this.configuration.getHighestSSE() && numTrainingIterations <= maxEpochs);
+            numEpoch++;
+        } while (sseEpochTotal > this.configuration.getHighestSSE() && numEpoch <= maxEpochs);
 
-        if (numTrainingIterations > maxEpochs) {
+        if (numEpoch > maxEpochs) {
             System.out.println(
                     "\nUnable to train neural network in " + maxEpochs + " iterations.\n");
             System.out.println("Thanks for using the program.");
@@ -223,15 +229,17 @@ public class NeuralNet implements Serializable {
 
         this.trainingTime = (System.nanoTime() - startTime) / 1000000000.0;
         this.trainingFinalSSE = sseEpochTotal;
-        this.trainingAverageSSE = sseTotal / numTrainingIterations;
-        this.trainingNumberOfEpochs = numTrainingIterations;
+        this.trainingAverageSSE = sseTotal / numEpoch;
+        this.trainingNumberOfEpochs = numEpoch;
         System.out.println("Neural network has been trained successfully");
         System.out.println("with the following perfomance peramenters:");
         System.out.println("\tFinal sum of squared errors: " + sseEpochTotal);
         System.out.println(
-                "\tAverage sum of squared errors: " + sseTotal / numTrainingIterations);
-        System.out.println("\tNumber of epochs used: " + numTrainingIterations);
+                "\tAverage sum of squared errors: " + sseTotal / numEpoch);
+        System.out.println("\tNumber of epochs used: " + numEpoch);
         System.out.println("\tTraining time (seconds): " + this.trainingTime);
+
+        ANNUtility.logFooter(this);
     }
 
     /**
@@ -363,5 +371,4 @@ public class NeuralNet implements Serializable {
     public ArrayList<Layer> getLayers() {
         return layers;
     }
-
 }

@@ -1,7 +1,7 @@
 Names 
 Logan Stiles (lts010) and Kartikeya Sharma (ks061)
 
-Primary Resources
+Primary Resources:
 https://drive.google.com/file/d/1KSQ_7curVmEuemYg6AMsmNyPgsAljTjj/view (the homework PDF)
 https://www.youtube.com/watch?v=QUTU4Y-bgbU&feature=youtu.be
 https://en.wikipedia.org/wiki/Linear_separability
@@ -18,6 +18,8 @@ https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html
 https://docs.oracle.com/javase/8/docs/api/java/lang/System.html
 https://towardsdatascience.com/activation-functions-neural-networks-1cbd9f8d91d6
 https://en.wikipedia.org/wiki/Activation_function
+https://www.tutorialspoint.com/design_pattern/singleton_pattern.htm
+https://www.geeksforgeeks.org/writing-a-csv-file-in-java-using-opencsv/
 
 Configuration File Format:
 The first line will have the following numbers, in this order, separated by one 
@@ -50,3 +52,14 @@ Other Notes:
 - Because the homework explicitly says to keep the readme.txt here, we update the same
 readme.txt for subsequent homeworks, as it appears that the readme is shared across all
 homework.
+- The Logger has static fields and methods; this design is intentional. The 
+default constructor is overridden to be private so that it is private. The assumption 
+here is that there will only be one Logger instance per process.
+- The ConfigObject has a long parameter list, and it is intentional. This keeps the long
+parameter list away from the NeuralNet, so a clean encapsulated data structure can be
+passed into the NeuralNet instance.
+- We interpreted "ANN-Name" at the bottom of pg. 5 of HW2 to be "ANN-<name of 
+contributors>"
+- We interpreted "Input values can be any number between 0 <= x <= 1 only." at
+the bottom of pg. 4 of HW2 to truly mean throwing out any input sets that have values
+that do not fall within the range [0,1].

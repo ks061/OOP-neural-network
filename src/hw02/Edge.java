@@ -201,7 +201,6 @@ public class Edge {
         this.weight += this.deltaWeight;
         this.weightTimesErrorGradient = this.weight * errorGradient;
         neuralNet.storeWeight(layerNum, edgeNum, this.weight);
-        this.weight += this.deltaWeight;
     }
 
 }

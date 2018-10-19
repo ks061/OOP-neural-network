@@ -16,6 +16,7 @@
  */
 package hw02.Layer;
 
+import hw02.ActivationFunction.SigmoidActivationFunction;
 import hw02.NeuralNet;
 import hw02.Neuron.Neuron;
 import hw02.Neuron.OutputNeuron;
@@ -78,7 +79,8 @@ public class OutputLayer extends Layer {
         Neuron neuronToAdd;
         for (int i = 0; i < numNeurons; i++) {
             neuronToAdd = new OutputNeuron(i, this.layerNum,
-                                           this.neuralNet);
+                                           this.neuralNet,
+                                           new SigmoidActivationFunction());
             createdNeurons.add(
                     neuronToAdd);
         }

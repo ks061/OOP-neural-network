@@ -19,7 +19,6 @@ package hw02.Neuron;
 import hw02.ActivationFunction.ActivationFunction;
 import hw02.Edge;
 import hw02.NeuralNet;
-import hw02.ActivationFunction.SigmoidActivationFunction;
 import java.util.ArrayList;
 
 /**
@@ -72,16 +71,20 @@ public abstract class Neuron {
      * @param neuronNum numerical identifier for the neuron
      * @param layerNum numerical identifier for the layer it is in
      * @param nN the neural net the neuron is in
+     * @param activationFunction activation function this neuron will use to
+     * calculate its net value
      *
      * @author ks061, lts010
+     *
      */
-    public Neuron(int neuronNum, int layerNum, NeuralNet nN) {
+    public Neuron(int neuronNum, int layerNum, NeuralNet nN,
+                  ActivationFunction activationFunction) {
         this.neuronNum = neuronNum;
         this.layerNum = layerNum;
         this.inEdges = new ArrayList<>();
         this.outEdges = new ArrayList<>();
         this.neuralNet = nN;
-        this.activationFunction = new SigmoidActivationFunction();
+        this.activationFunction = activationFunction;
     }
 
     /**

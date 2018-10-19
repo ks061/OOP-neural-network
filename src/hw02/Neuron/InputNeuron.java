@@ -16,6 +16,7 @@
  */
 package hw02.Neuron;
 
+import hw02.ActivationFunction.ActivationFunction;
 import hw02.NeuralNet;
 
 /**
@@ -31,11 +32,14 @@ public class InputNeuron extends Neuron {
      * @param neuronNum index of the neuron within the input layer
      * @param layerNum index of the input layer this neuron lies within
      * @param nN neural network this neuron lies within
+     * @param activationFunction activation function this neuron will use to
+     * calculate its net value
      *
      * @author ks061, lts010
      */
-    public InputNeuron(int neuronNum, int layerNum, NeuralNet nN) {
-        super(neuronNum, layerNum, nN);
+    public InputNeuron(int neuronNum, int layerNum, NeuralNet nN,
+                       ActivationFunction activationFunction) {
+        super(neuronNum, layerNum, nN, activationFunction);
     }
 
     /**

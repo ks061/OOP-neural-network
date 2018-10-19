@@ -16,11 +16,12 @@
  */
 package hw02.Layer;
 
+import hw02.ActivationFunction.SigmoidActivationFunction;
 import hw02.Edge;
 import hw02.NeuralNet;
 import hw02.NeuralNetConstructionException;
-import hw02.Neuron.Neuron;
 import hw02.Neuron.HiddenNeuron;
+import hw02.Neuron.Neuron;
 import java.util.ArrayList;
 
 /**
@@ -75,7 +76,8 @@ public class HiddenLayer extends Layer {
 
         Neuron neuronToAdd;
         for (int i = 0; i < numNeurons; i++) {
-            neuronToAdd = new HiddenNeuron(i, this.layerNum, this.neuralNet);
+            neuronToAdd = new HiddenNeuron(i, this.layerNum, this.neuralNet,
+                                           new SigmoidActivationFunction());
             createdNeurons.add(neuronToAdd);
         }
 
