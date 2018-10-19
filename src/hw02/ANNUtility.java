@@ -287,21 +287,4 @@ public class ANNUtility {
                 "MM/dd/yyyy").format(new Date()) + "," + new SimpleDateFormat(
                 "HH:mm:ss").format(new Date()));
     }
-
-    /**
-     * Validates an input set for each input value in the set being in the range
-     * [0,1] (inclusive on the bounds)
-     *
-     * @returns true if all values are in the range [0,1]; otherwise returns
-     * false
-     */
-    public static boolean validateInputSet(double[] inputSet) {
-        for (double inputValue : inputSet) {
-            if (inputValue < 0 || inputValue > 1) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

@@ -106,6 +106,14 @@ public class OutputLayer extends Layer {
         if (super.getNeuralNet().getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
             learn();
         }
+        else if (targetOutputs.length > 0) {
+
+            for (Neuron neuron : this.neurons) {
+                int neuronID = neuron.getNeuronNum();
+                this.outputErrors[neuronID] = targetOutputs[neuronID] - this.neurons.get(
+                        neuronID).getNetValue();
+            }
+        }
     }
 
     /**

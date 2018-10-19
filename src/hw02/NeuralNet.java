@@ -16,7 +16,6 @@
  */
 package hw02;
 
-import static hw02.ANNUtility.validateInputSet;
 import hw02.Layer.HiddenLayer;
 import hw02.Layer.InputLayer;
 import hw02.Layer.Layer;
@@ -175,6 +174,19 @@ public class NeuralNet implements Serializable {
         }
     }
 
+    private boolean shouldClassify() {
+        System.out.println("The neural network is now trained.");
+        Scanner in = new Scanner(System.in);
+        System.out.print(
+                "Would you like to classify using the same data set and the trained neural network? (y or yes for yes; anything else for no): ");
+        String willClassify = in.nextLine();
+        if (willClassify.equalsIgnoreCase("y") || willClassify.equalsIgnoreCase(
+                "yes")) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Runs the neural network in the training mode, which trains a neural
      * network based on sets of input and corresponding output values
@@ -200,21 +212,18 @@ public class NeuralNet implements Serializable {
         do {
             sseEpochTotal = 0;
             for (double[] inputOutputSet : this.data) {
-                if (validateInputSet(Arrays.copyOfRange(inputOutputSet, 0,
-                                                        this.configuration.getNumInputs()))) {
-                    inputLayer.setInputs(
-                            Arrays.copyOfRange(inputOutputSet, 0,
-                                               this.configuration.getNumInputs()));
-                    outputLayer.setTargetOutputs(
-                            Arrays.copyOfRange(
-                                    inputOutputSet,
-                                    this.configuration.getNumInputs(),
-                                    inputOutputSet.length));
-                    inputLayer.fireNeurons();
-                    sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
+                inputLayer.setInputs(
+                        Arrays.copyOfRange(inputOutputSet, 0,
+                                           this.configuration.getNumInputs()));
+                outputLayer.setTargetOutputs(
+                        Arrays.copyOfRange(
+                                inputOutputSet,
+                                this.configuration.getNumInputs(),
+                                inputOutputSet.length));
+                inputLayer.fireNeurons();
+                sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
 
-                    ANNUtility.logEpochAndWeights(numEpoch, inputOutputSet, this);
-                }
+                ANNUtility.logEpochAndWeights(numEpoch, inputOutputSet, this);
             }
             sseTotal += sseEpochTotal;
             numEpoch++;
@@ -240,6 +249,10 @@ public class NeuralNet implements Serializable {
         System.out.println("\tTraining time (seconds): " + this.trainingTime);
 
         ANNUtility.logFooter(this);
+
+        if (shouldClassify()) {
+            classify();
+        }
     }
 
     /**
@@ -262,17 +275,44 @@ public class NeuralNet implements Serializable {
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
         OutputLayer outputLayer = ((OutputLayer) this.layers.get(
                                    this.layers.size() - 1));
+
+        boolean shouldTestData = false;
+        double sse = 0;
+        if (data[0].length == this.configuration.getNumInputs() + this.configuration.getNumOutputs()) {
+            shouldTestData = true;
+        }
+        else {
+            outputLayer.setTargetOutputs(new double[0]);
+        }
+
         ArrayList<ArrayList<Double>> setsOfPredictedOutputs = new ArrayList<>();
+
         for (double[] inputOutputSet : this.data) {
             inputLayer.setInputs(
                     Arrays.copyOfRange(inputOutputSet, 0,
                                        this.configuration.getNumInputs()));
+            if (shouldTestData) {
+                outputLayer.setTargetOutputs(
+                        Arrays.copyOfRange(
+                                inputOutputSet,
+                                this.configuration.getNumInputs(),
+                                inputOutputSet.length));
+            }
             inputLayer.fireNeurons();
             System.out.println("For the set of inputs " + Arrays.toString(
                     Arrays.copyOfRange(inputOutputSet, 0,
                                        this.configuration.getNumInputs())) + ", the set of outputs is: " + Arrays.toString(
                     getSetOfPredictedOutputs(outputLayer).toArray()));
             setsOfPredictedOutputs.add(getSetOfPredictedOutputs(outputLayer));
+
+            if (shouldTestData) {
+                sse += outputLayer.calculateSumOfSquaredErrors();
+            }
+        }
+
+        if (shouldTestData) {
+            System.out.println(
+                    "The total sum of squared errors for all inputs is " + sse);
         }
         return setsOfPredictedOutputs;
     }

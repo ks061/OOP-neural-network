@@ -50,8 +50,8 @@ THETAS
 
 Other Notes:
 - Because the homework explicitly says to keep the readme.txt here, we update the same
-readme.txt for subsequent homeworks, as it appears that the readme is shared across all
-homework.
+readme.txt for subsequent homework assignments, as it appears that the readme is shared
+across all homework.
 - The Logger has static fields and methods; this design is intentional. The 
 default constructor is overridden to be private so that it is private. The assumption 
 here is that there will only be one Logger instance per process.
@@ -61,5 +61,7 @@ passed into the NeuralNet instance.
 - We interpreted "ANN-Name" at the bottom of pg. 5 of HW2 to be "ANN-<name of 
 contributors>"
 - We interpreted "Input values can be any number between 0 <= x <= 1 only." at
-the bottom of pg. 4 of HW2 to truly mean throwing out any input sets that have values
-that do not fall within the range [0,1].
+the bottom of pg. 4 of HW2 to be contradictory to "Now, you must implement a flexible
+network with any number of real valued inputs and outputs." The latter makes more sense
+because the neural net should learn based on the provided inputs; the former restriction
+seems arbitrary.

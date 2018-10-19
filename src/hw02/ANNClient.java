@@ -171,7 +171,7 @@ public class ANNClient {
         while (!csvFound) {
             // Get CSV filename from user
             System.out.print(
-                    "Enter the name of the training data file (.csv file): ");
+                    "Enter the name of the ANN data file (.csv file): ");
             filename = scanner.nextLine();
             if (filename.endsWith(".csv")) {
                 File csv = new File(filename);
@@ -181,7 +181,7 @@ public class ANNClient {
                     csvFound = true;
                 } catch (FileNotFoundException ex) {
                     System.out.println(
-                            "The training data file has not been found. ");
+                            "The ANN data file has not been found. ");
                 }
             }
             else {
