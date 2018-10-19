@@ -28,7 +28,7 @@ import java.util.*;
 /**
  * NeuralNet represents an artificial neural network.
  *
- * @author cld028, ks061
+ * @author cld028, ks061, lts010
  */
 public class NeuralNet implements Serializable {
 

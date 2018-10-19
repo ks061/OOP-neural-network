@@ -68,3 +68,17 @@ seems arbitrary.
 - We interpreted "Restrict the value [of momentum] to be between 0 and 1." in the middle
 of pg. 4 to mean that the user should make the constant between 0 and 1; the program
 does not set this value, so it does not make sense for the program to restrict this value.
+- Looking at this:
+"Improved performance metrics should be reported after an ANN is trained. You should report:
+o The average SSE over the entire training data
+o The average SSE over the entire test data (if a test file was specified) <-- [we interpreted this to mean
+  that the average SSE over the entire test data is printed in classify as long as there is a test file specified
+  at some point throughout the program]
+o The time to train (in seconds)"
+o The number of epochs
+- All class fields in Layer have been marked as protected; we thought this would be 
+an elegant way for subclasses to efficiently be able to access them.
+- In the UML diagram, it should be noted that the lines which are overlapping
+have multiple cardinalities because it would make the diagram look less cluttered
+and still indicate cardinalities of all the lines, particularly if they are fairly
+similar.

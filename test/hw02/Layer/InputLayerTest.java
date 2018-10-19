@@ -84,16 +84,6 @@ public class InputLayerTest extends TestCase {
     }
 
     /**
-     * Test of connectLayer method, of class InputLayer.
-     *
-     * @author lts010, ks061
-     */
-    @Test
-    public void testConnectLayer() {
-        assertTrue(myLayer.nextLayer == myNet.getLayers().get(1)); //if the layers connected properly then we should be able to refer to the next layer in the net this way
-    }
-
-    /**
      * Test of a thrown exception in InputLayer called
      * NeuralNetConstructionException
      *

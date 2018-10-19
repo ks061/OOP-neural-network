@@ -416,6 +416,8 @@ public class ANNClient {
      * network will train itself on the training data if the sum of squared
      * errors calculated by the neural network is less than or equal to the set
      * maximum sum of squared errors for the neural network
+     *
+     * @author ks061, lts010
      */
     private static int getNumMaxEpochs() {
         int numMaxEpochs = ANNUtility.getIntInput(
@@ -532,7 +534,6 @@ public class ANNClient {
      * ObjectInputStream </a>
      *
      * @author lts010, ks061
-     *
      */
     public static NeuralNet deserializeANN(String filename) throws FileNotFoundException, IOException, ClassNotFoundException {
         String aNNFilename = filename;
@@ -821,7 +822,8 @@ public class ANNClient {
      * @throws java.io.FileNotFoundException if the file for the configuration
      * to be written to as specified by the user cannot be written to or another
      * error occurs while opening or creating the file
-     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.ClassNotFoundException thrown if any classes this
+     * method is dependent on could not be found
      * @see
      * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
      * PrintWriter </a>

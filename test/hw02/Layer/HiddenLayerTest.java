@@ -96,19 +96,6 @@ public class HiddenLayerTest extends TestCase {
     }
 
     /**
-     * Test of connectLayer method, of class HiddenLayer.
-     *
-     * @author lts010, ks061
-     */
-    @Test
-    public void testConnectLayer() {
-        System.out.println("connectLayer");
-        assertTrue(myLayer.nextLayer == myNet.getLayers().get(2)); //if the layers connected this should be true
-        assertTrue(myLayer.prevLayer == myNet.getLayers().get(0)); //if the layers connected this should be true
-
-    }
-
-    /**
      * Test of learn method, of class HiddenLayer.
      *
      * @author lts010, ks061

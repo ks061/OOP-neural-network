@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * OutputLayer represents the last column of neurons within a neural network.
  *
- * @author cld028, lts010
+ * @author cld028, lts010, ks061
  */
 public class OutputLayer extends Layer {
 
@@ -46,7 +46,7 @@ public class OutputLayer extends Layer {
     /**
      * Link to previous layer in the neural network
      */
-    protected Layer prevLayer;
+    private Layer prevLayer;
 
     /**
      * Constructor that initializes an output layer with a particular number of

@@ -21,7 +21,7 @@ package hw02;
  * NeuralNetConstructionException is a RuntimeException that is thrown when
  * there is an issue in creating the neural network.
  *
- * @author cld028, ks061
+ * @author cld028, ks061, lts010
  */
 public class NeuralNetConstructionException extends RuntimeException {
 

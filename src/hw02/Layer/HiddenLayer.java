@@ -39,12 +39,12 @@ public class HiddenLayer extends Layer {
     /**
      * Link to previous layer in the neural network
      */
-    protected Layer prevLayer;
+    private Layer prevLayer;
 
     /**
      * Link to next layer in the neural network
      */
-    protected Layer nextLayer;
+    private Layer nextLayer;
 
     /**
      * Constructor that initializes a hidden layer with a particular number of

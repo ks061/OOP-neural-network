@@ -75,7 +75,6 @@ public abstract class Neuron {
      * calculate its net value
      *
      * @author ks061, lts010
-     *
      */
     public Neuron(int neuronNum, int layerNum, NeuralNet nN,
                   ActivationFunction activationFunction) {

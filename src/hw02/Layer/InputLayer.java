@@ -43,7 +43,7 @@ public class InputLayer extends Layer {
     /**
      * Link to next layer in the neural network
      */
-    protected Layer nextLayer;
+    private Layer nextLayer;
 
     /**
      * Constructor that creates the input layer with a particular number of
