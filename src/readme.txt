@@ -65,3 +65,6 @@ the bottom of pg. 4 of HW2 to be contradictory to "Now, you must implement a fle
 network with any number of real valued inputs and outputs." The latter makes more sense
 because the neural net should learn based on the provided inputs; the former restriction
 seems arbitrary.
+- We interpreted "Restrict the value [of momentum] to be between 0 and 1." in the middle
+of pg. 4 to mean that the user should make the constant between 0 and 1; the program
+does not set this value, so it does not make sense for the program to restrict this value.

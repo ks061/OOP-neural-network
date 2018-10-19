@@ -164,7 +164,7 @@ public class ANNClient {
      *
      * @author ks061, lts010
      */
-    private static double[][] getData() {
+    public static double[][] getData() {
         Scanner scanner = new Scanner(System.in);
         boolean csvFound = false;
         String filename = null;
@@ -788,6 +788,7 @@ public class ANNClient {
         System.out.print(
                 "Do you want to keep running this ANN program? (enter y or yes for yes; anything else for no): ");
         String userDecision = in.nextLine();
+        System.out.println();
         if (userDecision.equalsIgnoreCase("y") || userDecision.equalsIgnoreCase(
                 "yes")) {
             return true;

@@ -74,11 +74,6 @@ public class NeuralNet implements Serializable {
     private int trainingNumberOfEpochs;
 
     /**
-     * The maximum number of epochs before the training session terminates
-     */
-    private int maxTrainingEpochs;
-
-    /**
      * Constructor that sets pointers to the input and/or output data array and
      * configuration and creates the input layer, any hidden layers, and output
      * layer based on preferences stored in the configuration, along with
@@ -174,14 +169,32 @@ public class NeuralNet implements Serializable {
         }
     }
 
+    /**
+     * Asks the user whether they would like to test their trained neural
+     * network on a new data set; if they would like to use a new data set, the
+     * method reads in the new data set from the file that the user specifies
+     *
+     * @return true if the user would like to continue with classifying;
+     * otherwise false
+     *
+     * @author ks061, lts010
+     */
     private boolean shouldClassify() {
         System.out.println("The neural network is now trained.");
         Scanner in = new Scanner(System.in);
         System.out.print(
-                "Would you like to classify using the same data set and the trained neural network? (y or yes for yes; anything else for no): ");
+                "Would you like to run a test data set? (y or yes for yes; anything else for no): ");
         String willClassify = in.nextLine();
+
         if (willClassify.equalsIgnoreCase("y") || willClassify.equalsIgnoreCase(
                 "yes")) {
+            System.out.print(
+                    "Do you want a different file? (y or yes for yes; anything else for no): ");
+            String wantsNewFile = in.nextLine();
+            if (wantsNewFile.equalsIgnoreCase("y") || wantsNewFile.equalsIgnoreCase(
+                    "yes")) {
+                this.data = ANNClient.getData();
+            }
             return true;
         }
         return false;
@@ -242,10 +255,12 @@ public class NeuralNet implements Serializable {
         this.trainingNumberOfEpochs = numEpoch;
         System.out.println("Neural network has been trained successfully");
         System.out.println("with the following perfomance peramenters:");
-        System.out.println("\tFinal sum of squared errors: " + sseEpochTotal);
         System.out.println(
-                "\tAverage sum of squared errors: " + sseTotal / numEpoch);
-        System.out.println("\tNumber of epochs used: " + numEpoch);
+                "\tFinal sum of squared errors: " + this.trainingFinalSSE);
+        System.out.println(
+                "\tAverage sum of squared errors: " + this.trainingAverageSSE);
+        System.out.println(
+                "\tNumber of epochs used: " + this.trainingNumberOfEpochs);
         System.out.println("\tTraining time (seconds): " + this.trainingTime);
 
         ANNUtility.logFooter(this);
