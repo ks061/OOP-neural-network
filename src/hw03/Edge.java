@@ -32,6 +32,11 @@ public class Edge {
     public final static double DEFAULTMU = 0.5;
 
     /**
+     * The mu (momentum constant) value of this edge
+     */
+    private double mu = DEFAULTMU;
+
+    /**
      * Represents the index of this edge amongst the edges connecting from the
      * layer that has neurons that this edge receives input from, i.e. the edge
      * connecting the first neuron in a layer to the first neuron in the next
@@ -191,7 +196,7 @@ public class Edge {
      */
     public void learn(double errorGradient) {
         double previousDeltaWeight = this.deltaWeight;
-        this.deltaWeight = NeuralNet.alpha * this.from.getNetValue() * errorGradient;
+        this.deltaWeight = this.neuralNet.getAlpha() * this.from.getNetValue() * errorGradient;
 
         if ((this.deltaWeight < 0 && previousDeltaWeight < 0)
             || (this.deltaWeight > 0 && previousDeltaWeight > 0)) {
@@ -201,6 +206,26 @@ public class Edge {
         this.weight += this.deltaWeight;
         this.weightTimesErrorGradient = this.weight * errorGradient;
         neuralNet.storeWeight(layerNum, edgeNum, this.weight);
+    }
+
+    /**
+     * Gets the momentum constant of this edge
+     *
+     * @return the momentum constant of this edge
+     * @author lts010
+     */
+    public double getMu() {
+        return mu;
+    }
+
+    /**
+     * Sets the momentum constant of this edge
+     *
+     * @param mu - the new momentum constant of this edge
+     * @author lts010
+     */
+    public void setMu(double mu) {
+        this.mu = mu;
     }
 
 }

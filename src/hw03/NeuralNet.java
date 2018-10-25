@@ -49,9 +49,14 @@ public class NeuralNet implements Serializable {
     private transient ArrayList<Layer> layers;
 
     /**
-     * Learning rate of this neural network
+     * default learning rate of this neural network
      */
-    public static final double alpha = 0.2;
+    public static final double DEFAULT_ALPHA = 0.2;
+
+    /**
+     * learning rate of this neural network
+     */
+    public double alpha = DEFAULT_ALPHA;
 
     /**
      * Length of time to train this network
@@ -426,4 +431,25 @@ public class NeuralNet implements Serializable {
     public ArrayList<Layer> getLayers() {
         return layers;
     }
+
+    /**
+     * Gets the learning rate of this neural network
+     *
+     * @return the learning rate of this neural network
+     * @author lts010
+     */
+    public double getAlpha() {
+        return alpha;
+    }
+
+    /**
+     * Sets the learning rate of this neural network
+     *
+     * @param alpha - the new learning rate of this neural network
+     * @author lts010
+     */
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
+
 }

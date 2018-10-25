@@ -82,7 +82,8 @@ public class HiddenNeuron extends Neuron {
         }
 
         errorGradient = super.getNetValue() * (1 - super.getNetValue()) * weightedErrorGradients;
-        setTheta(getTheta() + NeuralNet.alpha * -1 * errorGradient);
+        setTheta(
+                getTheta() + this.getNeuralNet().getAlpha() * -1 * errorGradient);
 
         for (Edge edge : super.getInEdges()) {
             edge.learn(errorGradient);

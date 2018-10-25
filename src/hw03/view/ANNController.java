@@ -1,0 +1,150 @@
+/* *****************************************
+* CSCI205 - Software Engineering and Design
+* Fall 2018
+*
+* Name: Logan Stiles and Kartikeya Sharma
+* Date: Oct 24, 2018
+* Time: 5:25:27 PM
+*
+* Project: csci205_proj_hw
+* Package: hw03.view
+* File: ANNController
+* Description:
+*
+* ****************************************
+ */
+package hw03.view;
+
+import hw03.ActivationFunction.ActivationFunction;
+import hw03.ActivationFunction.HyperbolicTangentActivationFunction;
+import hw03.ActivationFunction.SigmoidActivationFunction;
+import hw03.ActivationFunction.StepActivationFunction;
+import hw03.Edge;
+import hw03.Layer.Layer;
+import hw03.NeuralNet;
+import hw03.Neuron.Neuron;
+import java.util.ArrayList;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+
+/**
+ *
+ * @author logan
+ */
+public class ANNController implements EventHandler<ActionEvent> {
+
+    private ANNView theView;
+    private NeuralNet theModel;
+    private SimpleBooleanProperty propSigmoid;
+    private SimpleBooleanProperty propStep;
+    private SimpleBooleanProperty propHyperbolicTangent;
+
+    public ANNController(ANNView theView) {
+        this.theView = theView;
+        this.theModel = this.theView.getMyNet();
+        this.theView.getAlphaInput().setOnAction(this);
+        this.theView.getMuInput().setOnAction(this);
+        this.propSigmoid = new SimpleBooleanProperty(true);
+        this.propStep = new SimpleBooleanProperty(false);
+        this.propHyperbolicTangent = new SimpleBooleanProperty(false);
+        propSigmoid.bind(theView.getSigmoid().selectedProperty());
+        propStep.bind(theView.getStep().selectedProperty());
+        propHyperbolicTangent.bind(
+                theView.getHyperbolicTangent().selectedProperty());
+    }
+
+    @Override
+    public void handle(ActionEvent event) {
+        updateActivationFunction();
+        if (event.getSource() == this.theView.getAlphaInput()) {
+            try {
+                String alpha = theView.getAlphaInput().getText();
+                if (alpha.length() > 0) {
+                    double newAlpha = Double.parseDouble(alpha);
+                    this.theModel.setAlpha(newAlpha);
+                    theView.getCurrentAlpha().setText(alpha);
+                }
+            } catch (NumberFormatException numberFormatException) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Incorrect input!");
+                alert.setHeaderText("Incorrect input specified!");
+                alert.setContentText(String.format("Can not convert \"%s\"",
+                                                   this.theView.getAlphaInput().getText()));
+                alert.show();
+            }
+        }
+        else if (event.getSource() == this.theView.getMuInput()) {
+            try {
+                String mu = theView.getMuInput().getText();
+                if (mu.length() > 0) {
+                    theView.getCurrentMu().setText(mu);
+                    setNewMu(mu);
+                }
+            } catch (NumberFormatException numberFormatException) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Incorrect input!");
+                alert.setHeaderText("Incorrect input specified!");
+                alert.setContentText(String.format("Can not convert \"%s\"",
+                                                   this.theView.getMuInput().getText()));
+                alert.show();
+            }
+        }
+    }
+
+    public void updateActivationFunction() {
+        ActivationFunction currentActivationFunction = this.theModel.getLayers().get(
+                0).getNeurons().get(0).getActivationFunction();
+        if (propSigmoid.get() && !(currentActivationFunction instanceof SigmoidActivationFunction)) {
+            SigmoidActivationFunction newActivationFunction = new SigmoidActivationFunction();
+            for (Layer layer : theModel.getLayers()) {
+                for (Neuron neuron : layer.getNeurons()) {
+                    neuron.setActivationFunction(newActivationFunction);
+                }
+            }
+        }
+        else if (propStep.get() && !(currentActivationFunction instanceof StepActivationFunction)) {
+            StepActivationFunction newActivationFunction = new StepActivationFunction();
+            for (Layer layer : theModel.getLayers()) {
+                for (Neuron neuron : layer.getNeurons()) {
+                    neuron.setActivationFunction(newActivationFunction);
+                }
+            }
+        }
+        else if (propHyperbolicTangent.get() && !(currentActivationFunction instanceof HyperbolicTangentActivationFunction)) {
+            HyperbolicTangentActivationFunction newActivationFunction = new HyperbolicTangentActivationFunction();
+            for (Layer layer : theModel.getLayers()) {
+                for (Neuron neuron : layer.getNeurons()) {
+                    neuron.setActivationFunction(newActivationFunction);
+                }
+            }
+        }
+    }
+
+    public boolean checkActivationFunction(ActivationFunction activationFunction) {
+        return false;
+    }
+
+    /**
+     * Changes the momentum constant for every edge in theModel
+     *
+     * @param mu
+     * @author lts010
+     */
+    public void setNewMu(String mu) {
+        double newMu = Double.parseDouble(mu);
+        ArrayList<Neuron> inputNeurons = theModel.getLayers().get(0).getNeurons();
+        ArrayList<Neuron> hiddenNeurons = theModel.getLayers().get(1).getNeurons();
+        for (Neuron inputNeuron : inputNeurons) {
+            for (Edge edge : inputNeuron.getOutEdges()) {
+                edge.setMu(newMu);
+            }
+        }
+        for (Neuron hiddenNeuron : hiddenNeurons) {
+            for (Edge edge : hiddenNeuron.getOutEdges()) {
+                edge.setMu(newMu);
+            }
+        }
+    }
+}
