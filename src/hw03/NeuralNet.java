@@ -452,4 +452,21 @@ public class NeuralNet implements Serializable {
         this.alpha = alpha;
     }
 
+    /**
+     * Gets the number of epochs gone through during training
+     *
+     * @return the number of epochs gone through during training
+     */
+    public int getTrainingNumberOfEpochs() {
+        return trainingNumberOfEpochs;
+    }
+
+    /**
+     * Gets the average sum of squared errors over all epochs
+     *
+     * @return the average sum of squared errors over all epochs
+     */
+    public double getTrainingAverageSSE() {
+        return trainingAverageSSE;
+    }
 }

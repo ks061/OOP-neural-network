@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -34,7 +35,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
@@ -45,7 +45,7 @@ import javafx.scene.text.Text;
  */
 public class ANNView {
 
-    private ArrayList<ArrayList<Circle>> nodeCircles;
+    private ArrayList<ArrayList<NodeCircle>> nodeCircles;
     private ArrayList<ArrayList<Line>> edgeLines;
     private Group root;
     private NeuralNet theModel;
@@ -57,6 +57,13 @@ public class ANNView {
     private RadioButton sigmoid;
     private RadioButton hyperbolicTangent;
     private RadioButton step;
+    private Label currentSSE;
+    private Label currentEpochNum;
+    private RadioButton epochPause;
+    private Button stepEpoch;
+    private Button classify;
+    private Button learn;
+    private Button stepDataInstance;
 
     public ANNView() throws FileNotFoundException {
 
@@ -190,7 +197,6 @@ public class ANNView {
         momentumBox.setAlignment(Pos.CENTER);
 
         Label momentum = new Label("Momentum"); //tells the user what the box is for
-        momentum.setAlignment(Pos.CENTER);
 
         muInput = new TextField(); //allows the user to change the momentum
         muInput.setAlignment(Pos.CENTER);
@@ -210,20 +216,67 @@ public class ANNView {
         momentumBox.getChildren().add(currentMu);
         optionsBox.getChildren().add(momentumBox);
 
-        VBox activationFunctions = new VBox(minSpacing);
-        Label activationLabel = new Label("Activation Functions");
-        sigmoid = new RadioButton("Sigmoid");
-        step = new RadioButton("Step");
-        hyperbolicTangent = new RadioButton("Hyperbolic Tangent");
+        VBox activationFunctions = new VBox(minSpacing); //lets the user decide which activation function to use
+        Label activationLabel = new Label("Activation Functions"); //describes this part of the GUI to the user
+        sigmoid = new RadioButton("Sigmoid"); //lets the user choose the sigmoid function
+        step = new RadioButton("Step"); //lets the user choose the step function
+        hyperbolicTangent = new RadioButton("Hyperbolic Tangent"); //lets the user choose the hyperbolic tangent function
         activationFunctions.getChildren().add(activationLabel);
         activationFunctions.getChildren().add(sigmoid);
         activationFunctions.getChildren().add(step);
         activationFunctions.getChildren().add(hyperbolicTangent);
         optionsBox.getChildren().add(activationFunctions);
 
+        VBox averageSSEBox = new VBox(minSpacing); //set up the averageSSE box
+        Label averageSSE = new Label("Average SSE"); //tells the user what this box is for
+        averageSSE.setAlignment(Pos.CENTER);
+        currentSSE = new Label(); //tells the user what the current SSE is
+        currentSSE.setPrefWidth(75);
+        currentSSE.setPrefHeight(25);
+        currentSSE.setAlignment(Pos.CENTER);
+        currentSSE.setBorder(new Border(
+                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
+                                 4),
+                                 BorderWidths.DEFAULT)));
+        averageSSEBox.getChildren().add(averageSSE);
+        averageSSEBox.getChildren().add(currentSSE);
+        optionsBox.getChildren().add(averageSSEBox);
+
+        VBox epochBox = new VBox(minSpacing); //set up the number of epochs box
+        Label numEpochs = new Label("Number of epochs"); //tells the user what the box is for
+        numEpochs.setAlignment(Pos.CENTER);
+        currentEpochNum = new Label(); //tells the current number of epochs box
+        currentEpochNum.setPrefWidth(75);
+        currentEpochNum.setPrefHeight(25);
+        currentEpochNum.setAlignment(Pos.CENTER);
+        currentEpochNum.setBorder(new Border(
+                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
+                                 4),
+                                 BorderWidths.DEFAULT)));
+        epochBox.getChildren().add(numEpochs);
+        epochBox.getChildren().add(currentEpochNum);
+        optionsBox.getChildren().add(epochBox);
+
         optionsBox.setTranslateY(heightOfBox);
         root.getChildren().add(optionsBox);
 
+        VBox programOptions = new VBox(minSpacing);
+        learn = new Button();
+        learn.setText("LEARN");
+        classify = new Button();
+        classify.setText("CLASSIFY");
+        stepDataInstance = new Button();
+        stepDataInstance.setText("Step through one data instance");
+        stepEpoch = new Button();
+        stepEpoch.setText("Step through one epoch");
+        epochPause = new RadioButton("Pause After Each Epoch");
+        programOptions.getChildren().add(learn);
+        programOptions.getChildren().add(classify);
+        programOptions.setTranslateX(widthOfBox);
+        programOptions.getChildren().add(stepDataInstance);
+        programOptions.getChildren().add(stepEpoch);
+        programOptions.getChildren().add(epochPause);
+        root.getChildren().add(programOptions);
     }
 
     public void createEdgeLines(ArrayList<ArrayList<Point>> centers) {
@@ -264,7 +317,7 @@ public class ANNView {
         double x;
         double y;
         String[] nodeTypes = {"Input ", "Hidden ", "Output "};
-        Circle tempCircle;
+        NodeCircle tempCircle;
         Text tempText;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < centers.get(i).size(); j++) {
@@ -272,15 +325,13 @@ public class ANNView {
                 y = centers.get(i).get(j).getY();
                 //TODO display the following text?
                 tempText = new Text(nodeTypes[i] + (j + 1));
-                tempText.setLayoutX(x - (radius / 3));
-                tempText.setLayoutY(y);
                 //tempText.setTextAlignment(TextAlignment.CENTER);
-                tempCircle = new Circle(x, y, radius);
-                tempCircle.setFill(Color.WHITE);
-                tempCircle.setStroke(Color.BLACK);
+                tempCircle = new NodeCircle(x, y, radius);
+                tempCircle.setText(tempText);
                 nodeCircles.get(i).add(tempCircle);
                 this.root.getChildren().add(tempCircle);
-                this.root.getChildren().add(tempText);
+                tempCircle.getText().getLayoutX();
+                this.root.getChildren().add(tempCircle.getText());
             }
         }
     }
@@ -349,6 +400,38 @@ public class ANNView {
 
     public RadioButton getStep() {
         return step;
+    }
+
+    public ArrayList<ArrayList<NodeCircle>> getNodeCircles() {
+        return nodeCircles;
+    }
+
+    public Label getCurrentSSE() {
+        return currentSSE;
+    }
+
+    public Label getCurrentEpochNum() {
+        return currentEpochNum;
+    }
+
+    public RadioButton getEpochPause() {
+        return epochPause;
+    }
+
+    public Button getStepEpoch() {
+        return stepEpoch;
+    }
+
+    public Button getClassify() {
+        return classify;
+    }
+
+    public Button getLearn() {
+        return learn;
+    }
+
+    public Button getStepDataInstance() {
+        return stepDataInstance;
     }
 
 }

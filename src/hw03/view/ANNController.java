@@ -21,13 +21,19 @@ import hw03.ActivationFunction.SigmoidActivationFunction;
 import hw03.ActivationFunction.StepActivationFunction;
 import hw03.Edge;
 import hw03.Layer.Layer;
+import hw03.Layer.OutputLayer;
 import hw03.NeuralNet;
 import hw03.Neuron.Neuron;
+import hw03.ProgramMode;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.shape.Line;
 
 /**
  *
@@ -40,19 +46,29 @@ public class ANNController implements EventHandler<ActionEvent> {
     private SimpleBooleanProperty propSigmoid;
     private SimpleBooleanProperty propStep;
     private SimpleBooleanProperty propHyperbolicTangent;
+    private SimpleBooleanProperty propEpochPause;
 
     public ANNController(ANNView theView) {
         this.theView = theView;
         this.theModel = this.theView.getMyNet();
+
         this.theView.getAlphaInput().setOnAction(this);
         this.theView.getMuInput().setOnAction(this);
-        this.propSigmoid = new SimpleBooleanProperty(true);
+        this.theView.getClassify().setOnAction(this);
+        this.theView.getLearn().setOnAction(this);
+        this.theView.getStepDataInstance().setOnAction(this);
+        this.theView.getStepEpoch().setOnAction(this);
+
+        this.propSigmoid = new SimpleBooleanProperty(true); //sigmoid function is the default
         this.propStep = new SimpleBooleanProperty(false);
         this.propHyperbolicTangent = new SimpleBooleanProperty(false);
+        this.propEpochPause = new SimpleBooleanProperty(false);
+
         propSigmoid.bind(theView.getSigmoid().selectedProperty());
         propStep.bind(theView.getStep().selectedProperty());
         propHyperbolicTangent.bind(
                 theView.getHyperbolicTangent().selectedProperty());
+        propEpochPause.bind(theView.getEpochPause().selectedProperty());
     }
 
     @Override
@@ -90,6 +106,33 @@ public class ANNController implements EventHandler<ActionEvent> {
                                                    this.theView.getMuInput().getText()));
                 alert.show();
             }
+        }
+        else if (event.getSource() == this.theView.getLearn()) {
+            System.out.println("1");
+        }
+        else if (event.getSource() == this.theView.getClassify()) {
+            try {
+                System.out.println("2");
+                theModel.classify();
+                updateNodeValues();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ANNController.class.getName()).log(Level.SEVERE,
+                                                                    null, ex);
+            }
+        }
+        else if (event.getSource() == this.theView.getStepDataInstance()) {
+            System.out.println("3");
+        }
+        else if (event.getSource() == this.theView.getStepEpoch()) {
+            System.out.println("4");
+        }
+        if (this.theModel.getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
+            OutputLayer outputLayer = (OutputLayer) this.theModel.getLayers().get(
+                    2);
+            this.theView.getCurrentSSE().setText(String.format("%f",
+                                                               this.theModel.getTrainingAverageSSE()));
+            this.theView.getCurrentEpochNum().setText(String.format("%d",
+                                                                    this.theModel.getTrainingNumberOfEpochs()));
         }
     }
 
@@ -145,6 +188,34 @@ public class ANNController implements EventHandler<ActionEvent> {
             for (Edge edge : hiddenNeuron.getOutEdges()) {
                 edge.setMu(newMu);
             }
+        }
+    }
+
+    public void updateEdgeColors() {
+        for (Neuron neuron : theModel.getLayers().get(0).getNeurons()) {
+            for (Edge edge : neuron.getOutEdges()) {
+                int layerNum = 0;
+                int edgeNum = neuron.getOutEdges().indexOf(edge);
+                Line line = theView.getEdgeLines().get(layerNum).get(edgeNum);
+                theView.updateEdgeColor(line, layerNum, edgeNum);
+            }
+        }
+    }
+
+    public void updateNodeValues() {
+        for (Neuron neuron : theModel.getLayers().get(0).getNeurons()) {
+            int layerNum = 0;
+            int neuronNum = neuron.getNeuronNum();
+            double netValue = neuron.getNetValue();
+            String text = String.format("%f", netValue);
+            theView.getNodeCircles().get(layerNum).get(neuronNum).setText(text);
+        }
+        for (Neuron neuron : theModel.getLayers().get(2).getNeurons()) {
+            int layerNum = 2;
+            int neuronNum = neuron.getNeuronNum();
+            double netValue = neuron.getNetValue();
+            String text = String.format("%f", netValue);
+            theView.getNodeCircles().get(layerNum).get(neuronNum).setText(text);
         }
     }
 }
