@@ -219,6 +219,7 @@ public class ANNView {
         VBox activationFunctions = new VBox(minSpacing); //lets the user decide which activation function to use
         Label activationLabel = new Label("Activation Functions"); //describes this part of the GUI to the user
         sigmoid = new RadioButton("Sigmoid"); //lets the user choose the sigmoid function
+        sigmoid.setSelected(true); //sigmoid is the default so we want the button to be selected on start up
         step = new RadioButton("Step"); //lets the user choose the step function
         hyperbolicTangent = new RadioButton("Hyperbolic Tangent"); //lets the user choose the hyperbolic tangent function
         activationFunctions.getChildren().add(activationLabel);
@@ -321,7 +322,7 @@ public class ANNView {
         Text tempText;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < centers.get(i).size(); j++) {
-                x = centers.get(i).get(j).getX();;
+                x = centers.get(i).get(j).getX();
                 y = centers.get(i).get(j).getY();
                 //TODO display the following text?
                 tempText = new Text(nodeTypes[i] + (j + 1));

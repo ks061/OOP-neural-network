@@ -75,37 +75,10 @@ public class ANNController implements EventHandler<ActionEvent> {
     public void handle(ActionEvent event) {
         updateActivationFunction();
         if (event.getSource() == this.theView.getAlphaInput()) {
-            try {
-                String alpha = theView.getAlphaInput().getText();
-                if (alpha.length() > 0) {
-                    double newAlpha = Double.parseDouble(alpha);
-                    this.theModel.setAlpha(newAlpha);
-                    theView.getCurrentAlpha().setText(alpha);
-                }
-            } catch (NumberFormatException numberFormatException) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Incorrect input!");
-                alert.setHeaderText("Incorrect input specified!");
-                alert.setContentText(String.format("Can not convert \"%s\"",
-                                                   this.theView.getAlphaInput().getText()));
-                alert.show();
-            }
+            setNewAlpha();
         }
         else if (event.getSource() == this.theView.getMuInput()) {
-            try {
-                String mu = theView.getMuInput().getText();
-                if (mu.length() > 0) {
-                    theView.getCurrentMu().setText(mu);
-                    setNewMu(mu);
-                }
-            } catch (NumberFormatException numberFormatException) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Incorrect input!");
-                alert.setHeaderText("Incorrect input specified!");
-                alert.setContentText(String.format("Can not convert \"%s\"",
-                                                   this.theView.getMuInput().getText()));
-                alert.show();
-            }
+            setNewMu();
         }
         else if (event.getSource() == this.theView.getLearn()) {
             System.out.println("1");
@@ -169,25 +142,55 @@ public class ANNController implements EventHandler<ActionEvent> {
         return false;
     }
 
+    public void setNewAlpha() {
+        try {
+            String alpha = theView.getAlphaInput().getText();
+            if (alpha.length() > 0) {
+                double newAlpha = Double.parseDouble(alpha);
+                this.theModel.setAlpha(newAlpha);
+                theView.getCurrentAlpha().setText(alpha);
+            }
+        } catch (NumberFormatException numberFormatException) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect input!");
+            alert.setHeaderText("Incorrect input specified!");
+            alert.setContentText(String.format("Can not convert \"%s\"",
+                                               this.theView.getAlphaInput().getText()));
+            alert.show();
+        }
+    }
+
     /**
      * Changes the momentum constant for every edge in theModel
      *
-     * @param mu
      * @author lts010
      */
-    public void setNewMu(String mu) {
-        double newMu = Double.parseDouble(mu);
-        ArrayList<Neuron> inputNeurons = theModel.getLayers().get(0).getNeurons();
-        ArrayList<Neuron> hiddenNeurons = theModel.getLayers().get(1).getNeurons();
-        for (Neuron inputNeuron : inputNeurons) {
-            for (Edge edge : inputNeuron.getOutEdges()) {
-                edge.setMu(newMu);
+    public void setNewMu() {
+        try {
+            String mu = theView.getMuInput().getText();
+            if (mu.length() > 0) {
+                double newMu = Double.parseDouble(mu);
+                ArrayList<Neuron> inputNeurons = theModel.getLayers().get(0).getNeurons();
+                ArrayList<Neuron> hiddenNeurons = theModel.getLayers().get(1).getNeurons();
+                for (Neuron inputNeuron : inputNeurons) {
+                    for (Edge edge : inputNeuron.getOutEdges()) {
+                        edge.setMu(newMu);
+                    }
+                }
+                for (Neuron hiddenNeuron : hiddenNeurons) {
+                    for (Edge edge : hiddenNeuron.getOutEdges()) {
+                        edge.setMu(newMu);
+                    }
+                }
+                theView.getCurrentMu().setText(mu);
             }
-        }
-        for (Neuron hiddenNeuron : hiddenNeurons) {
-            for (Edge edge : hiddenNeuron.getOutEdges()) {
-                edge.setMu(newMu);
-            }
+        } catch (NumberFormatException numberFormatException) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect input!");
+            alert.setHeaderText("Incorrect input specified!");
+            alert.setContentText(String.format("Can not convert \"%s\"",
+                                               this.theView.getMuInput().getText()));
+            alert.show();
         }
     }
 
