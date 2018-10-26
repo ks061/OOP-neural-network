@@ -35,7 +35,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 /**
@@ -46,7 +45,7 @@ import javafx.scene.text.Text;
 public class ANNView {
 
     private ArrayList<ArrayList<NodeCircle>> nodeCircles;
-    private ArrayList<ArrayList<Line>> edgeLines;
+    private ArrayList<ArrayList<EdgeLine>> edgeLines;
     private Group root;
     private NeuralNet theModel;
     private HBox optionsBox;
@@ -158,11 +157,9 @@ public class ANNView {
         createEdgeLines(centers);
         createNodeCircles(centers, radius);
 
-        for (ArrayList<Line> lineList : this.edgeLines) {
-            for (Line line : lineList) {
-                int layerNum = this.edgeLines.indexOf(lineList);
-                int edgeNum = lineList.indexOf(line);
-                updateEdgeColor(line, layerNum, edgeNum);
+        for (ArrayList<EdgeLine> lineList : this.edgeLines) {
+            for (EdgeLine edgeLine : lineList) {
+                edgeLine.updateColor();
             }
         }
 
@@ -262,14 +259,10 @@ public class ANNView {
         root.getChildren().add(optionsBox);
 
         VBox programOptions = new VBox(minSpacing);
-        learn = new Button();
-        learn.setText("LEARN");
-        classify = new Button();
-        classify.setText("CLASSIFY");
-        stepDataInstance = new Button();
-        stepDataInstance.setText("Step through one data instance");
-        stepEpoch = new Button();
-        stepEpoch.setText("Step through one epoch");
+        learn = new Button("LEARN");
+        classify = new Button("CLASSIFY");
+        stepDataInstance = new Button("Step through one data instance");
+        stepEpoch = new Button("Step through one epoch");
         epochPause = new RadioButton("Pause After Each Epoch");
         programOptions.getChildren().add(learn);
         programOptions.getChildren().add(classify);
@@ -280,27 +273,42 @@ public class ANNView {
         root.getChildren().add(programOptions);
     }
 
+    /**
+     *
+     * @param centers
+     * @author lts010, ks061
+     */
     public void createEdgeLines(ArrayList<ArrayList<Point>> centers) {
 
         this.edgeLines.add(new ArrayList<>());
         this.edgeLines.add(new ArrayList<>());
         double x;
         double y;
-        Line tempLine;
+        EdgeLine tempLine;
+        Point start;
+        Point end;
+        double weight;
 
-        for (Point start : centers.get(0)) {
-            for (Point end : centers.get(1)) {
-                tempLine = new Line(start.getX(), start.getY(), end.getX(),
-                                    end.getY());
+        for (int i = 0; i < centers.get(0).size(); i++) {
+            for (int j = 0; j < centers.get(1).size(); j++) {
+                start = centers.get(0).get(i);
+                end = centers.get(1).get(j);
+                weight = theModel.getWeight(0, (i * centers.get(1).size()) + j);
+                tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
+                                        end.getY(), weight);
+
                 tempLine.setStroke(Color.BLACK);
                 edgeLines.get(0).add(tempLine);
                 this.root.getChildren().add(tempLine);
             }
         }
-        for (Point one : centers.get(1)) {
-            for (Point two : centers.get(2)) {
-                tempLine = new Line(one.getX(), one.getY(), two.getX(),
-                                    two.getY());
+        for (int i = 0; i < centers.get(1).size(); i++) {
+            for (int j = 0; j < centers.get(2).size(); j++) {
+                start = centers.get(1).get(i);
+                end = centers.get(2).get(j);
+                weight = theModel.getWeight(1, (i * centers.get(2).size()) + j);
+                tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
+                                        end.getY(), weight);
                 tempLine.setStroke(Color.BLACK);
                 edgeLines.get(1).add(tempLine);
                 this.root.getChildren().add(tempLine);
@@ -337,33 +345,7 @@ public class ANNView {
         }
     }
 
-    /**
-     * Updates the color of a line based on the edge weight associated with the
-     * provided edge and layer number (red for negative weights, green for
-     * positive, and blue for zero)
-     *
-     * @param line - the line we want to change the color of, associated with a
-     * specific edge
-     * @param layerNum - the number of the layer that the associated edge is
-     * contained in
-     * @param edgeNum - the number of the edge that the line is associated with
-     */
-    public void updateEdgeColor(Line line, int layerNum, int edgeNum) {
-        double weight = theModel.getWeight(layerNum, edgeNum);
-        if (weight > 0) {
-            line.setStroke(Color.GREEN);
-        }
-        else if (weight == 0) {
-            line.setStroke(Color.BLUE);
-        }
-        else {
-            line.setStroke(Color.RED);
-        }
-        this.edgeLines.get(layerNum).set(edgeNum, line);
-
-    }
-
-    public ArrayList<ArrayList<Line>> getEdgeLines() {
+    public ArrayList<ArrayList<EdgeLine>> getEdgeLines() {
         return edgeLines;
     }
 
