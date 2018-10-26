@@ -97,7 +97,7 @@ public class ANNController implements EventHandler<ActionEvent> {
                     ANNLogger.setSwitch(ANNLoggerStatus.OFF);
                     theModel.train();
                     while (true) {
-                        continue;
+                        continue; //can delete this, was just made to see if I could do stuff while this ran in the background
                     }
                     /*return null;*/
                 }
