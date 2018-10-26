@@ -33,16 +33,24 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import javafx.scene.shape.Line;
 
 /**
  *
- * @author logan
+ * @author lts010, ks061
  */
 public class ANNController implements EventHandler<ActionEvent> {
 
+    /**
+     * The view of this neural network MVC application.
+     */
     private ANNView theView;
+    /**
+     * The model behind this neural network MVC application.
+     */
     private NeuralNet theModel;
+    //TODO should the next two be here?
+    private ArrayList<ArrayList<NodeCircle>> nodeCircles;
+    private ArrayList<ArrayList<EdgeLine>> edgeLines;
     private SimpleBooleanProperty propSigmoid;
     private SimpleBooleanProperty propStep;
     private SimpleBooleanProperty propHyperbolicTangent;
@@ -51,7 +59,8 @@ public class ANNController implements EventHandler<ActionEvent> {
     public ANNController(ANNView theView) {
         this.theView = theView;
         this.theModel = this.theView.getMyNet();
-
+        this.nodeCircles = this.theView.getNodeCircles();
+        this.edgeLines = this.theView.getEdgeLines();
         this.theView.getAlphaInput().setOnAction(this);
         this.theView.getMuInput().setOnAction(this);
         this.theView.getClassify().setOnAction(this);
@@ -191,13 +200,15 @@ public class ANNController implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+     *
+     * @author ks061, lts010
+     */
     public void updateEdgeColors() {
-        for (Neuron neuron : theModel.getLayers().get(0).getNeurons()) {
-            for (Edge edge : neuron.getOutEdges()) {
-                int layerNum = 0;
-                int edgeNum = neuron.getOutEdges().indexOf(edge);
-                Line line = theView.getEdgeLines().get(layerNum).get(edgeNum);
-                theView.updateEdgeColor(line, layerNum, edgeNum);
+
+        for (ArrayList<EdgeLine> edges : edgeLines) {
+            for (EdgeLine edgeLine : edges) {
+                edgeLine.updateColor();
             }
         }
     }
