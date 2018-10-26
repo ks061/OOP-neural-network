@@ -50,9 +50,9 @@ public class ANNMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
-        this.theConfigScene = new ConfigScene(primaryStage);
-        // Scene scene = new Scene(theView.getRootNode());
-        Scene scene = new Scene(theConfigScene.getRootNode(), 600, 400);
+        //this.theConfigScene = new ConfigScene(primaryStage);
+        Scene scene = new Scene(theView.getRootNode());
+        //Scene scene = new Scene(theConfigScene.getRootNode(), 600, 400);
         primaryStage.setTitle("Neural Net");
         primaryStage.setScene(scene);
         primaryStage.show();

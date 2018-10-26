@@ -24,7 +24,7 @@ import javafx.scene.shape.Line;
  */
 public class EdgeLine extends Line {
 
-    private double weight;
+    private Double weight;
 
     /**
      *
@@ -36,9 +36,10 @@ public class EdgeLine extends Line {
      * @author ks061, lts010
      */
     public EdgeLine(double startX, double startY, double endX, double endY,
-                    double weight) {
+                    Double weight) {
         super(startX, startY, endX, endY);
         this.weight = weight;
+        updateColor();
     }
 
     /**

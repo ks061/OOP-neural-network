@@ -15,6 +15,8 @@
  */
 package hw03.view;
 
+import hw02.ANNLogger.ANNLogger;
+import hw02.ANNLogger.ANNLoggerStatus;
 import hw03.ActivationFunction.ActivationFunction;
 import hw03.ActivationFunction.HyperbolicTangentActivationFunction;
 import hw03.ActivationFunction.SigmoidActivationFunction;
@@ -27,9 +29,8 @@ import hw03.Neuron.Neuron;
 import hw03.ProgramMode;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -90,17 +91,24 @@ public class ANNController implements EventHandler<ActionEvent> {
             setNewMu();
         }
         else if (event.getSource() == this.theView.getLearn()) {
-            System.out.println("1");
+            Task learnTask = new Task<Void>() {
+                @Override
+                public Void call() throws FileNotFoundException {
+                    ANNLogger.setSwitch(ANNLoggerStatus.OFF);
+                    theModel.train();
+                    while (true) {
+                        continue;
+                    }
+                    /*return null;*/
+                }
+            };
+            Thread learningThread = new Thread(learnTask);
+            learningThread.setDaemon(true);
+            learningThread.start();
+
         }
         else if (event.getSource() == this.theView.getClassify()) {
-            try {
-                System.out.println("2");
-                theModel.classify();
-                updateNodeValues();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ANNController.class.getName()).log(Level.SEVERE,
-                                                                    null, ex);
-            }
+            System.out.println("2");
         }
         else if (event.getSource() == this.theView.getStepDataInstance()) {
             System.out.println("3");

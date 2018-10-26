@@ -58,7 +58,7 @@ public class Edge {
     /**
      * Represents the weights of each edge
      */
-    private double weight;
+    private Double weight;
 
     /**
      * Represents the change in weight during the current learn cycle

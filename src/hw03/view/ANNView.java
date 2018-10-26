@@ -27,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -214,11 +215,15 @@ public class ANNView {
         optionsBox.getChildren().add(momentumBox);
 
         VBox activationFunctions = new VBox(minSpacing); //lets the user decide which activation function to use
+        ToggleGroup activationGroup = new ToggleGroup();
         Label activationLabel = new Label("Activation Functions"); //describes this part of the GUI to the user
         sigmoid = new RadioButton("Sigmoid"); //lets the user choose the sigmoid function
+        sigmoid.setToggleGroup(activationGroup);
         sigmoid.setSelected(true); //sigmoid is the default so we want the button to be selected on start up
         step = new RadioButton("Step"); //lets the user choose the step function
+        step.setToggleGroup(activationGroup);
         hyperbolicTangent = new RadioButton("Hyperbolic Tangent"); //lets the user choose the hyperbolic tangent function
+        hyperbolicTangent.setToggleGroup(activationGroup);
         activationFunctions.getChildren().add(activationLabel);
         activationFunctions.getChildren().add(sigmoid);
         activationFunctions.getChildren().add(step);
