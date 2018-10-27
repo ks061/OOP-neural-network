@@ -33,15 +33,16 @@ public class NodeCircle extends Circle {
 
     public NodeCircle(double x, double y, double radius) {
         super(x, y, radius);
-        this.text = new Text("Uninitialized");
+        this.text = new Text("");
+
         this.text.setLayoutX(x - (radius / 3));
         this.text.setLayoutY(y);
+
         this.setFill(Color.WHITE);
         this.setStroke(Color.BLACK);
         this.text.setStroke(Color.BLACK);
         this.text.setLayoutX(x - (radius / 3));
         this.text.setLayoutY(y);
-
     }
 
     public Text getText() {

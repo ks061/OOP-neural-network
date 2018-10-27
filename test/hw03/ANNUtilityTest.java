@@ -15,7 +15,7 @@
  */
 package hw03;
 
-import hw03.ANNUtility;
+import hw03.utility.ANNUtility;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;

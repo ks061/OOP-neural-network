@@ -19,6 +19,7 @@ import hw03.ANNConfig;
 import hw03.Edge;
 import hw03.NeuralNet;
 import hw03.ProgramMode;
+import hw03.model.ANNModel;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javafx.geometry.Pos;
@@ -45,29 +46,36 @@ import javafx.scene.text.Text;
  */
 public class ANNView {
 
+    /**
+     * The model of this neural network MVC application.
+     */
+    private ANNModel theModel;
+
     private ArrayList<ArrayList<NodeCircle>> nodeCircles;
     private ArrayList<ArrayList<EdgeLine>> edgeLines;
+
     private Group root;
-    private NeuralNet theModel;
     private HBox optionsBox;
+
     private TextField alphaInput;
     private Label currentAlpha;
     private TextField muInput;
     private Label currentMu;
+
     private RadioButton sigmoid;
     private RadioButton hyperbolicTangent;
     private RadioButton step;
+
     private Label currentSSE;
     private Label currentEpochNum;
-    private RadioButton epochPause;
-    private Button stepEpoch;
-    private Button classify;
+
     private Button learn;
+    private Button classify;
     private Button stepDataInstance;
+    private Button stepEpoch;
+    private RadioButton epochPause;
 
-    public ANNView() throws FileNotFoundException {
-
-        ArrayList<ArrayList<Double>> thetas = new ArrayList<>();
+    private void initThetas(ArrayList<ArrayList<Double>> thetas) {
         thetas.add(new ArrayList<>());
         thetas.add(new ArrayList<>());
         thetas.get(1).add(0.1);
@@ -75,7 +83,9 @@ public class ANNView {
         thetas.get(1).add(0.1);
         thetas.add(new ArrayList<>());
         thetas.get(2).add(0.1);
-        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
+    }
+
+    private void initWeights(ArrayList<ArrayList<Double>> weights) {
         weights.add(new ArrayList<>());
         weights.get(0).add(-0.3);
         weights.get(0).add(0.2);
@@ -87,14 +97,32 @@ public class ANNView {
         weights.get(1).add(-0.1);
         weights.get(1).add(-0.5);
         weights.get(1).add(0.0);
+    }
+
+    public ANNView(ANNModel theModel) throws FileNotFoundException {
+        this.root = new Group();
+
+        this.theModel = theModel;
+
+        // TODO figure out how to phase out use of test theta values here
+        ArrayList<ArrayList<Double>> thetas = new ArrayList<>();
+
+        initThetas(thetas);
+
+        // TODO figure out how to phase out use of test weight values here
+        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
+
+        initWeights(weights);
+
         ANNConfig config = new ANNConfig(2, 1, 1, 3, 0.001, 100000, weights,
                                          thetas, ProgramMode.TEST);
         double[][] data = {{1, 1, 1}};
-        theModel = new NeuralNet(data, config);
 
-        int numInputs = theModel.getConfiguration().getNumInputs();
-        int numHiddenNodes = theModel.getConfiguration().getNumNeuronsPerHiddenLayer();
-        int numOutputs = theModel.getConfiguration().getNumOutputs();
+        theModel.setNeuralNetwork(new NeuralNet(data, config));
+
+        int numInputs = theModel.getNeuralNetwork().getConfiguration().getNumInputs();
+        int numHiddenNodes = theModel.getNeuralNetwork().getConfiguration().getNumNeuronsPerHiddenLayer();
+        int numOutputs = theModel.getNeuralNetwork().getConfiguration().getNumOutputs();
         int minSpacing = 15;
         int spacingBetweenLayers = 100;
         int radius = 50;
@@ -298,7 +326,9 @@ public class ANNView {
             for (int j = 0; j < centers.get(1).size(); j++) {
                 start = centers.get(0).get(i);
                 end = centers.get(1).get(j);
-                weight = theModel.getWeight(0, (i * centers.get(1).size()) + j);
+                weight = theModel.getNeuralNetwork().getWeight(0,
+                                                               (i * centers.get(
+                                                                        1).size()) + j);
                 tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
                                         end.getY(), weight);
 
@@ -311,7 +341,9 @@ public class ANNView {
             for (int j = 0; j < centers.get(2).size(); j++) {
                 start = centers.get(1).get(i);
                 end = centers.get(2).get(j);
-                weight = theModel.getWeight(1, (i * centers.get(2).size()) + j);
+                weight = theModel.getNeuralNetwork().getWeight(1,
+                                                               (i * centers.get(
+                                                                        2).size()) + j);
                 tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
                                         end.getY(), weight);
                 tempLine.setStroke(Color.BLACK);
@@ -358,7 +390,7 @@ public class ANNView {
         return root;
     }
 
-    public NeuralNet getMyNet() {
+    public ANNModel getTheModel() {
         return theModel;
     }
 

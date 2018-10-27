@@ -9,14 +9,14 @@
 * Project: csci205_proj_hw
 * Package: hw03.view
 * File: ANNController
-* Description:
-*
+* Description: This file contains ANNController, which represents the controller
+*              of the neural network application.
 * ****************************************
  */
-package hw03.view;
+package hw03.controller;
 
-import hw02.ANNLogger.ANNLogger;
-import hw02.ANNLogger.ANNLoggerStatus;
+import hw03.ANNLogger.ANNLogger;
+import hw03.ANNLogger.ANNLoggerStatus;
 import hw03.ActivationFunction.ActivationFunction;
 import hw03.ActivationFunction.HyperbolicTangentActivationFunction;
 import hw03.ActivationFunction.SigmoidActivationFunction;
@@ -24,44 +24,50 @@ import hw03.ActivationFunction.StepActivationFunction;
 import hw03.Edge;
 import hw03.Layer.Layer;
 import hw03.Layer.OutputLayer;
-import hw03.NeuralNet;
 import hw03.Neuron.Neuron;
 import hw03.ProgramMode;
+import hw03.model.ANNModel;
+import hw03.view.ANNView;
+import hw03.view.EdgeLine;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 
 /**
+ * ANNController represents the controller of the neural network MVC
+ * application.
  *
  * @author lts010, ks061
  */
 public class ANNController implements EventHandler<ActionEvent> {
 
     /**
-     * The view of this neural network MVC application.
+     * The model of the neural network MVC application.
+     */
+    private ANNModel theModel;
+
+    /**
+     * The view of the neural network MVC application.
      */
     private ANNView theView;
-    /**
-     * The model behind this neural network MVC application.
-     */
-    private NeuralNet theModel;
-    //TODO should the next two be here?
-    private ArrayList<ArrayList<NodeCircle>> nodeCircles;
-    private ArrayList<ArrayList<EdgeLine>> edgeLines;
-    private SimpleBooleanProperty propSigmoid;
-    private SimpleBooleanProperty propStep;
-    private SimpleBooleanProperty propHyperbolicTangent;
-    private SimpleBooleanProperty propEpochPause;
 
-    public ANNController(ANNView theView) {
+    /**
+     * Constructor to initialize the controller of the neural network MVC
+     * application
+     *
+     * @param theModel pointer to the model of the neural network MVC
+     * application
+     * @param theView pointer to the model of the neural network MVC application
+     *
+     * @author ks061, lts010
+     */
+    public ANNController(ANNModel theModel, ANNView theView) {
         this.theView = theView;
-        this.theModel = this.theView.getMyNet();
-        this.nodeCircles = this.theView.getNodeCircles();
-        this.edgeLines = this.theView.getEdgeLines();
+        this.theModel = theModel;
+
         this.theView.getAlphaInput().setOnAction(this);
         this.theView.getMuInput().setOnAction(this);
         this.theView.getClassify().setOnAction(this);
@@ -69,18 +75,22 @@ public class ANNController implements EventHandler<ActionEvent> {
         this.theView.getStepDataInstance().setOnAction(this);
         this.theView.getStepEpoch().setOnAction(this);
 
-        this.propSigmoid = new SimpleBooleanProperty(true); //sigmoid function is the default
-        this.propStep = new SimpleBooleanProperty(false);
-        this.propHyperbolicTangent = new SimpleBooleanProperty(false);
-        this.propEpochPause = new SimpleBooleanProperty(false);
-
-        propSigmoid.bind(theView.getSigmoid().selectedProperty());
-        propStep.bind(theView.getStep().selectedProperty());
-        propHyperbolicTangent.bind(
+        this.theModel.getPropSigmoid().bind(
+                theView.getSigmoid().selectedProperty());
+        this.theModel.getPropStep().bind(theView.getStep().selectedProperty());
+        this.theModel.getPropHyperbolicTangent().bind(
                 theView.getHyperbolicTangent().selectedProperty());
-        propEpochPause.bind(theView.getEpochPause().selectedProperty());
+        this.theModel.getPropEpochPause().bind(
+                theView.getEpochPause().selectedProperty());
     }
 
+    /**
+     * Handles events that occur in the application
+     *
+     * @param event event that occurs in the application
+     *
+     * @author ks061, lts010
+     */
     @Override
     public void handle(ActionEvent event) {
         updateActivationFunction();
@@ -95,11 +105,8 @@ public class ANNController implements EventHandler<ActionEvent> {
                 @Override
                 public Void call() throws FileNotFoundException {
                     ANNLogger.setSwitch(ANNLoggerStatus.OFF);
-                    theModel.train();
-                    while (true) {
-                        continue; //can delete this, was just made to see if I could do stuff while this ran in the background
-                    }
-                    /*return null;*/
+                    theModel.getNeuralNetwork().train();
+                    return null;
                 }
             };
             Thread learningThread = new Thread(learnTask);
@@ -116,38 +123,46 @@ public class ANNController implements EventHandler<ActionEvent> {
         else if (event.getSource() == this.theView.getStepEpoch()) {
             System.out.println("4");
         }
-        if (this.theModel.getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
-            OutputLayer outputLayer = (OutputLayer) this.theModel.getLayers().get(
-                    2);
+        if (this.theModel.getNeuralNetwork().getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
+            // TODO unused reference to outputLayer, why do we need this?
+            OutputLayer outputLayer = (OutputLayer) this.theModel.getNeuralNetwork().getLayers().get(
+                    ANNModel.OUTPUT_LAYER_INDEX);
             this.theView.getCurrentSSE().setText(String.format("%f",
-                                                               this.theModel.getTrainingAverageSSE()));
+                                                               this.theModel.getNeuralNetwork().getTrainingAverageSSE()));
             this.theView.getCurrentEpochNum().setText(String.format("%d",
-                                                                    this.theModel.getTrainingNumberOfEpochs()));
+                                                                    this.theModel.getNeuralNetwork().getTrainingNumberOfEpochs()));
         }
     }
 
+    /**
+     * Updates activation functions stored in each neuron based on user
+     * selection encapsulated within the MVC model ANNModel
+     *
+     * @author ks061, lts010
+     */
     public void updateActivationFunction() {
-        ActivationFunction currentActivationFunction = this.theModel.getLayers().get(
-                0).getNeurons().get(0).getActivationFunction();
-        if (propSigmoid.get() && !(currentActivationFunction instanceof SigmoidActivationFunction)) {
+        ActivationFunction currentActivationFunction = this.theModel.getNeuralNetwork().getLayers().get(
+                ANNModel.INPUT_LAYER_INDEX).getNeurons().get(0).getActivationFunction();
+
+        if (theModel.getPropSigmoid().get() && !(currentActivationFunction instanceof SigmoidActivationFunction)) {
             SigmoidActivationFunction newActivationFunction = new SigmoidActivationFunction();
-            for (Layer layer : theModel.getLayers()) {
+            for (Layer layer : theModel.getNeuralNetwork().getLayers()) {
                 for (Neuron neuron : layer.getNeurons()) {
                     neuron.setActivationFunction(newActivationFunction);
                 }
             }
         }
-        else if (propStep.get() && !(currentActivationFunction instanceof StepActivationFunction)) {
+        else if (theModel.getPropStep().get() && !(currentActivationFunction instanceof StepActivationFunction)) {
             StepActivationFunction newActivationFunction = new StepActivationFunction();
-            for (Layer layer : theModel.getLayers()) {
+            for (Layer layer : theModel.getNeuralNetwork().getLayers()) {
                 for (Neuron neuron : layer.getNeurons()) {
                     neuron.setActivationFunction(newActivationFunction);
                 }
             }
         }
-        else if (propHyperbolicTangent.get() && !(currentActivationFunction instanceof HyperbolicTangentActivationFunction)) {
+        else if (theModel.getPropHyperbolicTangent().get() && !(currentActivationFunction instanceof HyperbolicTangentActivationFunction)) {
             HyperbolicTangentActivationFunction newActivationFunction = new HyperbolicTangentActivationFunction();
-            for (Layer layer : theModel.getLayers()) {
+            for (Layer layer : theModel.getNeuralNetwork().getLayers()) {
                 for (Neuron neuron : layer.getNeurons()) {
                     neuron.setActivationFunction(newActivationFunction);
                 }
@@ -155,16 +170,18 @@ public class ANNController implements EventHandler<ActionEvent> {
         }
     }
 
-    public boolean checkActivationFunction(ActivationFunction activationFunction) {
-        return false;
-    }
-
+    /**
+     * Sets the alpha value for neural network of the program based on the alpha
+     * value entered in the corresponding text box within the GUI
+     *
+     * @author ks061, lts010
+     */
     public void setNewAlpha() {
         try {
             String alpha = theView.getAlphaInput().getText();
             if (alpha.length() > 0) {
                 double newAlpha = Double.parseDouble(alpha);
-                this.theModel.setAlpha(newAlpha);
+                this.theModel.getNeuralNetwork().setAlpha(newAlpha);
                 theView.getCurrentAlpha().setText(alpha);
             }
         } catch (NumberFormatException numberFormatException) {
@@ -178,17 +195,20 @@ public class ANNController implements EventHandler<ActionEvent> {
     }
 
     /**
-     * Changes the momentum constant for every edge in theModel
+     * Sets the momentum value for the neural network of the program based on
+     * the momentum value entered in the corresponding text box within the GUI.
      *
-     * @author lts010
+     * @author lts010, ks061
      */
     public void setNewMu() {
         try {
             String mu = theView.getMuInput().getText();
             if (mu.length() > 0) {
                 double newMu = Double.parseDouble(mu);
-                ArrayList<Neuron> inputNeurons = theModel.getLayers().get(0).getNeurons();
-                ArrayList<Neuron> hiddenNeurons = theModel.getLayers().get(1).getNeurons();
+                ArrayList<Neuron> inputNeurons = theModel.getNeuralNetwork().getLayers().get(
+                        ANNModel.INPUT_LAYER_INDEX).getNeurons();
+                ArrayList<Neuron> hiddenNeurons = theModel.getNeuralNetwork().getLayers().get(
+                        ANNModel.HIDDEN_LAYER_INDEX).getNeurons();
                 for (Neuron inputNeuron : inputNeurons) {
                     for (Edge edge : inputNeuron.getOutEdges()) {
                         edge.setMu(newMu);
@@ -212,32 +232,42 @@ public class ANNController implements EventHandler<ActionEvent> {
     }
 
     /**
+     * Updates the color for each edge line based on the edge weight associated
+     * with the provided edge and layer number (red for negative weights, green
+     * for positive, and blue for zero)
      *
      * @author ks061, lts010
      */
     public void updateEdgeColors() {
 
-        for (ArrayList<EdgeLine> edges : edgeLines) {
+        for (ArrayList<EdgeLine> edges : theView.getEdgeLines()) {
             for (EdgeLine edgeLine : edges) {
                 edgeLine.updateColor();
             }
         }
     }
 
-    public void updateNodeValues() {
-        for (Neuron neuron : theModel.getLayers().get(0).getNeurons()) {
-            int layerNum = 0;
+    /**
+     * Updates the neuron values displayed in the view
+     *
+     * @author ks061, lts010
+     */
+    public void updateNeuronValues() {
+        for (Neuron neuron : theModel.getNeuralNetwork().getLayers().get(
+                ANNModel.INPUT_LAYER_INDEX).getNeurons()) {
             int neuronNum = neuron.getNeuronNum();
             double netValue = neuron.getNetValue();
             String text = String.format("%f", netValue);
-            theView.getNodeCircles().get(layerNum).get(neuronNum).setText(text);
+            theView.getNodeCircles().get(ANNModel.INPUT_LAYER_INDEX).get(
+                    neuronNum).setText(text);
         }
-        for (Neuron neuron : theModel.getLayers().get(2).getNeurons()) {
-            int layerNum = 2;
+        for (Neuron neuron : theModel.getNeuralNetwork().getLayers().get(
+                ANNModel.OUTPUT_LAYER_INDEX).getNeurons()) {
             int neuronNum = neuron.getNeuronNum();
             double netValue = neuron.getNetValue();
             String text = String.format("%f", netValue);
-            theView.getNodeCircles().get(layerNum).get(neuronNum).setText(text);
+            theView.getNodeCircles().get(ANNModel.OUTPUT_LAYER_INDEX).get(
+                    neuronNum).setText(text);
         }
     }
 }

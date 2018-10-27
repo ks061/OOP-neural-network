@@ -18,6 +18,7 @@
  */
 package hw03;
 
+import hw03.utility.ANNUtility;
 import hw03.ANNLogger.ANNLogger;
 import hw03.ANNLogger.ANNLoggerStatus;
 import hw03.Neuron.Neuron;
@@ -235,95 +236,6 @@ public class ANNClient {
         return data;
     }
 
-    /**
-     * Creates and returns a 2D list of random weights for each edge in each
-     * layer of the neural network. The weights are given a random value from
-     * the set of all numbers within the range -2.4 divided by the number of
-     * input edges to 2.4 divided by the number of input edges.
-     *
-     * @param numInputs number of input neurons in the neural network the
-     * program will use
-     * @param numOutputs number of output neurons in the neural network the
-     * program will use
-     * @param numHiddenLayers number of hidden layers in the neural network the
-     * program will use
-     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer in the
-     * neural network the program will use
-     * @return 2D list of randomly generated weights for each edge in each layer
-     * of the neural network that will be used by the program
-     *
-     * @author lts010, ks061
-     */
-    public static ArrayList<ArrayList<Double>> getRandomWeights(int numInputs,
-                                                                int numOutputs,
-                                                                int numHiddenLayers,
-                                                                int numNeuronsPerHiddenLayer) {
-        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
-        RandomWeightAssignment weightAssign = new RandomWeightAssignment();
-        weights.add(new ArrayList<>());
-        if (numHiddenLayers == 0) {
-            for (int i = 0; i < (numInputs * numOutputs); i++) {
-                weights.get(0).add(
-                        weightAssign.assignWeight(numInputs) / numInputs);
-            }
-        }
-        else {
-            for (int i = 0; i < (numInputs * numNeuronsPerHiddenLayer); i++) { //weights from the input layer connecting to the first hidden layer
-                weights.get(0).add(
-                        weightAssign.assignWeight(numInputs) / numInputs);
-            }
-            for (int i = 1; i < numHiddenLayers; i++) { //weights for hidden layers that are connected to layer
-                weights.add(new ArrayList<>());
-                for (int j = 0; j < (numNeuronsPerHiddenLayer * numNeuronsPerHiddenLayer); j++) {
-                    weights.get(i).add(
-                            weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
-                }
-            }
-            weights.add(new ArrayList<>());
-            for (int i = 0; i < numOutputs * numNeuronsPerHiddenLayer; i++) { //weights for the output layer connecting to the last hidden layer
-                weights.get(weights.size() - 1).add(
-                        weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
-            }
-        }
-        return weights;
-    }
-
-    /**
-     * Gets a 2D list with default theta values for each neuron in each layer in
-     * the neural network; the default theta value is set as a constant field in
-     * the Neuron class.
-     *
-     * @param numOutputs number of output neurons in the neural network the
-     * program will use
-     * @param numHiddenLayers number of hidden layers in the neural network the
-     * program will use
-     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer in the
-     * neural network the program will use
-     *
-     * @return 2D list with default theta values for each neuron in each layer
-     * in the neural network; the default theta value is set as a constant field
-     * in the Neuron class.
-     *
-     * @author ks061, lts010
-     */
-    public static ArrayList<ArrayList<Double>> getDefaultListOfThetas(
-            int numOutputs,
-            int numHiddenLayers,
-            int numNeuronsPerHiddenLayer) {
-        ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<>();
-        listOfThetas.add(new ArrayList<>());
-        for (int i = 1; i < numHiddenLayers + 1; i++) {
-            listOfThetas.add(new ArrayList<>());
-            for (int j = 0; j < numNeuronsPerHiddenLayer; j++) {
-                listOfThetas.get(i).add(Neuron.DEFAULTTHETA);
-            }
-        }
-        listOfThetas.add(new ArrayList<>());
-        for (int i = 0; i < numOutputs; i++) {
-            listOfThetas.get(listOfThetas.size() - 1).add(Neuron.DEFAULTTHETA);
-        }
-        return listOfThetas;
-    }
 
     /**
      * Prompts the user for and returns the number of input neurons the neural
@@ -697,11 +609,11 @@ public class ANNClient {
             numMaxEpochs = getNumMaxEpochs();
         }
 
-        ArrayList<ArrayList<Double>> weights = getRandomWeights(numInputs,
+        ArrayList<ArrayList<Double>> weights = ANNUtility.getRandomWeights(numInputs,
                                                                 numOutputs,
                                                                 numHiddenLayers,
                                                                 numNeuronsPerHiddenLayer);
-        ArrayList<ArrayList<Double>> thetas = getDefaultListOfThetas(numOutputs,
+        ArrayList<ArrayList<Double>> thetas = ANNUtility.getDefaultListOfThetas(numOutputs,
                                                                      numHiddenLayers,
                                                                      numNeuronsPerHiddenLayer);
         return new ANNConfig(numInputs, numOutputs,

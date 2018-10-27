@@ -11,12 +11,14 @@
 * File: ANNUtility
 * Description: This file contains ANNUtility, which contains utilities to aid
 *              a neural network program and client.
-*
 * ****************************************
  */
-package hw03;
+package hw03.utility;
 
 import hw03.ANNLogger.ANNLogger;
+import hw03.NeuralNet;
+import hw03.Neuron.Neuron;
+import hw03.WeightAssignment.RandomWeightAssignment;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -227,6 +229,8 @@ public class ANNUtility {
      * @param numEpoch number of the epoch training session is processing
      * @param inputOutputSet input-output set training session is processing
      * @param myNet neural network running training session to log
+     *
+     * @author ks061, lts010
      */
     public static void logEpochAndWeights(int numEpoch, double[] inputOutputSet,
                                           NeuralNet myNet) {
@@ -247,6 +251,8 @@ public class ANNUtility {
      * Logs current weights of each layer
      *
      * @param myNet neural network running training session to log
+     *
+     * @author ks061, lts010
      */
     public static void logWeights(NeuralNet myNet) {
         String layerType = null;
@@ -280,11 +286,102 @@ public class ANNUtility {
      * Logs footer of the log file
      *
      * @param myNet neural network running training session to log
+     *
+     * @author ks061, lts010
      */
     public static void logFooter(NeuralNet myNet) {
         ANNLogger.write("Training Ended");
         ANNLogger.write(new SimpleDateFormat(
                 "MM/dd/yyyy").format(new Date()) + "," + new SimpleDateFormat(
                 "HH:mm:ss").format(new Date()));
+    }
+
+    /**
+     * Gets a 2D list with default theta values for each neuron in each layer in
+     * the neural network; the default theta value is set as a constant field in
+     * the Neuron class.
+     *
+     * @param numOutputs number of output neurons in the neural network the
+     * program will use
+     * @param numHiddenLayers number of hidden layers in the neural network the
+     * program will use
+     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer in the
+     * neural network the program will use
+     *
+     * @return 2D list with default theta values for each neuron in each layer
+     * in the neural network; the default theta value is set as a constant field
+     * in the Neuron class.
+     *
+     * @author ks061, lts010
+     */
+    public static ArrayList<ArrayList<Double>> getDefaultListOfThetas(
+                                                                      int numOutputs,
+                                                                      int numHiddenLayers,
+                                                                      int numNeuronsPerHiddenLayer) {
+        ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<>();
+        listOfThetas.add(new ArrayList<>());
+        for (int i = 1; i < numHiddenLayers + 1; i++) {
+            listOfThetas.add(new ArrayList<>());
+            for (int j = 0; j < numNeuronsPerHiddenLayer; j++) {
+                listOfThetas.get(i).add(Neuron.DEFAULTTHETA);
+            }
+        }
+        listOfThetas.add(new ArrayList<>());
+        for (int i = 0; i < numOutputs; i++) {
+            listOfThetas.get(listOfThetas.size() - 1).add(Neuron.DEFAULTTHETA);
+        }
+        return listOfThetas;
+    }
+
+    /**
+     * Creates and returns a 2D list of random weights for each edge in each
+     * layer of the neural network. The weights are given a random value from
+     * the set of all numbers within the range -2.4 divided by the number of
+     * input edges to 2.4 divided by the number of input edges.
+     *
+     * @param numInputs number of input neurons in the neural network the
+     * program will use
+     * @param numOutputs number of output neurons in the neural network the
+     * program will use
+     * @param numHiddenLayers number of hidden layers in the neural network the
+     * program will use
+     * @param numNeuronsPerHiddenLayer number of neurons per hidden layer in the
+     * neural network the program will use
+     * @return 2D list of randomly generated weights for each edge in each layer
+     * of the neural network that will be used by the program
+     *
+     * @author lts010, ks061
+     */
+    public static ArrayList<ArrayList<Double>> getRandomWeights(int numInputs,
+                                                                int numOutputs,
+                                                                int numHiddenLayers,
+                                                                int numNeuronsPerHiddenLayer) {
+        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
+        RandomWeightAssignment weightAssign = new RandomWeightAssignment();
+        weights.add(new ArrayList<>());
+        if (numHiddenLayers == 0) {
+            for (int i = 0; i < (numInputs * numOutputs); i++) {
+                weights.get(0).add(weightAssign.assignWeight(numInputs) / numInputs);
+            }
+        }
+        else {
+            for (int i = 0; i < (numInputs * numNeuronsPerHiddenLayer); i++) {
+                //weights from the input layer connecting to the first hidden layer
+                weights.get(0).add(weightAssign.assignWeight(numInputs) / numInputs);
+            }
+            for (int i = 1; i < numHiddenLayers; i++) {
+                //weights for hidden layers that are connected to layer
+                weights.add(new ArrayList<>());
+                for (int j = 0; j < (numNeuronsPerHiddenLayer * numNeuronsPerHiddenLayer); j++) {
+                    weights.get(i).add(weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
+                }
+            }
+            weights.add(new ArrayList<>());
+            for (int i = 0; i < numOutputs * numNeuronsPerHiddenLayer; i++) {
+                //weights for the output layer connecting to the last hidden layer
+                weights.get(weights.size() - 1).add(weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
+            }
+        }
+        return weights;
     }
 }

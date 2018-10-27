@@ -17,6 +17,7 @@ package hw03;
 
 import hw03.ANNClient;
 import hw01.Neuron;
+import hw03.utility.ANNUtility;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class ANNClientTest extends TestCase {
     @Test
     public void testGetRandomWeights() throws Exception {
         System.out.println("getRandomWeights");
-        ArrayList<ArrayList<Double>> result = ANNClient.getRandomWeights(2, 1, 2,
+        ArrayList<ArrayList<Double>> result = ANNUtility.getRandomWeights(2, 1, 2,
                                                                          2);
         assertTrue(result.size() == 3); //there should be three layers of edge weights
         assertTrue(result.get(0).size() == 4); //first layer should have 4 edges
@@ -65,7 +66,7 @@ public class ANNClientTest extends TestCase {
     @Test
     public void testDefaultListOfThetas() throws Exception {
         System.out.println("getDefaultListOfThetas");
-        ArrayList<ArrayList<Double>> result = ANNClient.getDefaultListOfThetas(1,
+        ArrayList<ArrayList<Double>> result = ANNUtility.getDefaultListOfThetas(1,
                                                                                2,
                                                                                2);
         assertTrue(result.size() == 4);
