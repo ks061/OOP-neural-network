@@ -19,6 +19,7 @@ package hw03.utility;
 
 import hw03.ANNConfig;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import hw03.ActivationFunction.ActivationFunction;
 import hw03.ActivationFunction.HyperbolicTangentActivationFunction;
 import hw03.ActivationFunction.SigmoidActivationFunction;
@@ -237,6 +238,8 @@ public class ANNUtilityGUICompatible {
             return 2;
         }
 =======
+=======
+>>>>>>> 4f0b3402e5668b970df6f0cd15a1f7e8eeae3365
 import hw03.Neuron.Neuron;
 import hw03.ProgramMode;
 import java.io.File;
@@ -395,7 +398,10 @@ public class ANNUtilityGUICompatible {
                              numNeuronsPerHiddenLayer,
                              highestSSE, numMaxEpochs, weights,
                              thetas, ProgramMode.TRAINING);
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> 4f0b3402e5668b970df6f0cd15a1f7e8eeae3365
     }
 
 }

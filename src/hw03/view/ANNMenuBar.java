@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -229,6 +230,8 @@ public class ANNMenuBar {
 
     }
 =======
+=======
+>>>>>>> 4f0b3402e5668b970df6f0cd15a1f7e8eeae3365
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -535,5 +538,8 @@ public class ANNMenuBar {
 
     }
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> 4f0b3402e5668b970df6f0cd15a1f7e8eeae3365
 }

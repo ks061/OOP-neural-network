@@ -16,6 +16,7 @@
 package hw03.model;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import hw03.ANNConfig;
 import hw03.NeuralNet;
 import java.io.FileNotFoundException;
@@ -202,6 +203,8 @@ public class ANNModel {
     public void createNeuralNetwork(ANNConfig config) throws FileNotFoundException {
         this.neuralNetwork = new NeuralNet(config, this);
 =======
+=======
+>>>>>>> 4f0b3402e5668b970df6f0cd15a1f7e8eeae3365
 import hw03.NeuralNet;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -341,6 +344,9 @@ public class ANNModel {
      */
     public void setNeuralNetwork(NeuralNet neuralNetwork) {
         this.neuralNetwork = neuralNetwork;
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> 4f0b3402e5668b970df6f0cd15a1f7e8eeae3365
     }
 }

@@ -18,11 +18,6 @@
  */
 package hw03;
 
-<<<<<<< HEAD
-=======
-import hw03.utility.ANNUtility;
-import hw03.ANNLogger.ANNLogger;
->>>>>>> origin/master
 import hw03.ANNLogger.ANNLoggerStatus;
 import hw03.utility.ANNUtility;
 import java.io.File;
@@ -237,19 +232,23 @@ public class ANNClient {
         return data;
     }
 
-<<<<<<< HEAD
+    <<<<<<< HEAD
+    <<<<<<< HEAD
+    =======
 =======
+>>>>>>> 4f0b3402e5668b970df6f0cd15a1f7e8eeae3365
 
->>>>>>> origin/master
-    /**
-     * Prompts the user for and returns the number of input neurons the neural
-     * network will be configured to have.
-     *
-     * @return number of input neurons the neural network will be configured to
-     * have
-     *
-     * @author lts010, ks061
-     */
+    >>>>>>> origin
+    /master /**
+             * Prompts the user for and returns the number of input neurons the
+             * neural network will be configured to have.
+             *
+             * @return number of input neurons the neural network will be
+             * configured to have
+             *
+             * @author lts010, ks061
+             */
+
     private static int getNumInputs() {
         return ANNUtility.getIntInput(
                 "What should be the number of inputs (as an integer)?: ");
@@ -463,8 +462,8 @@ public class ANNClient {
             saveSetsOfPredictedOutputs(setsOfPredictedOutputs);
         }
         System.out.println("Thanks for using the program.");
-<<<<<<< HEAD
-=======
+         << << << < HEAD
+ == == == =
     }
 
     /**
@@ -503,13 +502,15 @@ public class ANNClient {
             numMaxEpochs = getNumMaxEpochs();
         }
 
-        ArrayList<ArrayList<Double>> weights = ANNUtility.getRandomWeights(numInputs,
-                                                                numOutputs,
-                                                                numHiddenLayers,
-                                                                numNeuronsPerHiddenLayer);
-        ArrayList<ArrayList<Double>> thetas = ANNUtility.getDefaultListOfThetas(numOutputs,
-                                                                     numHiddenLayers,
-                                                                     numNeuronsPerHiddenLayer);
+        ArrayList<ArrayList<Double>> weights = ANNUtility.getRandomWeights(
+                numInputs,
+                numOutputs,
+                numHiddenLayers,
+                numNeuronsPerHiddenLayer);
+        ArrayList<ArrayList<Double>> thetas = ANNUtility.getDefaultListOfThetas(
+                numOutputs,
+                numHiddenLayers,
+                numNeuronsPerHiddenLayer);
         return new ANNConfig(numInputs, numOutputs,
                              numHiddenLayers,
                              numNeuronsPerHiddenLayer,
@@ -559,7 +560,7 @@ public class ANNClient {
                              highestSSE, numMaxEpochs,
                              weights, thetas,
                              programMode);
->>>>>>> origin/master
+         >>> >>> > origin / master
     }
 
     /**

@@ -1,4 +1,236 @@
 /* *****************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* *****************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* CSCI205 - Software Engineering and Design
+* Fall 2018
+*
+* Name: Logan Stiles and Kartikeya Sharma
+* Date: Oct 24, 2018
+* Time: 5:11:22 PM
+*
+* Project: csci205_proj_hw
+* Package: hw03.view
+* File: ANNView
+* Description:
+*
+* ****************************************
+ */
+package hw03.view;
+
+import hw03.ANNConfig;
+import hw03.ActivationFunction.SigmoidActivationFunction;
+import hw03.ProgramMode;
+import hw03.model.ANNModel;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+/* *****************************************
+import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+/**
+ * The view component of the ANN Visualization
+ *
+ * @author lts010
+ */
+public class ANNView {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * The model of this neural network MVC application.
+     */
+
+    private final ANNModel theModel;
+    private final Group configGroup;
+    private final Group networkGroup;
+    private final Group networkPictureGroup;
+    private final Stage theStage;
+    private final ANNMenuBar aNNMenuBar;
+=======
+    private ANNModel theModel;
+    private ANNModel theModel;
+
+    private ArrayList<ArrayList<NodeCircle>> nodeCircles;
+    private ArrayList<ArrayList<EdgeLine>> edgeLines;
+
+    private Group root;
+    private HBox optionsBox;
+
+    private TextField alphaInput;
+    private Label currentAlpha;
+    private TextField muInput;
+    private Label currentMu;
+
+    private RadioButton sigmoid;
+    private RadioButton hyperbolicTangent;
+    private RadioButton step;
+
+    private Label currentSSE;
+    private Label currentEpochNum;
+
+    private Button learn;
+    private Button classify;
+    private Button stepDataInstance;
+    private Button stepEpoch;
 * CSCI205 - Software Engineering and Design
 * Fall 2018
 *
@@ -48,27 +280,6 @@ import javafx.stage.Stage;
  */
 public class ANNView {
 
-    /**
-     * The model of this neural network MVC application.
-     */
-<<<<<<< HEAD
-    private final ANNModel theModel;
-    private final Group configGroup;
-    private final Group networkGroup;
-    private final Group networkPictureGroup;
-    private final Stage theStage;
-    private final ANNMenuBar aNNMenuBar;
-=======
-    private ANNModel theModel;
->>>>>>> origin/master
-
-    private ArrayList<ArrayList<NodeCircle>> nodeCircles;
-    private ArrayList<ArrayList<EdgeLine>> edgeLines;
-<<<<<<< HEAD
-=======
-
-    private Group root;
-    private HBox optionsBox;
 
     private TextField alphaInput;
     private Label currentAlpha;
@@ -87,9 +298,7 @@ public class ANNView {
     private Button stepDataInstance;
     private Button stepEpoch;
     private RadioButton epochPause;
->>>>>>> origin/master
 
-<<<<<<< HEAD
     private final Pane root;
     private final HBox optionsBox;
     private final VBox programOptions;
@@ -118,33 +327,7 @@ public class ANNView {
     private final RadioButton terminateRBtn;
 
 =======
->>>>>>> origin/master
-    private void initThetas(ArrayList<ArrayList<Double>> thetas) {
-        thetas.add(new ArrayList<>());
-        thetas.add(new ArrayList<>());
-        thetas.get(1).add(0.1);
-        thetas.get(1).add(0.1);
-        thetas.get(1).add(0.1);
-        thetas.add(new ArrayList<>());
-        thetas.get(2).add(0.1);
-    }
 
-    private void initWeights(ArrayList<ArrayList<Double>> weights) {
-        weights.add(new ArrayList<>());
-        weights.get(0).add(-0.3);
-        weights.get(0).add(0.2);
-        weights.get(0).add(0.1);
-        weights.get(0).add(-0.2);
-        weights.get(0).add(-0.1);
-        weights.get(0).add(-0.5);
-        weights.add(new ArrayList<>());
-        weights.get(1).add(-0.1);
-        weights.get(1).add(-0.5);
-        weights.get(1).add(0.0);
-    }
-<<<<<<< HEAD
-//TODO  Delete makeConfig, initThetas, initWeights Use config the user inputs
-=======
 
     public ANNView(ANNModel theModel) throws FileNotFoundException {
         this.root = new Group();
@@ -164,9 +347,6 @@ public class ANNView {
         ANNConfig config = new ANNConfig(2, 1, 1, 3, 0.001, 100000, weights,
                                          thetas, ProgramMode.TEST);
         double[][] data = {{1, 1, 1}};
->>>>>>> origin/master
-
-<<<<<<< HEAD
     public final ANNConfig makeConfig() {
         // TODO figure out how to phase out use of test theta values here
         ArrayList<ArrayList<Double>> thetas = new ArrayList<>();
@@ -526,53 +706,9 @@ public class ANNView {
         //int numInputs = theModel.getNeuralNetwork().getConfiguration().getNumInputs();
         //int numHiddenNodes = theModel.getNeuralNetwork().getConfiguration().getNumNeuronsPerHiddenLayer();
         //int numOutputs = theModel.getNeuralNetwork().getConfiguration().getNumOutputs();
-=======
-        theModel.setNeuralNetwork(new NeuralNet(data, config));
-
-        int numInputs = theModel.getNeuralNetwork().getConfiguration().getNumInputs();
-        int numHiddenNodes = theModel.getNeuralNetwork().getConfiguration().getNumNeuronsPerHiddenLayer();
-        int numOutputs = theModel.getNeuralNetwork().getConfiguration().getNumOutputs();
-        int minSpacing = 15;
->>>>>>> origin/master
         int spacingBetweenLayers = 100;
         int radius = 50;
         double widthOfBox;
-        double heightOfBox;
-        Point upperLeftOfBox = new Point(100.0, 100.0);
-
-        this.edgeLines = new ArrayList<>();
-        this.nodeCircles = new ArrayList<>();
-
-        int maxNodes = numInputs;
-        if (maxNodes < numHiddenNodes) {
-            maxNodes = numHiddenNodes;
-        }
-        if (maxNodes < numOutputs) {
-            maxNodes = numOutputs;
-        }
-
-        widthOfBox = (6 * radius + 2 * spacingBetweenLayers) + 2 * this.minSpacing;
-        heightOfBox = ((2 * maxNodes * radius) + (1 + maxNodes) * this.minSpacing);
-        this.optionsBox.setTranslateY(heightOfBox);
-        this.programOptions.setTranslateX(widthOfBox);
-
-        ArrayList<ArrayList<Point>> centers = new ArrayList<>();
-
-        //add the three layers (input, hidden, output
-        centers.add(new ArrayList<>());
-        centers.add(new ArrayList<>());
-        centers.add(new ArrayList<>());
-        double verticalSpacing = (heightOfBox - (2 * radius * numInputs)) / (numInputs + 1);
-
-        //store the centers for the first layer
-        double x = this.minSpacing + radius;
-        double y = verticalSpacing + radius;
-        centers.get(0).add(new Point(x, y));
-        for (int i = 1; i < numInputs; i++) {
-            y += verticalSpacing + 2 * radius;
-            centers.get(0).add(new Point(x, y));
-        }
-
         //store the centers for the second layer;
         verticalSpacing = (heightOfBox - (2 * radius * numHiddenNodes)) / (numHiddenNodes + 1);
         x += spacingBetweenLayers + 2 * radius;
@@ -601,137 +737,13 @@ public class ANNView {
 
     }
 
-<<<<<<< HEAD
     public void makeNetorkGroupVisable() {
         this.configGroup.setVisible(false);
         this.networkGroup.setVisible(true);
-=======
-    /**
-     *
-     * @param centers
-     * @author lts010, ks061
-     */
-    public void createEdgeLines(ArrayList<ArrayList<Point>> centers) {
-
-        this.edgeLines.add(new ArrayList<>());
-        this.edgeLines.add(new ArrayList<>());
-        double x;
-        double y;
-        EdgeLine tempLine;
-        Point start;
-        Point end;
-        double weight;
-
-        for (int i = 0; i < centers.get(0).size(); i++) {
-            for (int j = 0; j < centers.get(1).size(); j++) {
-                start = centers.get(0).get(i);
-                end = centers.get(1).get(j);
-                weight = theModel.getNeuralNetwork().getWeight(0,
-                                                               (i * centers.get(
-                                                                        1).size()) + j);
-                tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
-                                        end.getY(), weight);
-
-                tempLine.setStroke(Color.BLACK);
-                edgeLines.get(0).add(tempLine);
-                this.root.getChildren().add(tempLine);
-            }
-        }
-        for (int i = 0; i < centers.get(1).size(); i++) {
-            for (int j = 0; j < centers.get(2).size(); j++) {
-                start = centers.get(1).get(i);
-                end = centers.get(2).get(j);
-                weight = theModel.getNeuralNetwork().getWeight(1,
-                                                               (i * centers.get(
-                                                                        2).size()) + j);
-                tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
-                                        end.getY(), weight);
-                tempLine.setStroke(Color.BLACK);
-                edgeLines.get(1).add(tempLine);
-                this.root.getChildren().add(tempLine);
-            }
-        }
->>>>>>> origin/master
     }
 
     public void makeConfigGroupVisable() {
         this.networkGroup.setVisible(false);
         this.configGroup.setVisible(true);
     }
-<<<<<<< HEAD
-=======
-
-    public ArrayList<ArrayList<EdgeLine>> getEdgeLines() {
-        return edgeLines;
-    }
-
-    public Group getRootNode() {
-        return root;
-    }
-
-    public ANNModel getTheModel() {
-        return theModel;
-    }
-
-    public TextField getAlphaInput() {
-        return alphaInput;
-    }
-
-    public Label getCurrentAlpha() {
-        return currentAlpha;
-    }
-
-    public TextField getMuInput() {
-        return muInput;
-    }
-
-    public Label getCurrentMu() {
-        return currentMu;
-    }
-
-    public RadioButton getSigmoid() {
-        return sigmoid;
-    }
-
-    public RadioButton getHyperbolicTangent() {
-        return hyperbolicTangent;
-    }
-
-    public RadioButton getStep() {
-        return step;
-    }
-
-    public ArrayList<ArrayList<NodeCircle>> getNodeCircles() {
-        return nodeCircles;
-    }
-
-    public Label getCurrentSSE() {
-        return currentSSE;
-    }
-
-    public Label getCurrentEpochNum() {
-        return currentEpochNum;
-    }
-
-    public RadioButton getEpochPause() {
-        return epochPause;
-    }
-
-    public Button getStepEpoch() {
-        return stepEpoch;
-    }
-
-    public Button getClassify() {
-        return classify;
-    }
-
-    public Button getLearn() {
-        return learn;
-    }
-
-    public Button getStepDataInstance() {
-        return stepDataInstance;
-    }
-
->>>>>>> origin/master
 }
