@@ -34,9 +34,8 @@ public class NodeCircle extends Circle {
     public NodeCircle(double x, double y, double radius) {
         super(x, y, radius);
         this.text = new Text("");
-
-        this.text.setLayoutX(x - (radius / 3));
-        this.text.setLayoutY(y);
+        this.text.setLayoutX(this.getCenterX() - (this.getRadius() / 2));
+        this.text.setLayoutY(this.getCenterY() - 10);
 
         this.setFill(Color.WHITE);
         this.setStroke(Color.BLACK);
