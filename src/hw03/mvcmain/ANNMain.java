@@ -59,6 +59,7 @@ public class ANNMain extends Application {
     @Override
     public void init() throws Exception {
         super.init();
+<<<<<<< HEAD
 
     }
 
@@ -78,6 +79,29 @@ public class ANNMain extends Application {
         theStage.setTitle("Neural Net");
         theStage.setScene(scene);
         theStage.show();
+=======
+        this.theModel = new ANNModel();
+        this.theView = new ANNView(theModel);
+        this.theCtrl = new ANNController(theModel, theView);
+    }
+
+    /**
+     * Starts the application
+     *
+     * @param primaryStage stage of the GUI
+     *
+     * @author ks061, lts010
+     */
+    @Override
+    public void start(Stage primaryStage) throws FileNotFoundException {
+        Scene scene = new Scene(theView.getRootNode());
+        // TODO move to view
+        // this.theConfigScene = new ANNMenuBar(primaryStage);
+        // Scene scene = new Scene(theConfigScene.getRootNode(), 600, 400);
+        primaryStage.setTitle("Neural Net");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+>>>>>>> origin/master
     }
 
     /**

@@ -16,6 +16,7 @@
  */
 package hw03;
 
+import hw03.utility.ANNUtility;
 import hw03.Layer.HiddenLayer;
 import hw03.Layer.InputLayer;
 import hw03.Layer.Layer;

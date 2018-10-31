@@ -18,6 +18,11 @@
  */
 package hw03;
 
+<<<<<<< HEAD
+=======
+import hw03.utility.ANNUtility;
+import hw03.ANNLogger.ANNLogger;
+>>>>>>> origin/master
 import hw03.ANNLogger.ANNLoggerStatus;
 import hw03.utility.ANNUtility;
 import java.io.File;
@@ -232,6 +237,10 @@ public class ANNClient {
         return data;
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
     /**
      * Prompts the user for and returns the number of input neurons the neural
      * network will be configured to have.
@@ -454,6 +463,103 @@ public class ANNClient {
             saveSetsOfPredictedOutputs(setsOfPredictedOutputs);
         }
         System.out.println("Thanks for using the program.");
+<<<<<<< HEAD
+=======
+    }
+
+    /**
+     * Gets user input for number of inputs, number of outputs, number of hidden
+     * layers, number of neurons per hidden layer (if there is at least one
+     * hidden layer), the highest allowed sum of squared errors (if in training
+     * mode), and the most number of epochs that the neural network should train
+     * through (if in training mode), generates lists of random weight values
+     * and default theta values, and returns a configuration for the neural
+     * network with said data
+     *
+     * @param programMode whether the program is running in training mode or
+     * classification mode
+     *
+     * @return configuration for the neural network
+     *
+     * @author ks061, lts010
+     */
+    private static ANNConfig initializeConfigurationForCreateMode(
+            ProgramMode programMode) {
+        int numInputs = getNumInputs();
+        int numOutputs = getNumOutputs();
+        int numHiddenLayers = getNumHiddenLayers();
+        int numNeuronsPerHiddenLayer = 0;
+        int numMaxEpochs = 0;
+        double highestSSE = 0;
+
+        if (numHiddenLayers != 0) {
+            numNeuronsPerHiddenLayer = getNumNeuronsPerHiddenLayer();
+        }
+        if (programMode != ProgramMode.TRAINING) { // if programMode is not training, no need for SSE
+            highestSSE = Double.MAX_VALUE;
+        }
+        else {
+            highestSSE = getHighestSSE();
+            numMaxEpochs = getNumMaxEpochs();
+        }
+
+        ArrayList<ArrayList<Double>> weights = ANNUtility.getRandomWeights(numInputs,
+                                                                numOutputs,
+                                                                numHiddenLayers,
+                                                                numNeuronsPerHiddenLayer);
+        ArrayList<ArrayList<Double>> thetas = ANNUtility.getDefaultListOfThetas(numOutputs,
+                                                                     numHiddenLayers,
+                                                                     numNeuronsPerHiddenLayer);
+        return new ANNConfig(numInputs, numOutputs,
+                             numHiddenLayers,
+                             numNeuronsPerHiddenLayer,
+                             highestSSE, numMaxEpochs,
+                             weights, thetas,
+                             programMode);
+    }
+
+    /**
+     * Reads the configuration file and gets a ANNConfig object containing the
+     * configuration information read in from the file
+     *
+     * @param programMode whether the program is running in training mode or
+     * classification mode
+     *
+     * @return configuration for the neural network
+     *
+     * @author ks061, lts010
+     */
+    private static ANNConfig initializeConfigurationForReadConfigMode(
+            ProgramMode programMode) {
+        ArrayList<String> configList = readConfigFile();
+        int thetaIndex = configList.indexOf("THETAS"); // indicates which index the thetas start at
+        ArrayList<String> configListWeights = new ArrayList<>(
+                configList.subList(0,
+                                   thetaIndex)); // seperates the weights (and the numbers before the weights) into a list before the string "THETA"
+        ArrayList<String> configListThetas = new ArrayList<>( // seperates the thetas into a list after the string "THETA"
+                configList.subList(
+                        thetaIndex + 1, configList.size()));
+        ArrayList<ArrayList<Double>> weightList = ANNUtility.strListToDoubleList( // turns the weight list into a list of list of doubles
+                configListWeights);
+        ArrayList<ArrayList<Double>> thetas = ANNUtility.strListToDoubleList(
+                configListThetas); // turns the theta list into a list of list of doubles
+        thetas.add(0, new ArrayList<>()); // adds input layer without any weights
+        int numInputs = (int) Math.round(weightList.get(0).get(0));
+        int numOutputs = (int) Math.round(weightList.get(0).get(1));
+        int numHiddenLayers = (int) Math.round(weightList.get(0).get(2));
+        int numNeuronsPerHiddenLayer = (int) Math.round(weightList.get(0).get(3));
+        double highestSSE = weightList.get(0).get(4);
+        int numMaxEpochs = (int) Math.round(weightList.get(0).get(5));
+        ArrayList<ArrayList<Double>> weights = new ArrayList<>(
+                weightList.subList(1,
+                                   configListWeights.size()));
+        return new ANNConfig(numInputs, numOutputs,
+                             numHiddenLayers,
+                             numNeuronsPerHiddenLayer,
+                             highestSSE, numMaxEpochs,
+                             weights, thetas,
+                             programMode);
+>>>>>>> origin/master
     }
 
     /**
