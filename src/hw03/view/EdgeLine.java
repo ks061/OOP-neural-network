@@ -43,9 +43,9 @@ public class EdgeLine extends Line {
     }
 
     /**
-     * Updates the color of a line based on the edge weight associated with the
-     * provided edge and layer number (red for negative weights, green for
-     * positive, and blue for zero)
+     * Updates the color of an edge line based on the edge weight associated
+     * with the provided edge and layer number (red for negative weights, green
+     * for positive, and blue for zero)
      *
      * @author lts010, ks061
      */

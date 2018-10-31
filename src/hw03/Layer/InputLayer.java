@@ -127,6 +127,7 @@ public class InputLayer extends Layer {
                 edge.setFrom(neuron);
                 nextNeuron.getInEdges().add(edge);
                 edge.setTo(nextNeuron);
+                edge.setMu(this.neuralNet.getConfiguration().getMu());
             }
         }
         this.nextLayer = nextLayer;

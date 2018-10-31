@@ -44,6 +44,12 @@ public class OutputLayer extends Layer {
     private double[] outputErrors;
 
     /**
+     * Contains the outputs of Network for the last forward propagation of
+     * input data.
+     */
+    private double[] outputs;
+    
+    /**
      * Link to previous layer in the neural network
      */
     private Layer prevLayer;
@@ -79,8 +85,8 @@ public class OutputLayer extends Layer {
         Neuron neuronToAdd;
         for (int i = 0; i < numNeurons; i++) {
             neuronToAdd = new OutputNeuron(i, this.layerNum,
-                                           this.neuralNet,
-                                           new SigmoidActivationFunction());
+                    this.neuralNet,
+                    new SigmoidActivationFunction());
             createdNeurons.add(
                     neuronToAdd);
         }
@@ -105,8 +111,7 @@ public class OutputLayer extends Layer {
         }
         if (super.getNeuralNet().getConfiguration().getProgramMode() == ProgramMode.TRAINING) {
             learn();
-        }
-        else if (targetOutputs.length > 0) {
+        } else if (targetOutputs.length > 0) {
 
             for (Neuron neuron : this.neurons) {
                 int neuronID = neuron.getNeuronNum();
@@ -160,8 +165,8 @@ public class OutputLayer extends Layer {
 
         for (Neuron neuron : this.neurons) {
             int neuronID = neuron.getNeuronNum();
-            this.outputErrors[neuronID] = targetOutputs[neuronID] - this.neurons.get(
-                    neuronID).getNetValue();
+            this.outputs[neuronID] = this.neurons.get(neuronID).getNetValue();
+            this.outputErrors[neuronID] = targetOutputs[neuronID] - this.outputs[neuronID];
             ((OutputNeuron) neuron).learn(this.outputErrors[neuronID]);
         }
 
@@ -182,6 +187,7 @@ public class OutputLayer extends Layer {
     public void setTargetOutputs(double[] targetOutputs) {
         this.targetOutputs = targetOutputs;
         this.outputErrors = new double[this.targetOutputs.length];
+        this.outputs = new double[this.targetOutputs.length];
     }
 
     /**
@@ -194,5 +200,12 @@ public class OutputLayer extends Layer {
     public void setPrevLayer(Layer prevLayer) {
         this.prevLayer = prevLayer;
     }
-
+    /**
+     * gets the predicted output for the current input
+     *
+     * @author lts010
+     */
+    public double[] getOutputs() {
+        return(this.outputs);
+    }
 }
