@@ -37,7 +37,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -77,14 +76,12 @@ public class ANNView {
     private final RadioButton hyperbolicTangentBtn;
     private final RadioButton stepFunctionBtn;
 
-    private final Text currentSSE;
-    private final Text currentEpochNum;
-    private final Text feedbackMessage;
+    private final Label currentSSE;
+    private final Label currentEpochNum;
 
     private final Button learnBtn;
     private final Button classifyBtn;
     private final Button stepBtn;
-    private final Button randomizeBtn;
     private final RadioButton runRBtn;
     private final RadioButton epochStepRBtn;
     private final RadioButton inputStepRBtn;
@@ -152,20 +149,10 @@ public class ANNView {
         this.aNNMenuBar = new ANNMenuBar(theStage, configGroup);
         //either the config group or network group will be visible
         this.configGroup.setVisible(false);
-
         root.getChildren().add(this.aNNMenuBar.getMenuBar());
-        HBox feedbackBox = new HBox();
-        feedbackBox.setLayoutX(150);
-        feedbackBox.setLayoutY(5);
-        feedbackMessage = new Text("Here is some text message");
-        feedbackMessage.setLayoutX(170);
-        feedbackMessage.setLayoutY(20);
-        feedbackMessage.setFont(Font.font ("Verdana", 12));
-        feedbackBox.getChildren().add(feedbackMessage);
-        root.getChildren().add(feedbackBox);
         root.getChildren().add(this.networkGroup);
         root.getChildren().add(this.configGroup);
-        root.setMinSize(725, 600);
+        root.setMinSize(600, 600);
         this.theModel = theModel;
 
 //TODO delete the following four lines
@@ -238,15 +225,14 @@ public class ANNView {
         VBox averageSSEBox = new VBox(this.minSpacing); //set up the averageSSE box
         Label averageSSE = new Label("Average SSE"); //tells the user what this box is for
         averageSSE.setAlignment(Pos.CENTER);
-        currentSSE = new Text();
-//        currentSSE = new Label(); //tells the user what the current SSE is
-//        currentSSE.setPrefWidth(75);
-//        currentSSE.setPrefHeight(25);
-//        currentSSE.setAlignment(Pos.CENTER);
-//        currentSSE.setBorder(new Border(
-//                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
-//                                 4),
-//                                 BorderWidths.DEFAULT)));
+        currentSSE = new Label(); //tells the user what the current SSE is
+        currentSSE.setPrefWidth(75);
+        currentSSE.setPrefHeight(25);
+        currentSSE.setAlignment(Pos.CENTER);
+        currentSSE.setBorder(new Border(
+                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
+                                 4),
+                                 BorderWidths.DEFAULT)));
         averageSSEBox.getChildren().add(averageSSE);
         averageSSEBox.getChildren().add(currentSSE);
         optionsBox.getChildren().add(averageSSEBox);
@@ -254,15 +240,14 @@ public class ANNView {
         VBox epochBox = new VBox(this.minSpacing); //set up the number of epochs box
         Label numEpochs = new Label("Number of epochs"); //tells the user what the box is for
         numEpochs.setAlignment(Pos.CENTER);
-       currentEpochNum = new Text();
-//        currentEpochNum = new Label(); //tells the current number of epochs box
-//        currentEpochNum.setPrefWidth(75);
-//        currentEpochNum.setPrefHeight(25);
-//        currentEpochNum.setAlignment(Pos.CENTER);
-//        currentEpochNum.setBorder(new Border(
-//                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
-//                                 4),
-//                                 BorderWidths.DEFAULT)));
+        currentEpochNum = new Label(); //tells the current number of epochs box
+        currentEpochNum.setPrefWidth(75);
+        currentEpochNum.setPrefHeight(25);
+        currentEpochNum.setAlignment(Pos.CENTER);
+        currentEpochNum.setBorder(new Border(
+                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
+                                 4),
+                                 BorderWidths.DEFAULT)));
         epochBox.getChildren().add(numEpochs);
         epochBox.getChildren().add(currentEpochNum);
         optionsBox.getChildren().add(epochBox);
@@ -274,7 +259,6 @@ public class ANNView {
         learnBtn = new Button("LEARN");
         classifyBtn = new Button("CLASSIFY");
         stepBtn = new Button("Step through input/epoch");
-        randomizeBtn = new Button("Randomize Weights");
 
         ToggleGroup runModeGroup = new ToggleGroup();
         runRBtn = new RadioButton("Resume");
@@ -290,7 +274,6 @@ public class ANNView {
         programOptions.getChildren().add(classifyBtn);
 
         programOptions.getChildren().add(stepBtn);
-        programOptions.getChildren().add(randomizeBtn);
         programOptions.getChildren().add(runRBtn);
         programOptions.getChildren().add(inputStepRBtn);
         programOptions.getChildren().add(epochStepRBtn);
@@ -315,7 +298,7 @@ public class ANNView {
     }
 
     /**
-     * Creates the edgelines
+     *
      * @param centers
      * @author lts010, ks061
      */
@@ -442,16 +425,12 @@ public class ANNView {
         return nodeCircles;
     }
 
-    public Text getCurrentSSE() {
+    public Label getCurrentSSE() {
         return currentSSE;
     }
 
-    public Text getCurrentEpochNum() {
+    public Label getCurrentEpochNum() {
         return currentEpochNum;
-    }
-
-    public Text getFeedbackMessage() {
-        return feedbackMessage;
     }
 
     public RadioButton getRunRBtn() {
@@ -480,10 +459,6 @@ public class ANNView {
 
     public Button getStepBtn() {
         return stepBtn;
-    }
-
-    public Button getRandomizeBtn() {
-        return randomizeBtn;
     }
 
     public void MakeNetworkGraphic(ANNConfig config) {
@@ -517,7 +492,6 @@ public class ANNView {
 
         widthOfBox = (6 * radius + 2 * spacingBetweenLayers) + 2 * this.minSpacing;
         heightOfBox = ((2 * maxNodes * radius) + (1 + maxNodes) * this.minSpacing);
-        theStage.setMinHeight(heightOfBox +200);
         this.optionsBox.setTranslateY(heightOfBox);
         this.programOptions.setTranslateX(widthOfBox);
 

@@ -217,14 +217,6 @@ public class Edge {
     public double getMu() {
         return mu;
     }
-    /**
-     * Sets the weight of this edge
-     *e
-     * @author lts010
-     */
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
 
     /**
      * Sets the momentum constant of this edge

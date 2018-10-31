@@ -15,7 +15,6 @@
  */
 package hw03.model.neuralnet.layer;
 
-import hw03.model.neuralnet.Edge;
 import hw03.model.neuralnet.NeuralNet;
 import hw03.model.neuralnet.neuron.Neuron;
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public abstract class Layer {
      * @author cld028
      */
     public Layer(int numNeurons, String layerID, int layerNum,
-            NeuralNet neuralNet) {
+                 NeuralNet neuralNet) {
         this.numNeurons = numNeurons;
         this.layerID = layerID;
         this.layerNum = layerNum;
@@ -131,34 +130,4 @@ public abstract class Layer {
         return neurons;
     }
 
-    /**
-     * Updates the weights for all of the out edges.
-     *
-     * @param weights the weight that should be assigned to the out edges.
-     * @author lts010
-     */
-    public void updateOutEdgeWeights(ArrayList<Double> weights) {
-        ArrayList<Edge> outEdges = new ArrayList<>();
-        for (Neuron neuron : neurons) {
-            outEdges.addAll(neuron.getOutEdges());
-        }
-        for(int i = 0; i < outEdges.size(); i++) {
-            outEdges.get(i).setWeight(weights.get(i));
-        }
-    }
-    
-    /**
-     * Updates the weights for all of the out edges.
-     *
-     * @return An ArrayList of the network values for the nodes in the layer. 
-     * @author lts010
-     */
-    public ArrayList<Double> getNetVals(){
-
-        ArrayList<Double> netVals = new ArrayList<>();
-        for (Neuron neuron : neurons) {
-            netVals.add(neuron.getNetValue());
-        }
-        return netVals;
-    }
 }
