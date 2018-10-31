@@ -14,7 +14,7 @@
 *
 * ****************************************
  */
-package hw03.WeightAssignment;
+package hw03.model.neuralnet.weightassignment;
 
 /**
  * WeightAssignment generalizes classes that provide weights to edges.

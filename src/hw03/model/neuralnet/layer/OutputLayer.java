@@ -14,13 +14,13 @@
  *
  * ****************************************
  */
-package hw03.Layer;
+package hw03.model.neuralnet.layer;
 
-import hw03.ActivationFunction.SigmoidActivationFunction;
-import hw03.NeuralNet;
-import hw03.Neuron.Neuron;
-import hw03.Neuron.OutputNeuron;
-import hw03.ProgramMode;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
+import hw03.model.neuralnet.neuron.Neuron;
+import hw03.model.neuralnet.neuron.OutputNeuron;
 import java.util.ArrayList;
 
 /**
@@ -42,6 +42,12 @@ public class OutputLayer extends Layer {
      * network)
      */
     private double[] outputErrors;
+
+    /**
+     * Contains the outputs of Network for the last forward propagation of input
+     * data.
+     */
+    private double[] outputs;
 
     /**
      * Link to previous layer in the neural network
@@ -160,8 +166,8 @@ public class OutputLayer extends Layer {
 
         for (Neuron neuron : this.neurons) {
             int neuronID = neuron.getNeuronNum();
-            this.outputErrors[neuronID] = targetOutputs[neuronID] - this.neurons.get(
-                    neuronID).getNetValue();
+            this.outputs[neuronID] = this.neurons.get(neuronID).getNetValue();
+            this.outputErrors[neuronID] = targetOutputs[neuronID] - this.outputs[neuronID];
             ((OutputNeuron) neuron).learn(this.outputErrors[neuronID]);
         }
 
@@ -182,6 +188,7 @@ public class OutputLayer extends Layer {
     public void setTargetOutputs(double[] targetOutputs) {
         this.targetOutputs = targetOutputs;
         this.outputErrors = new double[this.targetOutputs.length];
+        this.outputs = new double[this.targetOutputs.length];
     }
 
     /**
@@ -195,4 +202,14 @@ public class OutputLayer extends Layer {
         this.prevLayer = prevLayer;
     }
 
+    /**
+     * Gets the predicted output for the current input
+     *
+     * @return predicted output for the current input
+     *
+     * @author lts010, ks061
+     */
+    public double[] getOutputs() {
+        return (this.outputs);
+    }
 }

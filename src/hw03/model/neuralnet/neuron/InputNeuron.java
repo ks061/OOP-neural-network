@@ -14,10 +14,10 @@
 *
 * ****************************************
  */
-package hw03.Neuron;
+package hw03.model.neuralnet.neuron;
 
-import hw03.ActivationFunction.ActivationFunction;
-import hw03.NeuralNet;
+import hw03.model.neuralnet.activationfunction.ActivationFunction;
+import hw03.model.neuralnet.NeuralNet;
 
 /**
  * InputNeuron represents a neuron in the input layer of a neural network.

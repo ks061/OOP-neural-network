@@ -19,7 +19,6 @@ import hw03.controller.ANNController;
 import hw03.model.ANNModel;
 import hw03.view.ANNMenuBar;
 import hw03.view.ANNView;
-import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -46,8 +45,6 @@ public class ANNMain extends Application {
      */
     private ANNController theCtrl;
 
-    // TODO move to view
-    private ANNMenuBar theConfigScene;
 
     /**
      * Initializes the application
@@ -59,27 +56,25 @@ public class ANNMain extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        this.theModel = new ANNModel();
-        this.theView = new ANNView(theModel);
-        this.theCtrl = new ANNController(theModel, theView);
+
     }
 
     /**
      * Starts the application
      *
-     * @param primaryStage stage of the GUI
+     * @param theStage stage of the GUI
      *
      * @author ks061, lts010
      */
     @Override
-    public void start(Stage primaryStage) throws FileNotFoundException {
+    public void start(Stage theStage) {
+        this.theModel = new ANNModel();
+        this.theView = new ANNView(theModel, theStage);
+        this.theCtrl = new ANNController(theModel, theView);
         Scene scene = new Scene(theView.getRootNode());
-        // TODO move to view
-        // this.theConfigScene = new ANNMenuBar(primaryStage);
-        // Scene scene = new Scene(theConfigScene.getRootNode(), 600, 400);
-        primaryStage.setTitle("Neural Net");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        theStage.setTitle("Neural Net");
+        theStage.setScene(scene);
+        theStage.show();
     }
 
     /**

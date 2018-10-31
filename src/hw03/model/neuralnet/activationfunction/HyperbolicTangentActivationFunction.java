@@ -14,7 +14,7 @@
  *
  * ****************************************
  */
-package hw03.ActivationFunction;
+package hw03.model.neuralnet.activationfunction;
 
 /**
  * HyperbolicTangentActivationFunction represents the Hyperbolic Tangent

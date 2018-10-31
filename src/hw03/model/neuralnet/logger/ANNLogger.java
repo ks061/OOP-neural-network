@@ -14,7 +14,7 @@
 *
 * ****************************************
  */
-package hw03.ANNLogger;
+package hw03.model.neuralnet.logger;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

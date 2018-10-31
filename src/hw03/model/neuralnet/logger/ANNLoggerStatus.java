@@ -13,14 +13,23 @@
 *              logger is on or off (printing out to a .txt file or not).
 * ****************************************
  */
-package hw03.ANNLogger;
+package hw03.model.neuralnet.logger;
 
 /**
  * ANNLoggerStatus represents whether the logger is on or off (printing out to a
- .txt file or not).
+ * .txt file or not).
  *
  * @author ks061, lts010
  */
 public enum ANNLoggerStatus {
-    ON, OFF;
+    /**
+     * State assigned to a logger to indicate that it will write log messages
+     * from the program to the console.
+     */
+    ON,
+    /**
+     * State assigned to a logger to indicate that it will not write log
+     * messages from the program to the console.
+     */
+    OFF;
 }

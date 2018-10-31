@@ -15,10 +15,11 @@
  */
 package hw03.utility;
 
-import hw03.ANNLogger.ANNLogger;
-import hw03.NeuralNet;
-import hw03.Neuron.Neuron;
-import hw03.WeightAssignment.RandomWeightAssignment;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.logger.ANNLogger;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.neuron.Neuron;
+import hw03.model.neuralnet.weightassignment.RandomWeightAssignment;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -315,9 +316,9 @@ public class ANNUtility {
      * @author ks061, lts010
      */
     public static ArrayList<ArrayList<Double>> getDefaultListOfThetas(
-                                                                      int numOutputs,
-                                                                      int numHiddenLayers,
-                                                                      int numNeuronsPerHiddenLayer) {
+            int numOutputs,
+            int numHiddenLayers,
+            int numNeuronsPerHiddenLayer) {
         ArrayList<ArrayList<Double>> listOfThetas = new ArrayList<>();
         listOfThetas.add(new ArrayList<>());
         for (int i = 1; i < numHiddenLayers + 1; i++) {
@@ -361,25 +362,29 @@ public class ANNUtility {
         weights.add(new ArrayList<>());
         if (numHiddenLayers == 0) {
             for (int i = 0; i < (numInputs * numOutputs); i++) {
-                weights.get(0).add(weightAssign.assignWeight(numInputs) / numInputs);
+                weights.get(0).add(
+                        weightAssign.assignWeight(numInputs) / numInputs);
             }
         }
         else {
             for (int i = 0; i < (numInputs * numNeuronsPerHiddenLayer); i++) {
                 //weights from the input layer connecting to the first hidden layer
-                weights.get(0).add(weightAssign.assignWeight(numInputs) / numInputs);
+                weights.get(0).add(
+                        weightAssign.assignWeight(numInputs) / numInputs);
             }
             for (int i = 1; i < numHiddenLayers; i++) {
                 //weights for hidden layers that are connected to layer
                 weights.add(new ArrayList<>());
                 for (int j = 0; j < (numNeuronsPerHiddenLayer * numNeuronsPerHiddenLayer); j++) {
-                    weights.get(i).add(weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
+                    weights.get(i).add(weightAssign.assignWeight(
+                            numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
                 }
             }
             weights.add(new ArrayList<>());
             for (int i = 0; i < numOutputs * numNeuronsPerHiddenLayer; i++) {
                 //weights for the output layer connecting to the last hidden layer
-                weights.get(weights.size() - 1).add(weightAssign.assignWeight(numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
+                weights.get(weights.size() - 1).add(weightAssign.assignWeight(
+                        numNeuronsPerHiddenLayer) / numNeuronsPerHiddenLayer);
             }
         }
         return weights;

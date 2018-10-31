@@ -15,7 +15,7 @@
  */
 package hw03.WeightAssignment;
 
-import hw03.WeightAssignment.RandomWeightAssignment;
+import hw03.model.neuralnet.weightassignment.RandomWeightAssignment;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertTrue;
 import org.junit.Test;

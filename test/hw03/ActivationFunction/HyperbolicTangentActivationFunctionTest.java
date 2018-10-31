@@ -15,7 +15,7 @@
  */
 package hw03.ActivationFunction;
 
-import hw03.ActivationFunction.HyperbolicTangentActivationFunction;
+import hw03.model.neuralnet.activationfunction.HyperbolicTangentActivationFunction;
 import junit.framework.TestCase;
 import org.junit.Test;
 

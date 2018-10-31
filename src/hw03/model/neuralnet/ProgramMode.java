@@ -16,7 +16,7 @@
 *
 * ****************************************
  */
-package hw03;
+package hw03.model.neuralnet;
 
 /**
  * Enumeration that helps distinguish whether the user wants to run the neural
@@ -26,5 +26,20 @@ package hw03;
  * @author ks061, lts010
  */
 public enum ProgramMode {
-    TRAINING, CLASSIFICATION, TEST;
+
+    /**
+     * State in which the neural network runs in training mode, where the neural
+     * network should train the neural network using input and expected output
+     */
+    TRAINING,
+    /**
+     * State in which the neural network runs in classification mode, where the
+     * neural network should make predictions using the neural network model
+     * from sets of inputs
+     */
+    CLASSIFICATION,
+    /**
+     * State in which the neural network is being tested using JUnit tests
+     */
+    TEST;
 }

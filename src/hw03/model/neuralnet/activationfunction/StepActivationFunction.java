@@ -14,7 +14,7 @@
  *
  * ****************************************
  */
-package hw03.ActivationFunction;
+package hw03.model.neuralnet.activationfunction;
 
 /**
  * StepActivationFunction represents a step function used as an activation

@@ -15,7 +15,9 @@
  */
 package hw03.model;
 
-import hw03.NeuralNet;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.NeuralNet;
+import java.util.ArrayList;
 import javafx.beans.property.SimpleBooleanProperty;
 
 /**
@@ -41,11 +43,20 @@ public class ANNModel {
     public static final int OUTPUT_LAYER_INDEX = 2;
 
     /**
-     * Property representing whether the neural network is currently paused
-     * (after the neural network finishes running through an epoch if it is
-     * currently running through an epoch)
+     * Property representing whether the neural network is currently in the mode
+     * where it steps through one epoch at a time.
      */
-    private SimpleBooleanProperty propEpochPause;
+    private SimpleBooleanProperty propStepEpoch;
+    /**
+     * Property representing whether the neural network is currently in the mode
+     * where it steps through one input at a time.
+     */
+    private SimpleBooleanProperty propStepInput;
+    /**
+     * Property representing whether the neural network show terminate the
+     * current learn or classify task
+     */
+    private SimpleBooleanProperty propTerminate;
 
     /**
      * Property representing that the neural network will use the hyperbolic
@@ -61,12 +72,20 @@ public class ANNModel {
      * Property representing that the neural network will use the step
      * activation function in training mode
      */
-    private SimpleBooleanProperty propStep;
+    private SimpleBooleanProperty propStepFunction;
 
     /**
      * The model behind this neural network MVC application.
      */
-    public NeuralNet neuralNetwork;
+    private NeuralNet neuralNetwork;
+    /**
+     * Input-output sets of data
+     */
+    private double[][] theData;
+    /**
+     * Configuration of the neural network
+     */
+    private ANNConfig theConfig;
 
     /**
      * Constructor for the model of the neural network MVC application that
@@ -76,23 +95,50 @@ public class ANNModel {
      */
     public ANNModel() {
         this.propSigmoid = new SimpleBooleanProperty(true); //sigmoid function is the default
-        this.propStep = new SimpleBooleanProperty(false);
+        this.propStepFunction = new SimpleBooleanProperty(false);
         this.propHyperbolicTangent = new SimpleBooleanProperty(false);
-        this.propEpochPause = new SimpleBooleanProperty(false);
+        this.propStepEpoch = new SimpleBooleanProperty(false);
+        this.propStepInput = new SimpleBooleanProperty(false);
+        this.propTerminate = new SimpleBooleanProperty(false);
     }
 
     /**
-     * Gets whether the program is paused (after the neural network finishes
-     * running through an epoch if it is currently running through an epoch)
+     * Gets whether the Neural Network is in the mode where it pauses after each
+     * epoch
      *
-     * @return true if the program is paused (after the neural network finishes
-     * running through an epoch if it is currently running through an epoch);
-     * otherwise false
+     * @return true if the Neural Network is in the mode where it pauses after
+     * each epoch otherwise false
      *
      * @author ks061, lts010
      */
-    public SimpleBooleanProperty getPropEpochPause() {
-        return propEpochPause;
+    public SimpleBooleanProperty getStepEpoch() {
+        return propStepEpoch;
+    }
+
+    /**
+     * Gets whether the Neural Network is in the mode where it pauses after each
+     * input
+     *
+     * @return true if the Neural Network is in the mode where it pauses after
+     * each epoch otherwise false
+     *
+     * @author ks061, lts010
+     */
+    public SimpleBooleanProperty getStepInput() {
+        return propStepInput;
+    }
+
+    /**
+     * Gets whether the Neural Network is in the mode where stop after
+     * processing the current input.
+     *
+     * @return true if the Neural Network is in the mode where stop after
+     * processing the current input.t otherwise false
+     *
+     * @author ks061, lts010
+     */
+    public SimpleBooleanProperty getTerminate() {
+        return propTerminate;
     }
 
     /**
@@ -130,8 +176,8 @@ public class ANNModel {
      *
      * @author ks061, lts010
      */
-    public SimpleBooleanProperty getPropStep() {
-        return propStep;
+    public SimpleBooleanProperty getPropStepFunction() {
+        return propStepFunction;
     }
 
     /**
@@ -146,13 +192,79 @@ public class ANNModel {
     }
 
     /**
-     * Sets the neural network to encapsulate within the MVC model
+     * Gets the input-output sets imported into the model
      *
-     * @param neuralNetwork neural network to encapsulate within the MVC model
+     * @return input-output sets imported into the model
      *
      * @author ks061, lts010
      */
-    public void setNeuralNetwork(NeuralNet neuralNetwork) {
-        this.neuralNetwork = neuralNetwork;
+    public double[][] getTheData() {
+        return theData;
+    }
+
+    /**
+     * Gets the neural network configuration
+     *
+     * @return neural network configuration
+     *
+     * @author ks061, lts010
+     */
+    public ANNConfig getTheConfig() {
+        return theConfig;
+    }
+
+    /**
+     * Sets the input-output sets for the model
+     *
+     * @param theData input-output sets for the model
+     *
+     * @author ks061, lts010
+     */
+    public void setTheData(double[][] theData) {
+        this.theData = theData;
+    }
+
+    /**
+     * Sets the neural network configuration
+     *
+     * @param theConfig neural network configuration
+     *
+     * @author ks061, lts010
+     */
+    public void setTheConfig(ANNConfig theConfig) {
+        this.theConfig = theConfig;
+    }
+
+    /**
+     * Updates properties that will be used to display the neural network,
+     * including the weights, output values, expected output values, average sum
+     * of squared errors, and number of epochs executed.
+     *
+     * @param weights weights of neural net edges
+     * @param outputs output values generated by neural net and stored in output
+     * neurons
+     * @param expectedOutputs values expected to be generated by neural network
+     * in output neurons
+     * @param averageSSE average sum of squared errors
+     * @param numEpochsExecuted number of epochs that the neural network has
+     * executed
+     *
+     * @author ks061, lts010
+     */
+    public void updateProperties(ArrayList<ArrayList<Double>> weights,
+                                 double[] outputs,
+                                 double[] expectedOutputs, double averageSSE,
+                                 int numEpochsExecuted) {
+        System.out.println("calledUpdateProperties");
+
+    }
+
+    /**
+     * Creates the neural network within the MVC model;
+     *
+     * @author ks061, lts010
+     */
+    public void createNeuralNetwork() {
+        this.neuralNetwork = new NeuralNet(this.theConfig, this);
     }
 }

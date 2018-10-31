@@ -17,9 +17,9 @@
  */
 package hw03.utility;
 
-import hw03.ANNConfig;
-import hw03.Neuron.Neuron;
-import hw03.ProgramMode;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.neuron.Neuron;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,20 +29,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * ANNUtilityGUICompatible contains a collection of utilities that
- do not have command line components to them and are geared towards working
- with/returning information to the MVC ANN application.
+ * ANNUtilityGUICompatible contains a collection of utilities that do not have
+ * command line components to them and are geared towards working with/returning
+ * information to the MVC ANN application.
  *
  * @author ks061, lts010
  */
 public class ANNUtilityGUICompatible {
 
     /**
-     * Imports training data from a CSV file specified by the end user; Removes
-     * any input sets that have input values outside the range [0,1]. The UI
-     * will not allow the
+     * Imports training data from a CSV file specified by the end user
      *
-     * @return training data, including sets of inputs and corresponding outputs
+     * @param csvFile file to retrieve input and/or output sets from
+     *
+     * @return training data, including sets of inputs and corresponding
+     * expected outputs
      *
      * @author ks061, lts010
      */

@@ -15,10 +15,10 @@
  */
 package hw03;
 
-import hw03.ANNConfig;
-import hw03.NeuralNetConstructionException;
-import hw03.ProgramMode;
-import hw03.NeuralNet;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.NeuralNetConstructionException;
+import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.NeuralNet;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import junit.framework.TestCase;

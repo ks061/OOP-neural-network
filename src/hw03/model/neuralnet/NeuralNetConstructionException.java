@@ -15,7 +15,7 @@
  *
  * ****************************************
  */
-package hw03;
+package hw03.model.neuralnet;
 
 /**
  * NeuralNetConstructionException is a RuntimeException that is thrown when

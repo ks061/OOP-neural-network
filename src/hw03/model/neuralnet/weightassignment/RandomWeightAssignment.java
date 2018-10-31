@@ -15,7 +15,7 @@
  *
  * ****************************************
  */
-package hw03.WeightAssignment;
+package hw03.model.neuralnet.weightassignment;
 
 import java.util.Random;
 

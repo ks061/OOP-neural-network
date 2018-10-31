@@ -15,13 +15,13 @@
  */
 package hw03.Layer;
 
-import hw03.Layer.OutputLayer;
-import hw03.Layer.InputLayer;
-import hw03.Layer.HiddenLayer;
-import hw03.ANNConfig;
-import hw03.NeuralNet;
-import hw03.NeuralNetConstructionException;
-import hw03.ProgramMode;
+import hw03.model.neuralnet.layer.OutputLayer;
+import hw03.model.neuralnet.layer.InputLayer;
+import hw03.model.neuralnet.layer.HiddenLayer;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.NeuralNetConstructionException;
+import hw03.model.neuralnet.ProgramMode;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import junit.framework.TestCase;

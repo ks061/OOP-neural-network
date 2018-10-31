@@ -15,7 +15,7 @@
 *
 * ****************************************
  */
-package hw03.ActivationFunction;
+package hw03.model.neuralnet.activationfunction;
 
 /**
  * ActivationFunction is an interface that defines what functionalities each

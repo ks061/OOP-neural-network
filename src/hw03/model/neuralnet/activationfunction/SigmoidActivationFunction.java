@@ -14,7 +14,7 @@
  *
  * ****************************************
  */
-package hw03.ActivationFunction;
+package hw03.model.neuralnet.activationfunction;
 
 /**
  * SigmoidActivationFunction represents the Sigmoid function used as an

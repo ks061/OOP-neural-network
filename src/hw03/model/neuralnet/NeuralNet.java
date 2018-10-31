@@ -14,14 +14,15 @@
  *
  * ****************************************
  */
-package hw03;
+package hw03.model.neuralnet;
 
+import hw03.model.ANNModel;
+import hw03.model.neuralnet.layer.HiddenLayer;
+import hw03.model.neuralnet.layer.InputLayer;
+import hw03.model.neuralnet.layer.Layer;
+import hw03.model.neuralnet.layer.OutputLayer;
+import hw03.model.neuralnet.neuron.Neuron;
 import hw03.utility.ANNUtility;
-import hw03.Layer.HiddenLayer;
-import hw03.Layer.InputLayer;
-import hw03.Layer.Layer;
-import hw03.Layer.OutputLayer;
-import hw03.Neuron.Neuron;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.*;
@@ -34,15 +35,31 @@ import java.util.*;
 public class NeuralNet implements Serializable {
 
     /**
+     * Object used for wait/notify functionality needed for threading.
+     */
+    private final Object lockObject;
+
+    /**
      * Data that this neural network is fed, including input data and expected
      * output data.
      */
     private transient double[][] data;
 
     /**
+     * Internal field to represent that (if true) the neural network will not
+     * continue learning/classifying.
+     */
+    private transient boolean pause;
+
+    /**
      * Configuration of the neural network
      */
-    private ANNConfig configuration;
+    private final ANNConfig configuration;
+
+    /**
+     * The Model of the MVC pattern
+     */
+    private final ANNModel theModel;
 
     /**
      * Layers in this neural network
@@ -80,24 +97,39 @@ public class NeuralNet implements Serializable {
     private int trainingNumberOfEpochs;
 
     /**
-     * Constructor that sets pointers to the input and/or output data array and
-     * configuration and creates the input layer, any hidden layers, and output
-     * layer based on preferences stored in the configuration, along with
-     * creating connections between adjacent layers
+     * Constructor that sets pointers to the model and configuration and creates
+     * the input layer, any hidden layers, and output layer based on preferences
+     * stored in the configuration, along with creating connections between
+     * adjacent layers.
      *
-     * @param data input and/or output data to be used by the neural network
      * @param configuration configuration of the neural network
-     * @throws java.io.FileNotFoundException if the file for the configuration
-     * to be written to as specified by the user cannot be written to or another
-     * error occurs while opening or creating the file
-     * @see
-     * <a href=https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html>
-     * PrintWriter </a>
+     * @param theModel model of the neural network MVC application
      *
      * @author cld028, ks061, lts010
      */
-    public NeuralNet(double[][] data, ANNConfig configuration) throws FileNotFoundException {
+    public NeuralNet(ANNConfig configuration, ANNModel theModel) {
+        this.theModel = theModel;
+        this.configuration = configuration;
+        this.lockObject = new Object();
+        this.pause = false;
+
+        initializeLayers();
+    }
+
+    /**
+     * Validates that there are entries within the input-output sets and each
+     * input-output set has the same number of entries in them.
+     *
+     * @param data input-output sets
+     *
+     * @author ks061, lts010
+     */
+    public void validateData(double[][] data) {
         if (data.length == 0) {
+            throw new NeuralNetConstructionException(
+                    "No data has been provided.");
+        }
+        else if (data[0].length == 0) {
             throw new NeuralNetConstructionException(
                     "No data has been provided.");
         }
@@ -109,11 +141,6 @@ public class NeuralNet implements Serializable {
                         "Not all rows in data set have the same amount of entries.");
             }
         }
-
-        this.data = data;
-        this.configuration = configuration;
-
-        initializeLayers();
     }
 
     /**
@@ -176,37 +203,6 @@ public class NeuralNet implements Serializable {
     }
 
     /**
-     * Asks the user whether they would like to test their trained neural
-     * network on a new data set; if they would like to use a new data set, the
-     * method reads in the new data set from the file that the user specifies
-     *
-     * @return true if the user would like to continue with classifying;
-     * otherwise false
-     *
-     * @author ks061, lts010
-     */
-    private boolean shouldClassify() {
-        System.out.println("The neural network is now trained.");
-        Scanner in = new Scanner(System.in);
-        System.out.print(
-                "Would you like to run a test data set? (y or yes for yes; anything else for no): ");
-        String willClassify = in.nextLine();
-
-        if (willClassify.equalsIgnoreCase("y") || willClassify.equalsIgnoreCase(
-                "yes")) {
-            System.out.print(
-                    "Do you want a different file? (y or yes for yes; anything else for no): ");
-            String wantsNewFile = in.nextLine();
-            if (wantsNewFile.equalsIgnoreCase("y") || wantsNewFile.equalsIgnoreCase(
-                    "yes")) {
-                this.data = ANNClient.getData();
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Runs the neural network in the training mode, which trains a neural
      * network based on sets of input and corresponding output values
      *
@@ -222,8 +218,11 @@ public class NeuralNet implements Serializable {
     public void train() throws FileNotFoundException {
         double sseTotal = 0;
         double sseEpochTotal;
+        double[] inputs;
+        double[] targetOutputs = new double[this.configuration.getNumOutputs()];
         int maxEpochs = configuration.getNumMaxEpochs();
         long startTime = System.nanoTime();
+        int numEpochsBeforeUpdate = (800 / data.length) + 1;
         int numEpoch = 0;
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
         OutputLayer outputLayer = ((OutputLayer) this.layers.get(
@@ -231,23 +230,53 @@ public class NeuralNet implements Serializable {
         do {
             sseEpochTotal = 0;
             for (double[] inputOutputSet : this.data) {
-                inputLayer.setInputs(
-                        Arrays.copyOfRange(inputOutputSet, 0,
-                                           this.configuration.getNumInputs()));
-                outputLayer.setTargetOutputs(
-                        Arrays.copyOfRange(
-                                inputOutputSet,
-                                this.configuration.getNumInputs(),
-                                inputOutputSet.length));
+                inputs = Arrays.copyOfRange(inputOutputSet, 0,
+                                            this.configuration.getNumInputs());
+                inputLayer.setInputs(inputs);
+                targetOutputs = Arrays.copyOfRange(inputOutputSet,
+                                                   this.configuration.getNumInputs(),
+                                                   inputOutputSet.length);
+                outputLayer.setTargetOutputs(targetOutputs);
                 inputLayer.fireNeurons();
                 sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
 
                 ANNUtility.logEpochAndWeights(numEpoch, inputOutputSet, this);
+                System.out.print(".");
+
+                if (theModel.getStepInput().getValue() || theModel.getTerminate().getValue()) {
+                    theModel.updateProperties(this.configuration.getWeights(),
+                                              outputLayer.getOutputs(),
+                                              targetOutputs,
+                                              (sseTotal / numEpoch), numEpoch);
+                }
+                checkRunMode(theModel.getStepInput().getValue());
+                if (theModel.getTerminate().getValue()) {
+                    return;
+                }
             }
             sseTotal += sseEpochTotal;
             numEpoch++;
-        } while (sseEpochTotal > this.configuration.getHighestSSE() && numEpoch <= maxEpochs);
+            System.out.println("\nsseEpochTotal = " + sseEpochTotal);
 
+            if (theModel.getStepEpoch().getValue() || theModel.getTerminate().getValue()
+                || (numEpoch % numEpochsBeforeUpdate) == 0) {
+                theModel.updateProperties(this.configuration.getWeights(),
+                                          outputLayer.getOutputs(),
+                                          targetOutputs, (sseTotal / numEpoch),
+                                          numEpoch);
+            }
+            if (theModel.getStepEpoch().getValue()) {
+                System.out.println("in Step Epoch mode");
+            }
+            checkRunMode(theModel.getStepEpoch().getValue());
+            if (theModel.getTerminate().getValue()) {
+                return;
+            }
+
+        } while (sseEpochTotal > this.configuration.getHighestSSE() && numEpoch <= maxEpochs);
+        theModel.updateProperties(this.configuration.getWeights(),
+                                  outputLayer.getOutputs(),
+                                  targetOutputs, (sseTotal / numEpoch), numEpoch);
         if (numEpoch > maxEpochs) {
             System.out.println(
                     "\nUnable to train neural network in " + maxEpochs + " iterations.\n");
@@ -271,9 +300,9 @@ public class NeuralNet implements Serializable {
 
         ANNUtility.logFooter(this);
 
-        if (shouldClassify()) {
-            classify();
-        }
+        //  if (shouldClassify()) {
+        //    classify();
+        // }
     }
 
     /**
@@ -336,6 +365,44 @@ public class NeuralNet implements Serializable {
                     "The total sum of squared errors for all inputs is " + sse);
         }
         return setsOfPredictedOutputs;
+    }
+
+    /**
+     * Will block, i.e call wait() if pause or waitRequested are true
+     *
+     * @author ks061, lts010
+     */
+    private void checkRunMode(boolean waitRequested) {
+        while (this.pause) {
+            synchronized (this.lockObject) {
+                try {
+                    this.lockObject.wait();
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+        if (waitRequested) {
+            synchronized (this.lockObject) {
+                try {
+                    this.lockObject.wait();
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+    }
+
+    /**
+     * Calls notify so that the neural net will wake up if it is waiting.
+     *
+     * @author lts010, ks061
+     */
+    public void notifyNeuralNet() {
+        synchronized (this.lockObject) {
+            try {
+                this.lockObject.notifyAll();
+            } catch (Exception e) {
+            }
+        }
     }
 
     /**
@@ -437,7 +504,7 @@ public class NeuralNet implements Serializable {
      * Gets the learning rate of this neural network
      *
      * @return the learning rate of this neural network
-     * @author lts010
+     * @author lts010, ks061
      */
     public double getAlpha() {
         return alpha;
@@ -447,16 +514,30 @@ public class NeuralNet implements Serializable {
      * Sets the learning rate of this neural network
      *
      * @param alpha - the new learning rate of this neural network
-     * @author lts010
+     * @author lts010, ks061
      */
     public void setAlpha(double alpha) {
         this.alpha = alpha;
     }
 
     /**
+     * Sets the neural network to pause any running training or classification
+     *
+     * @param pause true if neural network should pause any running training or
+     * classification; otherwise false
+     *
+     * @author ks061, lts010
+     */
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
+
+    /**
      * Gets the number of epochs gone through during training
      *
      * @return the number of epochs gone through during training
+     *
+     * @author ks061, lts010
      */
     public int getTrainingNumberOfEpochs() {
         return trainingNumberOfEpochs;
@@ -466,8 +547,11 @@ public class NeuralNet implements Serializable {
      * Gets the average sum of squared errors over all epochs
      *
      * @return the average sum of squared errors over all epochs
+     *
+     * @author ks061, lts010
      */
     public double getTrainingAverageSSE() {
         return trainingAverageSSE;
     }
+
 }

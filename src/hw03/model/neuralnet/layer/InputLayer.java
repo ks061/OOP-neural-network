@@ -13,14 +13,14 @@
  *              in a neural network
  * ****************************************
  */
-package hw03.Layer;
+package hw03.model.neuralnet.layer;
 
-import hw03.ActivationFunction.SigmoidActivationFunction;
-import hw03.Edge;
-import hw03.NeuralNet;
-import hw03.NeuralNetConstructionException;
-import hw03.Neuron.InputNeuron;
-import hw03.Neuron.Neuron;
+import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
+import hw03.model.neuralnet.Edge;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.NeuralNetConstructionException;
+import hw03.model.neuralnet.neuron.InputNeuron;
+import hw03.model.neuralnet.neuron.Neuron;
 import java.util.ArrayList;
 
 /**

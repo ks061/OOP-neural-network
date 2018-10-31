@@ -15,10 +15,10 @@
  */
 package hw03.Neuron;
 
-import hw03.Neuron.OutputNeuron;
-import hw03.ANNConfig;
-import hw03.NeuralNet;
-import hw03.ProgramMode;
+import hw03.model.neuralnet.neuron.OutputNeuron;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.ProgramMode;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;

@@ -15,11 +15,11 @@
  */
 package hw03.Layer;
 
-import hw03.Layer.OutputLayer;
-import hw03.Layer.InputLayer;
-import hw03.ANNConfig;
-import hw03.NeuralNet;
-import hw03.ProgramMode;
+import hw03.model.neuralnet.layer.OutputLayer;
+import hw03.model.neuralnet.layer.InputLayer;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.ProgramMode;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;

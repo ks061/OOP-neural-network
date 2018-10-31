@@ -14,7 +14,7 @@
 *
 * ****************************************
  */
-package hw03;
+package hw03.model.neuralnet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -124,10 +124,6 @@ public class ANNConfig implements Serializable {
         this.weights = weights;
         this.thetas = thetas;
         this.programMode = programMode;
-    }
-
-    public ANNConfig(int i, int i0, int i1, int i2, double d, int i3) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

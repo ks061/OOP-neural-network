@@ -13,10 +13,10 @@
  *
  * ****************************************
  */
-package hw03.Layer;
+package hw03.model.neuralnet.layer;
 
-import hw03.NeuralNet;
-import hw03.Neuron.Neuron;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.neuron.Neuron;
 import java.util.ArrayList;
 
 /**

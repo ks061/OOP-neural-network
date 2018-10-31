@@ -14,9 +14,9 @@
  *
  * ****************************************
  */
-package hw03;
+package hw03.model.neuralnet;
 
-import hw03.Neuron.Neuron;
+import hw03.model.neuralnet.neuron.Neuron;
 
 /**
  * Edge represents the connection between neurons in adjacent layers within a
@@ -222,7 +222,7 @@ public class Edge {
      * Sets the momentum constant of this edge
      *
      * @param mu - the new momentum constant of this edge
-     * @author lts010
+     * @author lts010, ks061
      */
     public void setMu(double mu) {
         this.mu = mu;

@@ -15,13 +15,13 @@
  */
 package hw03.view;
 
-import hw03.ANNConfig;
-import hw03.Edge;
-import hw03.NeuralNet;
-import hw03.ProgramMode;
 import hw03.model.ANNModel;
-import java.io.FileNotFoundException;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.Edge;
+import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.ProgramMode;
 import java.util.ArrayList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -35,9 +35,11 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * The view component of the ANN Visualization
@@ -49,31 +51,44 @@ public class ANNView {
     /**
      * The model of this neural network MVC application.
      */
-    private ANNModel theModel;
+    private final ANNModel theModel;
+    private final Group configGroup;
+    private final Group networkGroup;
+    private final Group networkPictureGroup;
+    private final Stage theStage;
+    private final ANNMenuBar aNNMenuBar;
 
     private ArrayList<ArrayList<NodeCircle>> nodeCircles;
     private ArrayList<ArrayList<EdgeLine>> edgeLines;
 
-    private Group root;
-    private HBox optionsBox;
+    private final Pane root;
+    private final HBox optionsBox;
+    private final VBox programOptions;
+    private final int minSpacing;
+    //private int widthOfBox;
+    //private int heightOfBox;
 
-    private TextField alphaInput;
-    private Label currentAlpha;
-    private TextField muInput;
-    private Label currentMu;
+    private final TextField alphaInput;
+    private final Label currentAlpha;
+    private final TextField muInput;
+    private final Label currentMu;
 
-    private RadioButton sigmoid;
-    private RadioButton hyperbolicTangent;
-    private RadioButton step;
+    private final RadioButton sigmoidBtn;
+    private final RadioButton hyperbolicTangentBtn;
+    private final RadioButton stepFunctionBtn;
 
-    private Label currentSSE;
-    private Label currentEpochNum;
+    private final Label currentSSE;
+    private final Label currentEpochNum;
 
-    private Button learn;
-    private Button classify;
-    private Button stepDataInstance;
-    private Button stepEpoch;
-    private RadioButton epochPause;
+    private final Button learnBtn;
+    private final Button classifyBtn;
+    private final Button stepBtn;
+    private final RadioButton runRBtn;
+    private final RadioButton epochStepRBtn;
+    private final RadioButton inputStepRBtn;
+    private final RadioButton terminateRBtn;
+    // TODO move to view
+    private ANNMenuBar theConfigScene;
 
     private void initThetas(ArrayList<ArrayList<Double>> thetas) {
         thetas.add(new ArrayList<>());
@@ -98,12 +113,9 @@ public class ANNView {
         weights.get(1).add(-0.5);
         weights.get(1).add(0.0);
     }
+//TODO  Delete makeConfig, initThetas, initWeights Use config the user inputs
 
-    public ANNView(ANNModel theModel) throws FileNotFoundException {
-        this.root = new Group();
-
-        this.theModel = theModel;
-
+    public final ANNConfig makeConfig() {
         // TODO figure out how to phase out use of test theta values here
         ArrayList<ArrayList<Double>> thetas = new ArrayList<>();
 
@@ -114,88 +126,43 @@ public class ANNView {
 
         initWeights(weights);
 
-        ANNConfig config = new ANNConfig(2, 1, 1, 3, 0.001, 100000, weights,
-                                         thetas, ProgramMode.TEST);
-        double[][] data = {{1, 1, 1}};
+        ANNConfig config = new ANNConfig(2, 1, 1, 3, 0.1, 5000, weights,
+                                         thetas, ProgramMode.TRAINING);
+        double[][] data = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}};
+        return config;
+    }
 
-        theModel.setNeuralNetwork(new NeuralNet(data, config));
+    public ANNView(ANNModel theModel, Stage theStage) {
+        this.theStage = theStage;
+        this.root = new Pane();
+        this.configGroup = new Group();
+        this.minSpacing = 15;
+        this.configGroup.setLayoutX(10);
+        this.configGroup.setLayoutY(25);
+        this.networkGroup = new Group();
+        this.networkGroup.setLayoutX(10);
+        this.networkGroup.setLayoutY(25);
+        this.networkPictureGroup = new Group();
+        this.networkGroup.getChildren().add(networkPictureGroup);
+        this.optionsBox = new HBox(this.minSpacing);
+        this.optionsBox.setAlignment(Pos.CENTER);
+        this.programOptions = new VBox(this.minSpacing);
+        this.aNNMenuBar = new ANNMenuBar(theStage);
+        //either the config group or network group will be visible
+        this.configGroup.setVisible(false);
+        root.getChildren().add(this.aNNMenuBar.getMenuBar());
+        root.getChildren().add(this.networkGroup);
+        root.getChildren().add(this.configGroup);
+        root.setMinSize(600, 600);
+        this.theModel = theModel;
 
-        int numInputs = theModel.getNeuralNetwork().getConfiguration().getNumInputs();
-        int numHiddenNodes = theModel.getNeuralNetwork().getConfiguration().getNumNeuronsPerHiddenLayer();
-        int numOutputs = theModel.getNeuralNetwork().getConfiguration().getNumOutputs();
-        int minSpacing = 15;
-        int spacingBetweenLayers = 100;
-        int radius = 50;
-        double widthOfBox;
-        double heightOfBox;
-        Point upperLeftOfBox = new Point(100.0, 100.0);
+//TODO delete the following four lines
+        double[][] data = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}};
+        theModel.setTheConfig(makeConfig());
+        theModel.createNeuralNetwork();
+        theModel.getNeuralNetwork().setData(data);
 
-        this.edgeLines = new ArrayList<>();
-        this.nodeCircles = new ArrayList<>();
-
-        int maxNodes = numInputs;
-        if (maxNodes < numHiddenNodes) {
-            maxNodes = numHiddenNodes;
-        }
-        if (maxNodes < numOutputs) {
-            maxNodes = numOutputs;
-        }
-
-        widthOfBox = (6 * radius + 2 * spacingBetweenLayers) + 2 * minSpacing;
-        heightOfBox = ((2 * maxNodes * radius) + (1 + maxNodes) * minSpacing);
-
-        this.root = new Group();
-
-        ArrayList<ArrayList<Point>> centers = new ArrayList<>();
-
-        //add the three layers (input, hidden, output
-        centers.add(new ArrayList<>());
-        centers.add(new ArrayList<>());
-        centers.add(new ArrayList<>());
-        double verticalSpacing = (heightOfBox - (2 * radius * numInputs)) / (numInputs + 1);
-
-        //store the centers for the first layer
-        double x = minSpacing + radius;
-        double y = verticalSpacing + radius;
-        centers.get(0).add(new Point(x, y));
-        for (int i = 1; i < numInputs; i++) {
-            y += verticalSpacing + 2 * radius;
-            centers.get(0).add(new Point(x, y));
-        }
-
-        //store the centers for the second layer;
-        verticalSpacing = (heightOfBox - (2 * radius * numHiddenNodes)) / (numHiddenNodes + 1);
-        x += spacingBetweenLayers + 2 * radius;
-        y = verticalSpacing + radius;
-        centers.get(1).add(new Point(x, y));
-        for (int i = 1; i < numHiddenNodes; i++) {
-            y += verticalSpacing + 2 * radius;
-            centers.get(1).add(new Point(x, y));
-        }
-
-        //store the centers for the second layer;
-        verticalSpacing = (heightOfBox - (2 * radius * numOutputs)) / (numOutputs + 1);
-        x += spacingBetweenLayers + 2 * radius;
-        y = verticalSpacing + radius;
-        centers.get(2).add(new Point(x, y));
-        for (int i = 1; i < numOutputs; i++) {
-            y += verticalSpacing + 2 * radius;
-            centers.get(2).add(new Point(x, y));
-        }
-
-        createEdgeLines(centers);
-        createNodeCircles(centers, radius);
-
-        for (ArrayList<EdgeLine> lineList : this.edgeLines) {
-            for (EdgeLine edgeLine : lineList) {
-                edgeLine.updateColor();
-            }
-        }
-
-        optionsBox = new HBox(minSpacing);
-        optionsBox.setAlignment(Pos.CENTER);
-
-        VBox learningRateBox = new VBox(minSpacing); //set up the learning rate box
+        VBox learningRateBox = new VBox(this.minSpacing); //set up the learning rate box
         learningRateBox.setAlignment(Pos.CENTER);
 
         Label learningRate = new Label("Learning Rate"); //tells the user what the box is for
@@ -219,7 +186,7 @@ public class ANNView {
         learningRateBox.getChildren().add(currentAlpha);
         optionsBox.getChildren().add(learningRateBox);
 
-        VBox momentumBox = new VBox(minSpacing); //set up the momentum box
+        VBox momentumBox = new VBox(this.minSpacing); //set up the momentum box
         momentumBox.setAlignment(Pos.CENTER);
 
         Label momentum = new Label("Momentum"); //tells the user what the box is for
@@ -242,23 +209,23 @@ public class ANNView {
         momentumBox.getChildren().add(currentMu);
         optionsBox.getChildren().add(momentumBox);
 
-        VBox activationFunctions = new VBox(minSpacing); //lets the user decide which activation function to use
+        VBox activationFunctions = new VBox(this.minSpacing); //lets the user decide which activation function to use
         ToggleGroup activationGroup = new ToggleGroup();
         Label activationLabel = new Label("Activation Functions"); //describes this part of the GUI to the user
-        sigmoid = new RadioButton("Sigmoid"); //lets the user choose the sigmoid function
-        sigmoid.setToggleGroup(activationGroup);
-        sigmoid.setSelected(true); //sigmoid is the default so we want the button to be selected on start up
-        step = new RadioButton("Step"); //lets the user choose the step function
-        step.setToggleGroup(activationGroup);
-        hyperbolicTangent = new RadioButton("Hyperbolic Tangent"); //lets the user choose the hyperbolic tangent function
-        hyperbolicTangent.setToggleGroup(activationGroup);
+        sigmoidBtn = new RadioButton("Sigmoid"); //lets the user choose the sigmoidBtn function
+        sigmoidBtn.setToggleGroup(activationGroup);
+        sigmoidBtn.setSelected(true); //sigmoid is the default so we want the button to be selected on start up
+        stepFunctionBtn = new RadioButton("Step"); //lets the user choose the stepFunctionBtn function
+        stepFunctionBtn.setToggleGroup(activationGroup);
+        hyperbolicTangentBtn = new RadioButton("Hyperbolic Tangent"); //lets the user choose the hyperbolic tangent function
+        hyperbolicTangentBtn.setToggleGroup(activationGroup);
         activationFunctions.getChildren().add(activationLabel);
-        activationFunctions.getChildren().add(sigmoid);
-        activationFunctions.getChildren().add(step);
-        activationFunctions.getChildren().add(hyperbolicTangent);
+        activationFunctions.getChildren().add(sigmoidBtn);
+        activationFunctions.getChildren().add(stepFunctionBtn);
+        activationFunctions.getChildren().add(hyperbolicTangentBtn);
         optionsBox.getChildren().add(activationFunctions);
 
-        VBox averageSSEBox = new VBox(minSpacing); //set up the averageSSE box
+        VBox averageSSEBox = new VBox(this.minSpacing); //set up the averageSSE box
         Label averageSSE = new Label("Average SSE"); //tells the user what this box is for
         averageSSE.setAlignment(Pos.CENTER);
         currentSSE = new Label(); //tells the user what the current SSE is
@@ -273,7 +240,7 @@ public class ANNView {
         averageSSEBox.getChildren().add(currentSSE);
         optionsBox.getChildren().add(averageSSEBox);
 
-        VBox epochBox = new VBox(minSpacing); //set up the number of epochs box
+        VBox epochBox = new VBox(this.minSpacing); //set up the number of epochs box
         Label numEpochs = new Label("Number of epochs"); //tells the user what the box is for
         numEpochs.setAlignment(Pos.CENTER);
         currentEpochNum = new Label(); //tells the current number of epochs box
@@ -287,23 +254,49 @@ public class ANNView {
         epochBox.getChildren().add(numEpochs);
         epochBox.getChildren().add(currentEpochNum);
         optionsBox.getChildren().add(epochBox);
+        optionsBox.setVisible(false);
 
-        optionsBox.setTranslateY(heightOfBox);
-        root.getChildren().add(optionsBox);
+        networkGroup.getChildren().add(optionsBox);
 
-        VBox programOptions = new VBox(minSpacing);
-        learn = new Button("LEARN");
-        classify = new Button("CLASSIFY");
-        stepDataInstance = new Button("Step through one data instance");
-        stepEpoch = new Button("Step through one epoch");
-        epochPause = new RadioButton("Pause After Each Epoch");
-        programOptions.getChildren().add(learn);
-        programOptions.getChildren().add(classify);
-        programOptions.setTranslateX(widthOfBox);
-        programOptions.getChildren().add(stepDataInstance);
-        programOptions.getChildren().add(stepEpoch);
-        programOptions.getChildren().add(epochPause);
-        root.getChildren().add(programOptions);
+        programOptions.setPadding(new Insets(this.minSpacing));
+        learnBtn = new Button("LEARN");
+        classifyBtn = new Button("CLASSIFY");
+        stepBtn = new Button("Step through input/epoch");
+
+        ToggleGroup runModeGroup = new ToggleGroup();
+        runRBtn = new RadioButton("Resume");
+        runRBtn.setToggleGroup(runModeGroup);
+        inputStepRBtn = new RadioButton("Step through each input");
+        inputStepRBtn.setToggleGroup(runModeGroup);
+        epochStepRBtn = new RadioButton("Step through each epoch");
+        epochStepRBtn.setToggleGroup(runModeGroup);
+        terminateRBtn = new RadioButton("Teminate Execution");
+        terminateRBtn.setToggleGroup(runModeGroup);
+
+        programOptions.getChildren().add(learnBtn);
+        programOptions.getChildren().add(classifyBtn);
+
+        programOptions.getChildren().add(stepBtn);
+        programOptions.getChildren().add(runRBtn);
+        programOptions.getChildren().add(inputStepRBtn);
+        programOptions.getChildren().add(epochStepRBtn);
+        programOptions.getChildren().add(terminateRBtn);
+        programOptions.setVisible(false);
+        networkGroup.getChildren().add(programOptions);
+
+//TODO delete the following line
+        // MakeNetworkGraphic(testConfig);
+//TODO remove this, get binding to work
+        for (ArrayList<EdgeLine> lineList : this.edgeLines) {
+            for (EdgeLine edgeLine : lineList) {
+                edgeLine.updateColor();
+            }
+        }
+
+    }
+
+    public ANNMenuBar getANNMenuBar() {
+        return aNNMenuBar;
     }
 
     /**
@@ -334,7 +327,7 @@ public class ANNView {
 
                 tempLine.setStroke(Color.BLACK);
                 edgeLines.get(0).add(tempLine);
-                this.root.getChildren().add(tempLine);
+                this.networkPictureGroup.getChildren().add(tempLine);
             }
         }
         for (int i = 0; i < centers.get(1).size(); i++) {
@@ -348,7 +341,7 @@ public class ANNView {
                                         end.getY(), weight);
                 tempLine.setStroke(Color.BLACK);
                 edgeLines.get(1).add(tempLine);
-                this.root.getChildren().add(tempLine);
+                this.networkPictureGroup.getChildren().add(tempLine);
             }
         }
     }
@@ -375,9 +368,9 @@ public class ANNView {
                 tempCircle = new NodeCircle(x, y, radius);
                 tempCircle.setText(tempText);
                 nodeCircles.get(i).add(tempCircle);
-                this.root.getChildren().add(tempCircle);
+                this.networkPictureGroup.getChildren().add(tempCircle);
                 tempCircle.getText().getLayoutX();
-                this.root.getChildren().add(tempCircle.getText());
+                this.networkPictureGroup.getChildren().add(tempCircle.getText());
             }
         }
     }
@@ -386,12 +379,20 @@ public class ANNView {
         return edgeLines;
     }
 
-    public Group getRootNode() {
+    public Pane getRootNode() {
         return root;
+    }
+
+    public Stage getTheStage() {
+        return theStage;
     }
 
     public ANNModel getTheModel() {
         return theModel;
+    }
+
+    public Group getNetworkPictureGroup() {
+        return networkPictureGroup;
     }
 
     public TextField getAlphaInput() {
@@ -410,16 +411,16 @@ public class ANNView {
         return currentMu;
     }
 
-    public RadioButton getSigmoid() {
-        return sigmoid;
+    public RadioButton getSigmoidBtn() {
+        return sigmoidBtn;
     }
 
-    public RadioButton getHyperbolicTangent() {
-        return hyperbolicTangent;
+    public RadioButton getHyperbolicTangentBtn() {
+        return hyperbolicTangentBtn;
     }
 
-    public RadioButton getStep() {
-        return step;
+    public RadioButton getStepFunctionBtn() {
+        return stepFunctionBtn;
     }
 
     public ArrayList<ArrayList<NodeCircle>> getNodeCircles() {
@@ -434,24 +435,120 @@ public class ANNView {
         return currentEpochNum;
     }
 
-    public RadioButton getEpochPause() {
-        return epochPause;
+    public RadioButton getRunRBtn() {
+        return runRBtn;
     }
 
-    public Button getStepEpoch() {
-        return stepEpoch;
+    public RadioButton getEpochStepRBtn() {
+        return epochStepRBtn;
     }
 
-    public Button getClassify() {
-        return classify;
+    public RadioButton getInputStepRBtn() {
+        return inputStepRBtn;
     }
 
-    public Button getLearn() {
-        return learn;
+    public RadioButton getTerminateRBtn() {
+        return terminateRBtn;
     }
 
-    public Button getStepDataInstance() {
-        return stepDataInstance;
+    public Button getClassifyBtn() {
+        return classifyBtn;
     }
 
+    public Button getLearnBtn() {
+        return learnBtn;
+    }
+
+    public Button getStepBtn() {
+        return stepBtn;
+    }
+
+    public void MakeNetworkGraphic(ANNConfig config) {
+
+        int numInputs = config.getNumInputs();
+        int numHiddenNodes = config.getNumNeuronsPerHiddenLayer();
+        int numOutputs = config.getNumOutputs();
+        this.networkPictureGroup.getChildren().clear();
+        //TODO make sure NeuralNet is initialize in the Model and get info from there?
+        //TODO Note the controller calls this method so currently the config comes from there
+
+        //int numInputs = theModel.getNeuralNetwork().getConfiguration().getNumInputs();
+        //int numHiddenNodes = theModel.getNeuralNetwork().getConfiguration().getNumNeuronsPerHiddenLayer();
+        //int numOutputs = theModel.getNeuralNetwork().getConfiguration().getNumOutputs();
+        int spacingBetweenLayers = 100;
+        int radius = 50;
+        double widthOfBox;
+        double heightOfBox;
+        Point upperLeftOfBox = new Point(100.0, 100.0);
+
+        this.edgeLines = new ArrayList<>();
+        this.nodeCircles = new ArrayList<>();
+
+        int maxNodes = numInputs;
+        if (maxNodes < numHiddenNodes) {
+            maxNodes = numHiddenNodes;
+        }
+        if (maxNodes < numOutputs) {
+            maxNodes = numOutputs;
+        }
+
+        widthOfBox = (6 * radius + 2 * spacingBetweenLayers) + 2 * this.minSpacing;
+        heightOfBox = ((2 * maxNodes * radius) + (1 + maxNodes) * this.minSpacing);
+        this.optionsBox.setTranslateY(heightOfBox);
+        this.programOptions.setTranslateX(widthOfBox);
+
+        ArrayList<ArrayList<Point>> centers = new ArrayList<>();
+
+        //add the three layers (input, hidden, output
+        centers.add(new ArrayList<>());
+        centers.add(new ArrayList<>());
+        centers.add(new ArrayList<>());
+        double verticalSpacing = (heightOfBox - (2 * radius * numInputs)) / (numInputs + 1);
+
+        //store the centers for the first layer
+        double x = this.minSpacing + radius;
+        double y = verticalSpacing + radius;
+        centers.get(0).add(new Point(x, y));
+        for (int i = 1; i < numInputs; i++) {
+            y += verticalSpacing + 2 * radius;
+            centers.get(0).add(new Point(x, y));
+        }
+
+        //store the centers for the second layer;
+        verticalSpacing = (heightOfBox - (2 * radius * numHiddenNodes)) / (numHiddenNodes + 1);
+        x += spacingBetweenLayers + 2 * radius;
+        y = verticalSpacing + radius;
+        centers.get(1).add(new Point(x, y));
+        for (int i = 1; i < numHiddenNodes; i++) {
+            y += verticalSpacing + 2 * radius;
+            centers.get(1).add(new Point(x, y));
+        }
+
+        //store the centers for the second layer;
+        verticalSpacing = (heightOfBox - (2 * radius * numOutputs)) / (numOutputs + 1);
+        x += spacingBetweenLayers + 2 * radius;
+        y = verticalSpacing + radius;
+        centers.get(2).add(new Point(x, y));
+        for (int i = 1; i < numOutputs; i++) {
+            y += verticalSpacing + 2 * radius;
+            centers.get(2).add(new Point(x, y));
+        }
+
+        createEdgeLines(centers);
+        createNodeCircles(centers, radius);
+        this.programOptions.setVisible(true);
+        this.optionsBox.setVisible(true);
+        makeNetworkGroupVisible();
+
+    }
+
+    public void makeNetworkGroupVisible() {
+        this.configGroup.setVisible(false);
+        this.networkGroup.setVisible(true);
+    }
+
+    public void makeConfigGroupVisible() {
+        this.networkGroup.setVisible(false);
+        this.configGroup.setVisible(true);
+    }
 }

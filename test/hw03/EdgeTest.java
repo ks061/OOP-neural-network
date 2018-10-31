@@ -15,10 +15,10 @@
  */
 package hw03;
 
-import hw03.ANNConfig;
-import hw03.Edge;
-import hw03.ProgramMode;
-import hw03.NeuralNet;
+import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.Edge;
+import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.NeuralNet;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;
