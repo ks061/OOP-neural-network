@@ -17,9 +17,8 @@ package hw03.view;
 
 import hw03.model.ANNModel;
 import hw03.model.neuralnet.ANNConfig;
-import hw03.model.neuralnet.Edge;
-import hw03.model.neuralnet.NeuralNet;
 import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -87,8 +86,6 @@ public class ANNView {
     private final RadioButton epochStepRBtn;
     private final RadioButton inputStepRBtn;
     private final RadioButton terminateRBtn;
-    // TODO move to view
-    private ANNMenuBar theConfigScene;
 
     private void initThetas(ArrayList<ArrayList<Double>> thetas) {
         thetas.add(new ArrayList<>());
@@ -126,8 +123,10 @@ public class ANNView {
 
         initWeights(weights);
 
-        ANNConfig config = new ANNConfig(2, 1, 1, 3, 0.1, 5000, weights,
-                                         thetas, ProgramMode.TRAINING);
+        ANNConfig config = new ANNConfig(2, 1, 1, 3, 0.1, 5000, 0.2, 0.5,
+                                         weights,
+                                         thetas, ProgramMode.TRAINING,
+                                         new SigmoidActivationFunction());
         double[][] data = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}};
         return config;
     }
@@ -147,7 +146,7 @@ public class ANNView {
         this.optionsBox = new HBox(this.minSpacing);
         this.optionsBox.setAlignment(Pos.CENTER);
         this.programOptions = new VBox(this.minSpacing);
-        this.aNNMenuBar = new ANNMenuBar(theStage);
+        this.aNNMenuBar = new ANNMenuBar(theStage, configGroup);
         //either the config group or network group will be visible
         this.configGroup.setVisible(false);
         root.getChildren().add(this.aNNMenuBar.getMenuBar());
@@ -157,11 +156,10 @@ public class ANNView {
         this.theModel = theModel;
 
 //TODO delete the following four lines
-        double[][] data = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}};
-        theModel.setTheConfig(makeConfig());
-        theModel.createNeuralNetwork();
-        theModel.getNeuralNetwork().setData(data);
-
+        //double[][] data = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}};
+        //ANNConfig testConfig = makeConfig();
+        //theModel.createNeuralNetwork(testConfig);
+        //theModel.getNeuralNetwork().setData(data);
         VBox learningRateBox = new VBox(this.minSpacing); //set up the learning rate box
         learningRateBox.setAlignment(Pos.CENTER);
 
@@ -172,7 +170,7 @@ public class ANNView {
         alphaInput.setAlignment(Pos.CENTER);
         alphaInput.setPrefColumnCount(4);
 
-        currentAlpha = new Label(String.format("%.1f", NeuralNet.DEFAULT_ALPHA)); //tells the user what the current learning rate is
+        currentAlpha = new Label(); //tells the user what the current learning rate is
         currentAlpha.setPrefWidth(75);
         currentAlpha.setPrefHeight(25);
         currentAlpha.setAlignment(Pos.CENTER);
@@ -195,7 +193,7 @@ public class ANNView {
         muInput.setAlignment(Pos.CENTER);
         muInput.setPrefColumnCount(4);
 
-        currentMu = new Label(String.format("%.1f", Edge.DEFAULTMU)); //tells the user what the current momentum is
+        currentMu = new Label(); //tells the user what the current momentum is
         currentMu.setPrefWidth(75);
         currentMu.setPrefHeight(25);
         currentMu.setAlignment(Pos.CENTER);
@@ -214,7 +212,6 @@ public class ANNView {
         Label activationLabel = new Label("Activation Functions"); //describes this part of the GUI to the user
         sigmoidBtn = new RadioButton("Sigmoid"); //lets the user choose the sigmoidBtn function
         sigmoidBtn.setToggleGroup(activationGroup);
-        sigmoidBtn.setSelected(true); //sigmoid is the default so we want the button to be selected on start up
         stepFunctionBtn = new RadioButton("Step"); //lets the user choose the stepFunctionBtn function
         stepFunctionBtn.setToggleGroup(activationGroup);
         hyperbolicTangentBtn = new RadioButton("Hyperbolic Tangent"); //lets the user choose the hyperbolic tangent function
@@ -287,12 +284,13 @@ public class ANNView {
 //TODO delete the following line
         // MakeNetworkGraphic(testConfig);
 //TODO remove this, get binding to work
-        for (ArrayList<EdgeLine> lineList : this.edgeLines) {
-            for (EdgeLine edgeLine : lineList) {
-                edgeLine.updateColor();
-            }
-        }
-
+//        for (ArrayList<EdgeLine> lineList : this.edgeLines) {
+//            for (EdgeLine edgeLine : lineList) {
+//                edgeLine.updateColor();
+//            }
+//        }
+//
+//    }
     }
 
     public ANNMenuBar getANNMenuBar() {

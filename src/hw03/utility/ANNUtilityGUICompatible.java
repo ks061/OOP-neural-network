@@ -19,6 +19,10 @@ package hw03.utility;
 
 import hw03.model.neuralnet.ANNConfig;
 import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.activationfunction.ActivationFunction;
+import hw03.model.neuralnet.activationfunction.HyperbolicTangentActivationFunction;
+import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
+import hw03.model.neuralnet.activationfunction.StepActivationFunction;
 import hw03.model.neuralnet.neuron.Neuron;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -170,13 +174,68 @@ public class ANNUtilityGUICompatible {
         ArrayList<ArrayList<Double>> weights = new ArrayList<>(
                 weightList.subList(1,
                                    configListWeights.size()));
+        double alpha = weightList.get(0).get(6);
+        double mu = weightList.get(0).get(7);
+        int activationInt = (int) Math.round(weightList.get(0).get(8));
+        ActivationFunction activationFunction = convertIntToActivationFunction(
+                activationInt);
         //TODO fix so that TRAINING mode isn't hardcoded below
         //TODO add to config file?  if so does comand line need to be fixed?
         return new ANNConfig(numInputs, numOutputs,
                              numHiddenLayers,
                              numNeuronsPerHiddenLayer,
-                             highestSSE, numMaxEpochs, weights,
-                             thetas, ProgramMode.TRAINING);
+                             highestSSE, numMaxEpochs, alpha, mu, weights,
+                             thetas, ProgramMode.TRAINING, activationFunction);
+    }
+
+    /**
+     * Takes an integer, which should range from 0 to 2, and returns an integer
+     * corresponding to the type of ActivationFunction, Step function for 1,
+     * Hyperbolic Tangent function for 2, and Sigmoid function for 0 or any
+     * other integer. The corresponding radio button is also selected.
+     *
+     * @param integer - an integer (should range from 0 to 2)
+     * @return - an activation function that corresponds to the inputted integer
+     *
+     * @author lts010, ks061
+     */
+    public static ActivationFunction convertIntToActivationFunction(int integer) {
+        if (integer == 0) {
+            return new SigmoidActivationFunction();
+        }
+        else if (integer == 1) {
+            return new StepActivationFunction();
+        }
+        else if (integer == 2) {
+            return new HyperbolicTangentActivationFunction();
+        }
+        else {
+            return new SigmoidActivationFunction();
+        }
+    }
+
+    /**
+     * Takes an ActivationFunction and returns a corresponding integer, if it is
+     * a Sigmoid function it returns 0, if it is a Step function it returns 1,
+     * otherwise returns 2
+     *
+     * @param activationFunction - an activation function
+     * @return - an integer that corresponds to what kind of activation function
+     * is inputted
+     *
+     * @author lts010, ks061
+     */
+    public static int convertActivationFunctionToInt(
+            ActivationFunction activationFunction) {
+        if (activationFunction instanceof SigmoidActivationFunction) {
+            return 0;
+        }
+        else if (activationFunction instanceof StepActivationFunction) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
     }
 
 }

@@ -16,6 +16,7 @@
  */
 package hw03.model.neuralnet;
 
+import hw03.model.neuralnet.activationfunction.ActivationFunction;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -76,6 +77,9 @@ public class ANNConfig implements Serializable {
      * Run mode (classification or training mode) that a neural net will run in
      */
     private transient ProgramMode programMode;
+    private double alpha;
+    private double mu;
+    private ActivationFunction activationFunction;
 
     /**
      * Constructor that initializes the number of inputs (input neurons), the
@@ -99,6 +103,8 @@ public class ANNConfig implements Serializable {
      * network will be configured with
      * @param numMaxEpochs maximum number of epochs neural network will train
      * before terminating the training session
+     * @param alpha learning rate of the neural net
+     * @param mu momentum variable for the neural net's edges
      * @param weights list of edge weights (a weight for each edge going to the
      * next layer in each layer except the output layer) a neural network will
      * be configured with
@@ -106,15 +112,17 @@ public class ANNConfig implements Serializable {
      * or output layer) a neural network will be configured with
      * @param programMode program mode (classification or training mode) that a
      * neural network will be configured with neural net will run in
+     * @param activationFunction activation function used by the neural net
      *
      * @author lts010, ks061
      */
     public ANNConfig(int numInputs, int numOutputs, int numHiddenLayers,
                      int numNeuronsPerHiddenLayer, double highestSSE,
-                     int numMaxEpochs,
+                     int numMaxEpochs, double alpha, double mu,
                      ArrayList<ArrayList<Double>> weights,
                      ArrayList<ArrayList<Double>> thetas,
-                     ProgramMode programMode) {
+                     ProgramMode programMode,
+                     ActivationFunction activationFunction) {
         this.numInputs = numInputs;
         this.numOutputs = numOutputs;
         this.numHiddenLayers = numHiddenLayers;
@@ -124,6 +132,9 @@ public class ANNConfig implements Serializable {
         this.weights = weights;
         this.thetas = thetas;
         this.programMode = programMode;
+        this.alpha = alpha;
+        this.mu = mu;
+        this.activationFunction = activationFunction;
     }
 
     /**
@@ -354,4 +365,29 @@ public class ANNConfig implements Serializable {
     public int getNumMaxEpochs() {
         return numMaxEpochs;
     }
+
+    public double getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
+
+    public double getMu() {
+        return mu;
+    }
+
+    public void setMu(double mu) {
+        this.mu = mu;
+    }
+
+    public ActivationFunction getActivationFunction() {
+        return activationFunction;
+    }
+
+    public void setActivationFunction(ActivationFunction activationFunction) {
+        this.activationFunction = activationFunction;
+    }
+
 }

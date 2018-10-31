@@ -47,11 +47,13 @@ public class ANNModel {
      * where it steps through one epoch at a time.
      */
     private SimpleBooleanProperty propStepEpoch;
+
     /**
      * Property representing whether the neural network is currently in the mode
      * where it steps through one input at a time.
      */
     private SimpleBooleanProperty propStepInput;
+
     /**
      * Property representing whether the neural network show terminate the
      * current learn or classify task
@@ -189,6 +191,14 @@ public class ANNModel {
      */
     public NeuralNet getNeuralNetwork() {
         return neuralNetwork;
+    }
+
+    public void UpdateProperties(ArrayList<ArrayList<Double>> weights,
+                                 double[] outputs,
+                                 double[] expectedOutputs, double averageSSE,
+                                 int numEpochsExecuted) {
+        System.out.println("calledUpdateProperties");
+
     }
 
     /**

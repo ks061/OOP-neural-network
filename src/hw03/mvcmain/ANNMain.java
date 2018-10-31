@@ -17,7 +17,6 @@ package hw03.mvcmain;
 
 import hw03.controller.ANNController;
 import hw03.model.ANNModel;
-import hw03.view.ANNMenuBar;
 import hw03.view.ANNView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -44,7 +43,6 @@ public class ANNMain extends Application {
      * The controller of this neural network MVC application.
      */
     private ANNController theCtrl;
-
 
     /**
      * Initializes the application

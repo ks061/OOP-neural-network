@@ -26,7 +26,6 @@ import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
 import hw03.model.neuralnet.activationfunction.StepActivationFunction;
 import hw03.model.neuralnet.layer.Layer;
 import hw03.model.neuralnet.layer.OutputLayer;
-import hw03.model.neuralnet.logger.ANNLogger;
 import hw03.model.neuralnet.logger.ANNLoggerStatus;
 import hw03.model.neuralnet.neuron.Neuron;
 import hw03.utility.ANNUtility;
@@ -66,6 +65,8 @@ public class ANNController implements EventHandler<ActionEvent> {
      */
     private ANNView theView;
 
+    private Thread neuralNetThread = new Thread();
+
     /**
      * Constructor to initialize the controller of the neural network MVC
      * application
@@ -100,9 +101,7 @@ public class ANNController implements EventHandler<ActionEvent> {
         this.theView.getANNMenuBar().getCancelBtn().setOnAction(this);
         this.theView.getANNMenuBar().getSubmitBtn().setOnAction(this);
 
-        createButtonBindings();
-        //TODO remove next line
-        initNetworkBindings();
+        this.createButtonBindings();
 
     }
 
@@ -113,8 +112,8 @@ public class ANNController implements EventHandler<ActionEvent> {
      *
      * @author ks061, lts010
      */
+    @Override
     public void handle(ActionEvent event) {
-        updateActivationFunction();
         //System.out.println("event source = " + event.getSource().toString());
         if (event.getSource() == this.theView.getAlphaInput()) {
             setNewAlpha();
@@ -132,26 +131,75 @@ public class ANNController implements EventHandler<ActionEvent> {
             //make sure the Neural net has upto date data
             theModel.getNeuralNetwork().setData(theData);
              */
-            Task learnTask = new Task<Void>() {
-                @Override
-                public Void call() throws FileNotFoundException {
-                    ANNLogger.setSwitch(ANNLoggerStatus.OFF);
-                    theModel.getNeuralNetwork().train();
-                    return null;
-                }
-            };
-            Thread learningThread = new Thread(learnTask);
-            learningThread.setDaemon(true);
-            learningThread.start();
-
-        }
-        else if (event.getSource() == this.theView.getClassifyBtn()) {
             if (theModel.getTheData() == null) {
                 ANNViewUtility.showInputAlert("You must load data first",
                                               "Select the file menu to load data");
                 return;
             }
+            if (neuralNetThread.isAlive()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Active Thread");
+                alert.setHeaderText("Cannot start learning process!");
+                alert.setContentText(String.format(
+                        "Neural Net is running another process",
+                        this.theView.getAlphaInput().getText()));
+                alert.show();
+                return;
+            }
+            else {
+                updateActivationFunction();
+                Task learnTask = new Task<Void>() {
+                    @Override
+                    public Void call() throws FileNotFoundException {
+                        updateActivationFunction();
+                        theModel.getNeuralNetwork().getConfiguration().setProgramMode(
+                                hw03.model.neuralnet.ProgramMode.TRAINING);
+                        hw03.model.neuralnet.logger.ANNLogger.setSwitch(
+                                ANNLoggerStatus.OFF);
+                        theModel.getNeuralNetwork().train();
+                        updateEdgeColors();
+                        return null;
+                    }
+                };
+                neuralNetThread = new Thread(learnTask);
+                neuralNetThread.setDaemon(true);
+                neuralNetThread.start();
+            }
+
+        }
+        else if (event.getSource() == this.theView.getClassifyBtn()) {
+            if (this.theModel.getTheData() == null) {
+                ANNViewUtility.showInputAlert("You must load data first",
+                                              "Select the file menu to load data");
+                return;
+            }
             System.out.println("ClassifyBtn");
+            if (neuralNetThread.isAlive()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Active Thread");
+                alert.setHeaderText("Cannot start learning process!");
+                alert.setContentText(String.format(
+                        "Neural Net is running another process",
+                        this.theView.getAlphaInput().getText()));
+                alert.show();
+            }
+            else {
+                Task classifyTask = new Task<Void>() {
+                    @Override
+                    public Void call() throws FileNotFoundException {
+                        updateActivationFunction();
+                        theModel.getNeuralNetwork().getConfiguration().setProgramMode(
+                                hw03.model.neuralnet.ProgramMode.CLASSIFICATION);
+                        hw03.model.neuralnet.logger.ANNLogger.setSwitch(
+                                ANNLoggerStatus.OFF);
+                        theModel.getNeuralNetwork().classify();
+                        return null;
+                    }
+                };
+                neuralNetThread = new Thread(classifyTask);
+                neuralNetThread.setDaemon(true);
+                neuralNetThread.start();
+            }
 
         }
         else if (event.getSource() == this.theView.getStepBtn()) {
@@ -205,18 +253,24 @@ public class ANNController implements EventHandler<ActionEvent> {
                             Level.SEVERE, null, ex);
                 }
             }
-
-            try {
-                theModel.createNeuralNetwork();
-            } catch (FileNotFoundException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Une");
-                alert.setHeaderText("Incorrect input specified!");
-                alert.setContentText(String.format("Can not convert \"%s\"",
-                                                   this.theView.getAlphaInput().getText()));
-                alert.show();
-                Logger.getLogger(ANNController.class.getName()).log(Level.SEVERE,
-                                                                    null, ex);
+            theModel.createNeuralNetwork();
+            String alpha = String.format("%f",
+                                         this.theModel.getNeuralNetwork().getConfiguration().getAlpha());
+            String mu = String.format("%f",
+                                      this.theModel.getNeuralNetwork().getConfiguration().getMu());
+            theView.getCurrentAlpha().setText(alpha);
+            theView.getCurrentMu().setText(mu);
+            ActivationFunction activationFunction = this.theModel.getNeuralNetwork().getConfiguration().getActivationFunction();
+            if (activationFunction instanceof SigmoidActivationFunction) {
+                this.theView.getSigmoidBtn().setSelected(true);
+            }
+            else if (activationFunction instanceof StepActivationFunction) {
+                this.theView.getStepFunctionBtn().setSelected(
+                        true);
+            }
+            else {
+                this.theView.getHyperbolicTangentBtn().setSelected(
+                        true);
             }
             if (theModel.getTheData() != null) {
                 theModel.getNeuralNetwork().setData(theModel.getTheData());
@@ -255,6 +309,7 @@ public class ANNController implements EventHandler<ActionEvent> {
                 //if empty getData should have already notified the user
                 if (result.length > 0) {
                     theModel.setTheData(result);
+                    theModel.getNeuralNetwork().setData(theModel.getTheData());
                 }
             };
             System.out.println("MenuBar LoadTraining");
@@ -346,18 +401,22 @@ public class ANNController implements EventHandler<ActionEvent> {
                     numOutputs, 1,
                     numHiddenNodes);
 
+            double alpha = hw03.model.neuralnet.NeuralNet.DEFAULT_ALPHA;
+            double mu = hw03.model.neuralnet.Edge.DEFAULTMU;
+            ActivationFunction activationFunction = new SigmoidActivationFunction();
+            theView.getSigmoidBtn().setSelected(true);
+
             theModel.setTheConfig(new ANNConfig(numInputs, numOutputs, 1,
                                                 numHiddenNodes,
-                                                maxSSE, maxEpochs,
+                                                maxSSE, maxEpochs, alpha, mu,
                                                 weights, thetas,
-                                                ProgramMode.TRAINING));
-            try {
-                theModel.createNeuralNetwork();
-            } catch (FileNotFoundException ex) {
-                //TODO does NeuralNet still need to through exception?
-                Logger.getLogger(ANNController.class.getName()).log(Level.SEVERE,
-                                                                    null, ex);
-            }
+                                                hw03.model.neuralnet.ProgramMode.TRAINING,
+                                                activationFunction));
+            theModel.createNeuralNetwork();
+            theView.getCurrentAlpha().setText(String.format("%f",
+                                                            this.theModel.getNeuralNetwork().getConfiguration().getAlpha()));
+            theView.getCurrentMu().setText(String.format("%f",
+                                                         this.theModel.getNeuralNetwork().getConfiguration().getMu()));
             if (theModel.getTheData() != null) {
                 theModel.getNeuralNetwork().setData(theModel.getTheData());
             }
@@ -393,6 +452,8 @@ public class ANNController implements EventHandler<ActionEvent> {
                     neuron.setActivationFunction(newActivationFunction);
                 }
             }
+            this.theModel.getNeuralNetwork().getConfiguration().setActivationFunction(
+                    newActivationFunction);
         }
         else if (theModel.getPropStepFunction().get() && !(currentActivationFunction instanceof StepActivationFunction)) {
             StepActivationFunction newActivationFunction = new StepActivationFunction();
@@ -401,6 +462,8 @@ public class ANNController implements EventHandler<ActionEvent> {
                     neuron.setActivationFunction(newActivationFunction);
                 }
             }
+            this.theModel.getNeuralNetwork().getConfiguration().setActivationFunction(
+                    newActivationFunction);
         }
         else if (theModel.getPropHyperbolicTangent().get() && !(currentActivationFunction instanceof HyperbolicTangentActivationFunction)) {
             HyperbolicTangentActivationFunction newActivationFunction = new HyperbolicTangentActivationFunction();
@@ -409,6 +472,8 @@ public class ANNController implements EventHandler<ActionEvent> {
                     neuron.setActivationFunction(newActivationFunction);
                 }
             }
+            this.theModel.getNeuralNetwork().getConfiguration().setActivationFunction(
+                    newActivationFunction);
         }
     }
 
@@ -425,6 +490,7 @@ public class ANNController implements EventHandler<ActionEvent> {
                 double newAlpha = Double.parseDouble(alpha);
                 this.theModel.getNeuralNetwork().setAlpha(newAlpha);
                 theView.getCurrentAlpha().setText(alpha);
+                theModel.getTheConfig().setAlpha(newAlpha);
             }
         } catch (NumberFormatException numberFormatException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -462,6 +528,7 @@ public class ANNController implements EventHandler<ActionEvent> {
                     }
                 }
                 theView.getCurrentMu().setText(mu);
+                theModel.getTheConfig().setMu(newMu);
             }
         } catch (NumberFormatException numberFormatException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -521,7 +588,7 @@ public class ANNController implements EventHandler<ActionEvent> {
      *
      * @author ks061, lts010
      */
-    public void initNetworkBindings() {
+    public void InitNetorkBindings() {
 
     }
 
@@ -550,13 +617,12 @@ public class ANNController implements EventHandler<ActionEvent> {
     /**
      * Receives a new config and notifies
      *
-     * @param newConfig configuration for updating the neural network
-     *
      * @author ks061, lts010
+     * @param newConfig
      */
-    public void updateConfig(ANNConfig newConfig) {
+    public void UpdateConfig(ANNConfig newConfig) {
         this.theView.MakeNetworkGraphic(newConfig);
-        initNetworkBindings();
+        InitNetorkBindings();
         //Need create new neraul net and set buttons/text to default values.
 
     }
@@ -587,13 +653,17 @@ public class ANNController implements EventHandler<ActionEvent> {
         }
 
         PrintWriter pWriter = new PrintWriter(outputFile);
-        pWriter.printf("%d.0 %d.0 %d.0 %d.0 %f %d.0\n",
+        pWriter.printf("%d.0 %d.0 %d.0 %d.0 %f %d.0 %f %f %d\n",
                        nN.getConfiguration().getNumInputs(),
                        nN.getConfiguration().getNumOutputs(),
                        nN.getConfiguration().getNumHiddenLayers(),
                        nN.getConfiguration().getNumNeuronsPerHiddenLayer(),
                        nN.getConfiguration().getHighestSSE(),
-                       nN.getConfiguration().getNumMaxEpochs());
+                       nN.getConfiguration().getNumMaxEpochs(),
+                       nN.getConfiguration().getAlpha(),
+                       nN.getConfiguration().getMu(),
+                       ANNUtilityGUICompatible.convertActivationFunctionToInt(
+                               nN.getConfiguration().getActivationFunction()));
         ArrayList<ArrayList<Double>> weights = nN.getConfiguration().getWeights();
         String weightLayer;
         for (ArrayList<Double> weightList : weights) {
@@ -619,4 +689,5 @@ public class ANNController implements EventHandler<ActionEvent> {
         pWriter.flush();
         pWriter.close();
     }
+
 }

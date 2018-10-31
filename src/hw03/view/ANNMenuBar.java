@@ -15,9 +15,12 @@
  */
 package hw03.view;
 
+import hw03.model.neuralnet.ANNConfig;
+import java.util.ArrayList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -35,8 +38,11 @@ import javafx.stage.Stage;
  */
 public class ANNMenuBar {
 
+    private Group menu;
     private Group configGroup;
+    private ArrayList<Node> workSpaceChildren;
     private Stage theStage;
+    private ANNConfig theConfig;
     private MenuBar menuBar;
 
     private TextField numInputsTextField;
@@ -55,15 +61,10 @@ public class ANNMenuBar {
     private Button submitBtn;
     private Button cancelBtn;
 
-    /**
-     * Constructor assigning references to the stage
-     *
-     * @param theStage stage of the application
-     *
-     * @author ks061, lts010
-     */
-    public ANNMenuBar(Stage theStage) {
+    public ANNMenuBar(Stage theStage, Group workSpaceGroup) {
         this.theStage = theStage;
+        this.configGroup = workSpaceGroup;
+        this.workSpaceChildren = new ArrayList<Node>();
 
         Menu menuFile = new Menu("File");
         this.loadConfigFileMI = new MenuItem("Load Config File");
@@ -85,6 +86,7 @@ public class ANNMenuBar {
 
         this.menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuFile, menuConfig, menuExit);
+
     }
 
     public MenuItem getLoadConfigFileMI() {

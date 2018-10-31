@@ -25,12 +25,16 @@ Configuration File Format:
 The first line will have the following numbers, in this order, separated by one 
 space: the number of input neurons, the number of output neurons, the number of 
 hidden layers, the number of neurons in each hidden layer, the highest 
-acceptable SSE (sum of squared errors), and the maximum number of epochs. 
+acceptable SSE (sum of squared errors), the maximum number of epochs, the learning rate, and the momentum variable. 
+
 The lines after this will be edge weights, each line represents the edge 
-weights needed to connect one layer to the next (i.e. the first line will 
+weights needed to connect one layer to the next 
+(i.e. the first line will 
 be to connect layer one to layer two, the next line will connect layer two to
-layer three, etc.) After the edge weights, there should be a line with just the word 
-"THETAS," typed exactly like that without the double quotes. After this line, the 
+layer three, etc.) 
+After the edge weights, there should be a line with just the word 
+"THETAS," typed exactly like that without the double quotes. 
+After this line, the 
 remainder of the lines will represent theta values, each line representing the 
 thetas that will be given to the neurons of a given layer
 (i.e. the first line of thetas will be for the neurons in the first hidden layer layer, 
