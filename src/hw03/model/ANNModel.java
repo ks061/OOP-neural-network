@@ -77,35 +77,35 @@ public class ANNModel {
      * Property representing whether the neural network is currently in the mode
      * where it steps through one epoch at a time.
      */
-    private SimpleBooleanProperty propStepEpoch;
+    private final SimpleBooleanProperty propStepEpoch;
 
     /**
      * Property representing whether the neural network is currently in the mode
      * where it steps through one input at a time.
      */
-    private SimpleBooleanProperty propStepInput;
+    private final SimpleBooleanProperty propStepInput;
 
     /**
      * Property representing whether the neural network show terminate the
      * current learn or classify task
      */
-    private SimpleBooleanProperty propTerminate;
+    private final SimpleBooleanProperty propTerminate;
 
     /**
      * Property representing that the neural network will use the hyperbolic
      * tangent activation function in training mode
      */
-    private SimpleBooleanProperty propHyperbolicTangent;
+    private final SimpleBooleanProperty propHyperbolicTangent;
     /**
      * Property representing that the neural network will use the Sigmoid
      * activation function in training mode
      */
-    private SimpleBooleanProperty propSigmoid;
+    private final SimpleBooleanProperty propSigmoid;
     /**
      * Property representing that the neural network will use the step
      * activation function in training mode
      */
-    private SimpleBooleanProperty propStepFunction;
+    private final SimpleBooleanProperty propStepFunction;
 
     /**
      * The model behind this neural network MVC application.
@@ -120,10 +120,25 @@ public class ANNModel {
      */
     private ANNConfig theConfig;
 
+    /**
+     * Weights of the edges in the neural network
+     */
     private ArrayList<ArrayList<SimpleDoubleProperty>> propWeights;
+    /**
+     * Text to be displayed in each neuron
+     */
     private ArrayList<ArrayList<StringProperty>> nodeTextProp;
+    /**
+     * Average sum of squared errors of the current neural network
+     */
     private final StringProperty averageSSEProp;
+    /**
+     * Number of epochs the current neural network has iterated through
+     */
     private final StringProperty numEpochsProp;
+    /**
+     * Message in the status notification bar at the top of the GUI
+     */
     private final StringProperty feedbackMessageProp;
 
     /**
@@ -143,7 +158,6 @@ public class ANNModel {
         this.numEpochsProp = new SimpleStringProperty("");
         this.feedbackMessageProp = new SimpleStringProperty("");
         this.nodeTextProp = new ArrayList<>();
-
     }
 
     /**
@@ -388,6 +402,8 @@ public class ANNModel {
      *
      * @param msg property of the message in the status notification bar at the
      * top of the GUI
+     *
+     * @author ks061, lts010
      */
     public void updateMessage(String msg) {
         feedbackMessageProp.setValue(msg);
@@ -399,6 +415,8 @@ public class ANNModel {
      *
      * @return property of the message in the status notification bar at the top
      * of the GUI
+     *
+     * @author ks061, lts010
      */
     public StringProperty getFeedbackMessageProp() {
         return feedbackMessageProp;
@@ -408,6 +426,8 @@ public class ANNModel {
      * Gets the property of the weights of the edges in the MVC model
      *
      * @return property of the weights of the edges in the MVC model
+     *
+     * @author ks061, lts010
      */
     public ArrayList<ArrayList<SimpleDoubleProperty>> getPropWeights() {
         return propWeights;
@@ -418,6 +438,8 @@ public class ANNModel {
      *
      * @return property of the average sum of the squared errors in the MVC
      * model
+     *
+     * @author ks061, lts010
      */
     public StringProperty getAverageSSEProp() {
         return averageSSEProp;
@@ -429,14 +451,19 @@ public class ANNModel {
      *
      * @return property of the number of epochs that the neural network has run
      * through
+     *
+     * @author ks061, lts010
      */
     public StringProperty getNumEpochsProp() {
         return numEpochsProp;
     }
 
     /**
+     * Gets the text displayed across all neurons in the GUI
      *
-     * @return
+     * @return text displayed across all neurons in the GUI
+     *
+     * @author ks061, lts010
      */
     public ArrayList<ArrayList<StringProperty>> getNodeTextProp() {
         return nodeTextProp;

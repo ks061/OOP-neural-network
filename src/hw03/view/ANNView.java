@@ -9,7 +9,8 @@
 * Project: csci205_proj_hw
 * Package: hw03.view
 * File: ANNView
-* Description:
+* Description: This file contains ANNView, which is the view of the neural
+*              network MVC application
 *
 * ****************************************
  */
@@ -42,7 +43,7 @@ import javafx.stage.Stage;
 /**
  * The view component of the ANN Visualization
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class ANNView {
 

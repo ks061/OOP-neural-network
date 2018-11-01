@@ -33,7 +33,6 @@ public class EdgeLine extends Line {
      * @param startY starting y coordinate for the line
      * @param endX ending x coordinate for the line
      * @param endY ending y coordinate for the line
-     * @param weight weight associated with the edge represented by the line
      *
      * @author ks061, lts010
      */

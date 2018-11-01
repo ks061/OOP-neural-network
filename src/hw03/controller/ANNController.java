@@ -27,8 +27,9 @@ import hw03.model.neuralnet.activationfunction.StepActivationFunction;
 import hw03.model.neuralnet.layer.Layer;
 import hw03.model.neuralnet.logger.ANNLoggerStatus;
 import hw03.model.neuralnet.neuron.Neuron;
-import hw03.utility.ANNUtility;
-import hw03.utility.ANNUtilityGUICompatible;
+import hw03.utility.ANNConfigUtility;
+import hw03.utility.ANNGeneralUtility;
+import hw03.utility.ANNIOUtility;
 import hw03.utility.ANNViewUtility;
 import hw03.view.ANNMenuBar;
 import hw03.view.ANNView;
@@ -97,12 +98,6 @@ public class ANNController implements EventHandler<ActionEvent> {
         this.theView.getRandomizeBtn().setOnAction(this);
 
         this.theView.getRunRBtn().setOnAction(this);
-        //TODO the next 3 and their functions below can probably be deleted
-        //These buttons are now hand by binding them to the variable that
-        //they set.
-        // this.theView.getInputStepRBtn().setOnAction(this);
-        //this.theView.getEpochStepRBtn().setOnAction(this);
-        //this.theView.getTerminateRBtn().setOnAction(this);
 
         this.theView.getANNMenuBar().getLoadConfigFileMI().setOnAction(this);
         this.theView.getANNMenuBar().getSaveConfigFileMI().setOnAction(this);
@@ -169,7 +164,7 @@ public class ANNController implements EventHandler<ActionEvent> {
             loadTrainingFile();
         }
         else if (event.getSource() == this.theView.getANNMenuBar().getLoadTestFileMI()) {
-            LoadTestFileMI();
+            loadTestFileMI();
 
         }
         else if (event.getSource() == this.theView.getANNMenuBar().getCancelBtn()) {
@@ -419,7 +414,7 @@ public class ANNController implements EventHandler<ActionEvent> {
                        nN.getConfiguration().getNumMaxEpochs(),
                        nN.getConfiguration().getAlpha(),
                        nN.getConfiguration().getMu(),
-                       ANNUtilityGUICompatible.convertActivationFunctionToInt(
+                       ANNGeneralUtility.convertActivationFunctionToInt(
                                nN.getConfiguration().getActivationFunction()));
         ArrayList<ArrayList<Double>> weights = nN.getConfiguration().getWeights();
         String weightLayer;
@@ -491,6 +486,12 @@ public class ANNController implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+     * Processes the form in the configuration view and uses the configuration
+     * values to create the neural network used by the program
+     *
+     * @author ks061, lts010
+     */
     private void processConfigRequest() {
         theModel.getFeedbackMessageProp().setValue("");
 
@@ -549,12 +550,12 @@ public class ANNController implements EventHandler<ActionEvent> {
             return;
         }
 
-        ArrayList<ArrayList<Double>> weights = ANNUtility.getRandomWeights(
+        ArrayList<ArrayList<Double>> weights = ANNGeneralUtility.getRandomWeights(
                 numInputs,
                 numOutputs,
                 ANNModel.NUM_HIDDEN_LAYERS,
                 numHiddenNodes);
-        ArrayList<ArrayList<Double>> thetas = ANNUtilityGUICompatible.getListOfThetas(
+        ArrayList<ArrayList<Double>> thetas = ANNConfigUtility.getListOfThetas(
                 numOutputs, ANNModel.NUM_HIDDEN_LAYERS,
                 numHiddenNodes);
 
@@ -595,6 +596,11 @@ public class ANNController implements EventHandler<ActionEvent> {
                         "New Neural Net created with your parameters");
     }
 
+    /**
+     * Loads the training file used to train the neural network
+     *
+     * @author ks061, lts010
+     */
     private void loadTrainingFile() {
         theModel.getFeedbackMessageProp().setValue("");
         double[][] result;
@@ -609,7 +615,7 @@ public class ANNController implements EventHandler<ActionEvent> {
             ANNViewUtility.showInputAlert("Error", "Error openning file");
         }
         else {
-            result = ANNUtilityGUICompatible.getData(
+            result = ANNIOUtility.getData(
                     trainingFile);
             //if empty getData should have already notified the user
             if (result.length > 0) {
@@ -620,7 +626,12 @@ public class ANNController implements EventHandler<ActionEvent> {
                 "The training data has been loaded.");
     }
 
-    private void LoadTestFileMI() {
+    /**
+     * Loads the test file used to test the neural network with input data
+     *
+     * @author ks061, lts010
+     */
+    private void loadTestFileMI() {
         theModel.getFeedbackMessageProp().setValue("");
         double[][] result;
         FileChooser fileChooser = new FileChooser();
@@ -634,7 +645,7 @@ public class ANNController implements EventHandler<ActionEvent> {
             ANNViewUtility.showInputAlert("Error", "Error openning file");
         }
         else {
-            result = ANNUtilityGUICompatible.getData(testFile);
+            result = ANNIOUtility.getData(testFile);
             //if empty getData should have already notified the user
             if (result.length > 0) {
                 theModel.setTheData(result);
@@ -645,6 +656,11 @@ public class ANNController implements EventHandler<ActionEvent> {
                 "The test data has been loaded.");
     }
 
+    /**
+     * Loads the configuration file to configure the neural network
+     *
+     * @author ks061, lts010
+     */
     private void loadConfigFile() {
         theModel.getFeedbackMessageProp().setValue("");
         FileChooser fileChooser = new FileChooser();
@@ -656,7 +672,7 @@ public class ANNController implements EventHandler<ActionEvent> {
         if (configFile != null) {
             try {
                 theModel.setTheConfig(
-                        ANNUtilityGUICompatible.createConfigurationFromFile(
+                        ANNConfigUtility.createConfigurationFromFile(
                                 configFile));
 
             } catch (FileNotFoundException ex) {
@@ -694,6 +710,11 @@ public class ANNController implements EventHandler<ActionEvent> {
                 "New Neural Net created with the loaded Config");
     }
 
+    /**
+     * Starts a new thread for the neural network to learn
+     *
+     * @author ks061, lts010
+     */
     private void startLearnThread() {
         theModel.getFeedbackMessageProp().setValue("");
         if (theModel.getTheData() == null) {
@@ -709,7 +730,6 @@ public class ANNController implements EventHandler<ActionEvent> {
                     "Neural Net is running another process",
                     this.theView.getAlphaInput().getText()));
             alert.show();
-            return;
         }
         else {
             //make sure the NeuralNet has the data
@@ -734,6 +754,12 @@ public class ANNController implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+     * Saves the configuration of the neural network currently used by the
+     * program to a file
+     *
+     * @author ks061, lts010
+     */
     private void saveConfigFile() {
         theModel.getFeedbackMessageProp().setValue("");
         if (theModel.getNeuralNetwork() == null) {
@@ -752,9 +778,15 @@ public class ANNController implements EventHandler<ActionEvent> {
         theModel.getFeedbackMessageProp().setValue("Config file has been saved");
     }
 
+    /**
+     * Randomizes the weights of the neural network currently used by the
+     * program
+     *
+     * @author ks061, lts010
+     */
     private void randomizeWeights() {
         theModel.getFeedbackMessageProp().setValue("");
-        ArrayList<ArrayList<Double>> weights = ANNUtility.getRandomWeights(
+        ArrayList<ArrayList<Double>> weights = ANNGeneralUtility.getRandomWeights(
                 theModel.getTheConfig().getNumInputs(),
                 theModel.getTheConfig().getNumOutputs(),
                 1,

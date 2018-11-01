@@ -9,7 +9,8 @@
 * Project: csci205_proj_hw
 * Package: hw03.view
 * File: NodeCircle
-* Description: NodeCircle is what ANNView uses to represent the neurons of the ANN visually
+* Description: This file contains NodeCircle, which is used by the view
+*              to display the neurons in the neural network
 *
 * ****************************************
  */
@@ -20,9 +21,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 /**
- * NodeCircle is what ANNView uses to represent the neurons of the ANN visually
+ * NodeCircle is used by the view to display the neurons in the neural network
  *
- * @author lts010
+ * @author lts010, ks061
  */
 public class NodeCircle extends Circle {
 

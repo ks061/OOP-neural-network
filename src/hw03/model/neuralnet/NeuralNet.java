@@ -22,7 +22,8 @@ import hw03.model.neuralnet.layer.InputLayer;
 import hw03.model.neuralnet.layer.Layer;
 import hw03.model.neuralnet.layer.OutputLayer;
 import hw03.model.neuralnet.neuron.Neuron;
-import hw03.utility.ANNUtility;
+import hw03.utility.ANNLoggerUtility;
+import hw03.utility.ANNGeneralUtility;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.*;
@@ -239,7 +240,7 @@ public class NeuralNet implements Serializable {
                 inputLayer.fireNeurons();
                 sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
 
-                ANNUtility.logEpochAndWeights(numEpoch, inputOutputSet, this);
+                ANNLoggerUtility.logEpochAndWeights(numEpoch, inputOutputSet, this);
                 System.out.print(".");
 
                 if (theModel.getStepInput().getValue() || theModel.getTerminate().getValue()) {
@@ -299,7 +300,7 @@ public class NeuralNet implements Serializable {
                 "\tNumber of epochs used: " + this.trainingNumberOfEpochs);
         System.out.println("\tTraining time (seconds): " + this.trainingTime);
 
-        ANNUtility.logFooter(this);
+        ANNLoggerUtility.logFooter(this);
 
         //  if (shouldClassify()) {
         //    classify();

@@ -8,7 +8,7 @@
 *
 * Project: csci205_proj_hw
 * Package: hw02
-* File: ANNUtilityGUICompatible
+* File: ANNConfigUtility
 * Description: JUnit tests for the class ANNClient
 *
 * ****************************************
@@ -25,9 +25,9 @@ import org.junit.Test;
  *
  * @author lts010, ks061
  */
-public class ANNUtilityGUICompatible extends TestCase {
+public class ANNConfigUtility extends TestCase {
 
-    public ANNUtilityGUICompatible() {
+    public ANNConfigUtility() {
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ANNUtilityGUICompatible extends TestCase {
     @Test
     public void testGetRandomWeights() throws Exception {
         System.out.println("getRandomWeights");
-        ArrayList<ArrayList<Double>> result = ANNUtility.getRandomWeights(2, 1,
+        ArrayList<ArrayList<Double>> result = ANNGeneralUtility.getRandomWeights(2, 1,
                                                                           2,
                                                                           2);
         assertTrue(result.size() == 3); //there should be three layers of edge weights
@@ -65,7 +65,7 @@ public class ANNUtilityGUICompatible extends TestCase {
     @Test
     public void testDefaultListOfThetas() throws Exception {
         System.out.println("getDefaultListOfThetas");
-        ArrayList<ArrayList<Double>> result = ANNUtility.getDefaultListOfThetas(
+        ArrayList<ArrayList<Double>> result = ANNGeneralUtility.getDefaultListOfThetas(
                 1,
                 2,
                 2);
