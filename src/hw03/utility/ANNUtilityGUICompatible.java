@@ -194,23 +194,23 @@ public class ANNUtilityGUICompatible {
      * Hyperbolic Tangent function for 2, and Sigmoid function for 0 or any
      * other integer. The corresponding radio button is also selected.
      *
-     * @param integer - an integer (should range from 0 to 2)
+     * @param integer - an integer (should range from 0 to 2); 0 for Sigmoid
+     * function, 1 for step function, 2 for hyperbolic Tangent function
+     *
      * @return - an activation function that corresponds to the inputted integer
      *
      * @author lts010, ks061
      */
     public static ActivationFunction convertIntToActivationFunction(int integer) {
-        if (integer == 0) {
-            return new SigmoidActivationFunction();
-        }
-        else if (integer == 1) {
-            return new StepActivationFunction();
-        }
-        else if (integer == 2) {
-            return new HyperbolicTangentActivationFunction();
-        }
-        else {
-            return new SigmoidActivationFunction();
+        switch (integer) {
+            case 0:
+                return new SigmoidActivationFunction();
+            case 1:
+                return new StepActivationFunction();
+            case 2:
+                return new HyperbolicTangentActivationFunction();
+            default:
+                return new SigmoidActivationFunction();
         }
     }
 

@@ -27,35 +27,54 @@ import javafx.scene.text.Text;
 public class NodeCircle extends Circle {
 
     /**
-     * The text that will go over the circle
+     * Text displayed within the circle in the GUI
      */
     private Text text;
 
+    /**
+     * Constructor that specifies its location (its x and y coordinates within
+     * the GUI) and radius
+     *
+     * @param x x coordinate of the circle in the GUI
+     * @param y y coordinate of the circle in the GUI
+     * @param radius radius of the circle
+     *
+     * @author ks061, lts010
+     */
     public NodeCircle(double x, double y, double radius) {
         super(x, y, radius);
         this.text = new Text("");
-        this.text.setLayoutX(this.getCenterX() - (this.getRadius() / 2));
-        this.text.setLayoutY(this.getCenterY() - 10);
+        this.text.setLayoutX(this.getCenterX() - this.getRadius() * 2 / 3);
+        this.text.setLayoutY(y - this.getRadius() / 2);
 
         this.setFill(Color.WHITE);
         this.setStroke(Color.BLACK);
         this.text.setStroke(Color.BLACK);
-        this.text.setLayoutX(x - (radius / 3));
-        this.text.setLayoutY(y);
+
     }
 
+    /**
+     * Gets the text displayed within the circle in the GUI
+     *
+     * @return text displayed within the circle in the GUI
+     *
+     * @author ks061, lts010
+     */
     public Text getText() {
         return this.text;
     }
 
+    /**
+     * Sets the text displayed within the circle in the GUI
+     *
+     * @param text text displayed within the circle in the GUI
+     *
+     * @author ks061, lts010
+     */
     public void setText(Text text) {
         this.text = text;
-        this.text.setLayoutX(this.getCenterX() - (this.getRadius() / 3));
-        this.text.setLayoutY(this.getCenterY());
-    }
-
-    public void setText(String text) {
-        this.text.setText(text);
+        this.text.setLayoutX(this.getCenterX() - this.getRadius() * 2 / 3);
+        this.text.setLayoutY(this.getCenterY() - this.getRadius() / 2);
     }
 
 }

@@ -77,8 +77,17 @@ public class ANNConfig implements Serializable {
      * Run mode (classification or training mode) that a neural net will run in
      */
     private transient ProgramMode programMode;
+    /**
+     * Alpha value used to train the neural network
+     */
     private double alpha;
+    /**
+     * Mu value used to train the neural network
+     */
     private double mu;
+    /**
+     * Activation function used by neurons during firing
+     */
     private ActivationFunction activationFunction;
 
     /**
@@ -366,26 +375,60 @@ public class ANNConfig implements Serializable {
         return numMaxEpochs;
     }
 
+    /**
+     * Gets the alpha value of the neural network configuration
+     *
+     * @return alpha value of the neural network configuration
+     */
     public double getAlpha() {
         return alpha;
     }
 
+    /**
+     * Sets the alpha value of the neural network configuration
+     *
+     * @param alpha alpha value of the neural network configuration
+     */
     public void setAlpha(double alpha) {
         this.alpha = alpha;
     }
 
+    /**
+     * Gets the mu value of the neural network
+     *
+     * @return mu value of the neural network
+     *
+     * @author ks061, lts010
+     */
     public double getMu() {
         return mu;
     }
 
+    /**
+     * Sets the mu value of the neural network
+     *
+     * @param mu mu value of the neural network
+     *
+     * @author ks061, lts010
+     */
     public void setMu(double mu) {
         this.mu = mu;
     }
 
+    /**
+     * Gets the activation function used by the neural network
+     *
+     * @return activation function used by the neural network
+     */
     public ActivationFunction getActivationFunction() {
         return activationFunction;
     }
 
+    /**
+     * Sets the activation function used by the neural network
+     *
+     * @param activationFunction activation function used by the neural network
+     */
     public void setActivationFunction(ActivationFunction activationFunction) {
         this.activationFunction = activationFunction;
     }

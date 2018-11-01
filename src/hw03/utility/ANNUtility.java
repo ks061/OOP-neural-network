@@ -15,9 +15,8 @@
  */
 package hw03.utility;
 
-import hw03.model.neuralnet.ANNConfig;
-import hw03.model.neuralnet.logger.ANNLogger;
 import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.logger.ANNLogger;
 import hw03.model.neuralnet.neuron.Neuron;
 import hw03.model.neuralnet.weightassignment.RandomWeightAssignment;
 import java.io.File;
