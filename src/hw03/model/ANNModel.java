@@ -108,6 +108,7 @@ public class ANNModel {
         this.averageSSEProp = new SimpleStringProperty("");
         this.numEpochsProp = new SimpleStringProperty("");
         this.feedbackMessageProp = new SimpleStringProperty("");
+        this.nodeTextProp = new ArrayList<>();
 
     }
 
@@ -261,9 +262,9 @@ public class ANNModel {
      * @author ks061, lts010
      */
     public void updateProperties(ArrayList<ArrayList<Double>> weights,
-            ArrayList<ArrayList<Double>> NetValues,
-            double[] expectedOutputs, double averageSSE,
-            int numEpochsExecuted) {
+                                 ArrayList<ArrayList<Double>> NetValues,
+                                 double[] expectedOutputs, double averageSSE,
+                                 int numEpochsExecuted) {
         //set the edges weights
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < weights.get(i).size(); j++) {
@@ -272,21 +273,28 @@ public class ANNModel {
         }
         //set the Input values
         for (int i = 0; i < NetValues.get(0).size(); i++) {
-            nodeTextProp.get(0).get(i).setValue("Input = " + 
-                    String.format("%5f",NetValues.get(0).get(i)));
+            nodeTextProp.get(0).get(i).setValue("Input = "
+                                                + String.format("%5f",
+                                                                NetValues.get(0).get(
+                                                                        i)));
         }
         //set the netValues for the hidden layer
         for (int i = 0; i < NetValues.get(1).size(); i++) {
-            nodeTextProp.get(1).get(i).setValue("Current = " + 
-                    String.format("%5f",NetValues.get(1).get(i)));
+            nodeTextProp.get(1).get(i).setValue("Current = "
+                                                + String.format("%5f",
+                                                                NetValues.get(1).get(
+                                                                        i)));
         }
-        
+
         // set current and target outputs
         for (int i = 0; i < NetValues.get(2).size(); i++) {
-            nodeTextProp.get(2).get(i).setValue("Current = " + 
-                    String.format("%5f",NetValues.get(1).get(i)) +
-                    "\nTarget = " +
-                    String.format("%5f",expectedOutputs[i]));
+            nodeTextProp.get(2).get(i).setValue("Current = "
+                                                + String.format("%5f",
+                                                                NetValues.get(1).get(
+                                                                        i))
+                                                + "\nTarget = "
+                                                + String.format("%5f",
+                                                                expectedOutputs[i]));
         }
         //set the averageSSE and number of Epochs already completed
         averageSSEProp.setValue(String.format("%5f", averageSSE));
@@ -328,16 +336,16 @@ public class ANNModel {
                 this.propWeights.get(i).add(new SimpleDoubleProperty(weight));
             }
         }
-        for (int i = 0;  i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             nodeTextProp.add(new ArrayList<>());
         }
-        for (int i = 0;  i < theConfig.getNumInputs(); i++) {
+        for (int i = 0; i < theConfig.getNumInputs(); i++) {
             nodeTextProp.get(1).add(new SimpleStringProperty("Input " + i));
         }
-         for (int i = 0;  i < theConfig.getNumNeuronsPerHiddenLayer(); i++) {
+        for (int i = 0; i < theConfig.getNumNeuronsPerHiddenLayer(); i++) {
             nodeTextProp.get(1).add(new SimpleStringProperty("Hidden " + i));
         }
-       for (int i = 0;  i < theConfig.getNumOutputs(); i++) {
+        for (int i = 0; i < theConfig.getNumOutputs(); i++) {
             nodeTextProp.get(1).add(new SimpleStringProperty("Output " + i));
         }
         System.out.println("about to create the new net");

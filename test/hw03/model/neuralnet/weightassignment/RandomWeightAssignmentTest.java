@@ -13,7 +13,7 @@
 *
 * ****************************************
  */
-package hw03.WeightAssignment;
+package hw03.model.neuralnet.weightassignment;
 
 import hw03.model.neuralnet.weightassignment.RandomWeightAssignment;
 import junit.framework.TestCase;

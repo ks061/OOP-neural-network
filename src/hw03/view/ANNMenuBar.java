@@ -50,7 +50,7 @@ public class ANNMenuBar {
     private TextField numHiddenTextField;
     private TextField maxSSETextField;
     private TextField maxEpochTextField;
-    double[][] theData;
+    private double[][] theData;
 
     private MenuItem loadConfigFileMI;
     private MenuItem saveConfigFileMI;

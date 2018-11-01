@@ -13,12 +13,14 @@
 *
 * ****************************************
  */
-package hw03;
+package hw03.model.neuralnet;
 
+import hw03.model.ANNModel;
 import hw03.model.neuralnet.ANNConfig;
+import hw03.model.neuralnet.NeuralNet;
 import hw03.model.neuralnet.NeuralNetConstructionException;
 import hw03.model.neuralnet.ProgramMode;
-import hw03.model.neuralnet.NeuralNet;
+import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
@@ -34,6 +36,8 @@ public class NeuralNetTest extends TestCase {
      * Configuration for the neural network
      */
     private ANNConfig config;
+
+    private NeuralNet myNet;
 
     @Override
     public void setUp() throws Exception {
@@ -54,8 +58,9 @@ public class NeuralNetTest extends TestCase {
         thetas.get(1).add(0.1);
         thetas.get(1).add(0.1);
         thetas.get(2).add(0.1);
-        this.config = new ANNConfig(2, 1, 1, 2, 0.001, 2, weights, thetas,
-                                    ProgramMode.TEST); //create the config object, but not the data
+        this.config = new ANNConfig(2, 1, 1, 2, 0.001, 2, 0.2, 0.5, weights,
+                                    thetas, ProgramMode.TEST,
+                                    new SigmoidActivationFunction());
     }
 
     @Override
@@ -73,7 +78,9 @@ public class NeuralNetTest extends TestCase {
     public void testNoDataConstructionException() throws FileNotFoundException {
         try {
             double[][] data = {};
-            NeuralNet myNet = new NeuralNet(data, config); //create the neural net with no data, which should throw an exception
+            ANNModel theModel = new ANNModel();
+            myNet = new NeuralNet(config, theModel); //construct the neural net
+            myNet.validateData(data);
             fail("Improper checking for lack of data");
         } catch (NeuralNetConstructionException expected) {
         }
@@ -89,8 +96,9 @@ public class NeuralNetTest extends TestCase {
     public void testInconsistentDataException() throws FileNotFoundException {
         try {
             double[][] data = {{0.0, 1.0}, {1.0}}; //create the neural net with inconsistent amounts of data for each epoch, which should throw an exception
-
-            NeuralNet myNet = new NeuralNet(data, config);
+            ANNModel theModel = new ANNModel();
+            myNet = new NeuralNet(config, theModel); //construct the neural net
+            myNet.validateData(data);
             fail("Improper checking for mismatched rows of data");
         } catch (NeuralNetConstructionException expected) {
         }
@@ -105,7 +113,9 @@ public class NeuralNetTest extends TestCase {
     public void testClassify() throws FileNotFoundException {
         System.out.println("classify");
         double[][] data = {{1, 1, 1}}; //give the neural net good data to use
-        NeuralNet myNet = new NeuralNet(data, config);
+        ANNModel theModel = new ANNModel();
+        myNet = new NeuralNet(config, theModel); //construct the neural net
+        myNet.setData(data);
         System.out.println(myNet.classify());
         ArrayList<ArrayList<Double>> expResult = new ArrayList<>(); //create the result we expect
         expResult.add(new ArrayList<>());

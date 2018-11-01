@@ -8,16 +8,14 @@
 *
 * Project: csci205_proj_hw
 * Package: hw02
-* File: ANNClientTest
+* File: ANNUtilityGUICompatible
 * Description: JUnit tests for the class ANNClient
 *
 * ****************************************
  */
-package hw03;
+package hw03.utility;
 
-import hw03.ANNClient;
 import hw01.Neuron;
-import hw03.utility.ANNUtility;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -27,9 +25,9 @@ import org.junit.Test;
  *
  * @author lts010, ks061
  */
-public class ANNClientTest extends TestCase {
+public class ANNUtilityGUICompatible extends TestCase {
 
-    public ANNClientTest() {
+    public ANNUtilityGUICompatible() {
     }
 
     @Override
@@ -49,8 +47,9 @@ public class ANNClientTest extends TestCase {
     @Test
     public void testGetRandomWeights() throws Exception {
         System.out.println("getRandomWeights");
-        ArrayList<ArrayList<Double>> result = ANNUtility.getRandomWeights(2, 1, 2,
-                                                                         2);
+        ArrayList<ArrayList<Double>> result = ANNUtility.getRandomWeights(2, 1,
+                                                                          2,
+                                                                          2);
         assertTrue(result.size() == 3); //there should be three layers of edge weights
         assertTrue(result.get(0).size() == 4); //first layer should have 4 edges
         assertTrue(result.get(1).size() == 4); //second layer should have 4 edges
@@ -66,9 +65,10 @@ public class ANNClientTest extends TestCase {
     @Test
     public void testDefaultListOfThetas() throws Exception {
         System.out.println("getDefaultListOfThetas");
-        ArrayList<ArrayList<Double>> result = ANNUtility.getDefaultListOfThetas(1,
-                                                                               2,
-                                                                               2);
+        ArrayList<ArrayList<Double>> result = ANNUtility.getDefaultListOfThetas(
+                1,
+                2,
+                2);
         assertTrue(result.size() == 4);
         assertTrue(result.get(1).get(0) == Neuron.DEFAULTTHETA); //thetas should be the default theta
         assertTrue(result.get(0).size() == 0); //first layer should have no thetas

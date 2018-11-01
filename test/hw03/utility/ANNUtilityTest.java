@@ -13,7 +13,7 @@
 *
 * ****************************************
  */
-package hw03;
+package hw03.utility;
 
 import hw03.utility.ANNUtility;
 import java.io.ByteArrayInputStream;

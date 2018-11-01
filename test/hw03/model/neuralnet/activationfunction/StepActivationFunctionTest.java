@@ -13,7 +13,7 @@
 *
 * ****************************************
  */
-package hw03.ActivationFunction;
+package hw03.model.neuralnet.activationfunction;
 
 import hw03.model.neuralnet.activationfunction.StepActivationFunction;
 import junit.framework.TestCase;

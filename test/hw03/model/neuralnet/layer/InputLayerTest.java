@@ -13,13 +13,15 @@
 *
 * ****************************************
  */
-package hw03.Layer;
+package hw03.model.neuralnet.layer;
 
-import hw03.model.neuralnet.layer.InputLayer;
+import hw03.model.ANNModel;
 import hw03.model.neuralnet.ANNConfig;
 import hw03.model.neuralnet.NeuralNet;
 import hw03.model.neuralnet.NeuralNetConstructionException;
 import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
+import hw03.model.neuralnet.layer.InputLayer;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
@@ -60,10 +62,13 @@ public class InputLayerTest extends TestCase {
         thetas.get(1).add(0.1);
         thetas.get(1).add(0.1);
         thetas.get(2).add(0.1);
-        ANNConfig config = new ANNConfig(2, 1, 1, 2, 0.001, 2, weights,
-                                         thetas, ProgramMode.TEST);
+        ANNConfig config = new ANNConfig(2, 1, 1, 2, 0.001, 2, 0.2, 0.5, weights,
+                                         thetas, ProgramMode.TEST,
+                                         new SigmoidActivationFunction());
+        ANNModel theModel = new ANNModel();
         double[][] data = {{1, 1, 1}};
-        myNet = new NeuralNet(data, config); //create the neural net
+        myNet = new NeuralNet(config, theModel); //construct the neural net
+        myNet.setData(data);
         myLayer = (InputLayer) myNet.getLayers().get(0);
 
     }

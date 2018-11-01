@@ -3,28 +3,28 @@
 * Fall 2018
 *
 * Name: Logan Stiles and Kartikeya Sharma
-* Date: Oct 10, 2018
-* Time: 3:34:57 PM
+* Date: Oct 18, 2018
+* Time: 10:15:05 PM
 *
 * Project: csci205_proj_hw
-* Package: hw1
-* File: SigmoidActivationFunctionTest
-* Description: JUnit tests for the SigmoidActivationFunction
+* Package: hw02.ActivationFunction
+* File: HyperbolicTangentActivationFunctionTest
+* Description: JUnit Tests for class HyperbolicTangentActivationFunction
 *
 * ****************************************
  */
-package hw03.ActivationFunction;
+package hw03.model.neuralnet.activationfunction;
 
-import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
+import hw03.model.neuralnet.activationfunction.HyperbolicTangentActivationFunction;
 import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
- * JUnit tests for the SigmoidActivationFunction
+ * JUnit Tests for class HyperbolicTangentActivationFunction
  *
  * @author lts010, ks061
  */
-public class SigmoidActivationFunctionTest extends TestCase {
+public class HyperbolicTangentActivationFunctionTest extends TestCase {
 
     /**
      * Allowed deviation from the expected value
@@ -40,35 +40,30 @@ public class SigmoidActivationFunctionTest extends TestCase {
     }
 
     /**
-     * Test of calcOutput method, of class SigmoidActivationFunction.
-     *
-     * @author lts010, ks061
+     * Test of calcOutput method, of class HyperbolicTangentActivationFunction.
      */
     @Test
     public void testCalcOutput() {
         System.out.println("calcOutput");
         double netInput = 2;
-        SigmoidActivationFunction instance = new SigmoidActivationFunction();
-        double expResult = 1 / (1 + Math.exp(-1 * netInput)); //the method should always equal this value
+        HyperbolicTangentActivationFunction instance = new HyperbolicTangentActivationFunction();
+        double expResult = Math.tanh(netInput); //this should equal the function's output
         double result = instance.calcOutput(netInput);
         assertEquals(expResult, result, EPSILON);
     }
 
     /**
-     * Test of calcDervOutput method, of class SigmoidActivationFunction.
-     *
-     * @author lts010, ks061
+     * Test of calcDervOutput method, of class
+     * HyperbolicTangentActivationFunction.
      */
     @Test
     public void testCalcDervOutput() {
         System.out.println("calcDervOutput");
         double netInput = 2;
-        SigmoidActivationFunction instance = new SigmoidActivationFunction();
-        double expResult = instance.calcOutput(netInput) * (1 - instance.calcOutput(
-                                                            netInput)); //the method should always equal this value
+        HyperbolicTangentActivationFunction instance = new HyperbolicTangentActivationFunction();
+        double expResult = 1.0 / Math.pow(Math.cosh(netInput), 2.0); //this should equal the function's output
         double result = instance.calcDervOutput(netInput);
         assertEquals(expResult, result, EPSILON);
-
     }
 
 }

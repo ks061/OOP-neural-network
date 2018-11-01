@@ -39,7 +39,6 @@ public class EdgeLine extends Line {
                     Double weight) {
         super(startX, startY, endX, endY);
         this.weight = weight;
-        updateColor();
     }
 
     /**
