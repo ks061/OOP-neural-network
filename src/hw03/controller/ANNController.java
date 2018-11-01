@@ -147,17 +147,6 @@ public class ANNController implements EventHandler<ActionEvent> {
         else if (event.getSource() == this.theView.getRunRBtn()) {
             theModel.getNeuralNetwork().notifyNeuralNet();
             System.out.println("RunRBtn");
-//TODO delete the commented lines below
-/*
-        } else if (event.getSource() == this.theView.getInputStepRBtn()) {
-            System.out.println("InputStepRBtn");
-
-        } else if (event.getSource() == this.theView.getEpochStepRBtn()) {
-            System.out.println("EpochStepRBtn");
-
-        } else if (event.getSource() == this.theView.getTerminateRBtn()) {
-            System.out.println("TerminateRBtn");
-             */
         }
         else if (event.getSource() == this.theView.getANNMenuBar().getExitMI()) {
             System.exit(0);

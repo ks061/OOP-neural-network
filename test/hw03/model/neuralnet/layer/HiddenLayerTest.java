@@ -13,15 +13,17 @@
 *
 * ****************************************
  */
-package hw03.Layer;
+package hw03.model.neuralnet.layer;
 
-import hw03.model.neuralnet.layer.OutputLayer;
-import hw03.model.neuralnet.layer.InputLayer;
-import hw03.model.neuralnet.layer.HiddenLayer;
+import hw03.model.ANNModel;
 import hw03.model.neuralnet.ANNConfig;
 import hw03.model.neuralnet.NeuralNet;
 import hw03.model.neuralnet.NeuralNetConstructionException;
 import hw03.model.neuralnet.ProgramMode;
+import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
+import hw03.model.neuralnet.layer.HiddenLayer;
+import hw03.model.neuralnet.layer.InputLayer;
+import hw03.model.neuralnet.layer.OutputLayer;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
@@ -67,12 +69,15 @@ public class HiddenLayerTest extends TestCase {
         thetas.get(1).add(0.0);
         thetas.get(1).add(0.0);
         thetas.get(2).add(0.0);
-        ANNConfig config = new ANNConfig(2, 1, 1, 2, 0.001, 2, weights,
-                                         thetas, ProgramMode.TEST);
+        ANNConfig config = new ANNConfig(2, 1, 1, 2, 0.001, 2, 0.2, 0.5, weights,
+                                         thetas, ProgramMode.TEST,
+                                         new SigmoidActivationFunction());
+        ANNModel theModel = new ANNModel();
+        myNet = new NeuralNet(config, theModel); //construct the neural net
         double[][] data = {{1, 1, 1}};
         double[] inputs = {1.0, 1.0};
         double[] outputs = {1.0};
-        myNet = new NeuralNet(data, config); //create the neural net
+        myNet.setData(data);
         myLayer = (HiddenLayer) myNet.getLayers().get(1);
         InputLayer inputLayer = (InputLayer) myNet.getLayers().get(0);
         inputLayer.setInputs(inputs); //give inputs

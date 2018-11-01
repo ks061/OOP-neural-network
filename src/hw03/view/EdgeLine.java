@@ -26,11 +26,6 @@ import javafx.scene.shape.Line;
 public class EdgeLine extends Line {
 
     /**
-     * Weight of the the edge line representing an edge in the neural network
-     */
-    private Double weight;
-
-    /**
      * Constructs an edge line with starting and ending coordinates for the line
      * as well as the weight associated with the edge represented by the line
      *
@@ -42,10 +37,8 @@ public class EdgeLine extends Line {
      *
      * @author ks061, lts010
      */
-    public EdgeLine(double startX, double startY, double endX, double endY,
-                    Double weight) {
+    public EdgeLine(double startX, double startY, double endX, double endY) {
         super(startX, startY, endX, endY);
-        this.weight = weight;
     }
 
 }

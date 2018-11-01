@@ -372,7 +372,7 @@ public class ANNView {
                                                                (i * centers.get(
                                                                         1).size()) + j);
                 tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
-                                        end.getY(), weight);
+                                        end.getY());
 
                 tempLine.setStroke(Color.BLACK);
                 edgeLines.get(0).add(tempLine);
@@ -387,7 +387,7 @@ public class ANNView {
                                                                (i * centers.get(
                                                                         2).size()) + j);
                 tempLine = new EdgeLine(start.getX(), start.getY(), end.getX(),
-                                        end.getY(), weight);
+                                        end.getY());
                 tempLine.setStroke(Color.BLACK);
                 edgeLines.get(1).add(tempLine);
                 this.networkPictureGroup.getChildren().add(tempLine);

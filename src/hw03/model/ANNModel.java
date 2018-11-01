@@ -143,6 +143,7 @@ public class ANNModel {
         this.numEpochsProp = new SimpleStringProperty("");
         this.feedbackMessageProp = new SimpleStringProperty("");
         this.nodeTextProp = new ArrayList<>();
+
     }
 
     /**
