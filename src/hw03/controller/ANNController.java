@@ -374,6 +374,8 @@ public class ANNController implements EventHandler<ActionEvent> {
         ArrayList<ArrayList<NodeCircle>> nodeCircles = theView.getNodeCircles();
         theView.getCurrentEpochNum().textProperty().bind(
                 theModel.getNumEpochsProp());
+        theView.getCurrentSSE().textProperty().bind(
+                theModel.getAverageSSEProp());
         theView.getFeedbackMessage().textProperty().bind(
                 theModel.getFeedbackMessageProp());
 
