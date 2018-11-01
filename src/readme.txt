@@ -25,7 +25,8 @@ Configuration File Format:
 The first line will have the following numbers, in this order, separated by one 
 space: the number of input neurons, the number of output neurons, the number of 
 hidden layers, the number of neurons in each hidden layer, the highest 
-acceptable SSE (sum of squared errors), the maximum number of epochs, the learning rate, and the momentum variable. 
+acceptable SSE (sum of squared errors), the maximum number of epochs, the learning rate, and the momentum variable, and an integer representing the activation function.
+Put 0 for Sigmoid, 1 for Step, and 2 for Hyperbolic Tangent.
 
 The lines after this will be edge weights, each line represents the edge 
 weights needed to connect one layer to the next 
@@ -43,7 +44,7 @@ Note that the input layer does not have theta values; simply start listing the
 theta values for the first hidden layer (if no hidden layer exists, for the output layer).
 
 Configuration File Template:
-<number of input neurons> <number of output neurons> <number of hidden layers> <number of neurons in each hidden layer> <highest acceptable SSE> <maximum number of epochs>
+<number of input neurons> <number of output neurons> <number of hidden layers> <number of neurons in each hidden layer> <highest acceptable SSE> <maximum number of epochs> <learning rate> <momementum> <activation function>
 <edge weight connecting from neuron 1 in input layer to neuron 1 in first hidden layer> <edge weight connecting from neuron 1 in input layer to neuron 2 in first hidden layer> <etc.> <edge weight connecting from neuron 2 in input layer to neuron 1 in first hidden layer> <edge weight connecting from neuron 2 in input layer to neuron 2 in first hidden layer> <etc.>
 <edge weight connecting from neuron 1 in first hidden layer to neuron 1 in second hidden layer> <edge weight connecting from neuron 1 in first hidden layer to neuron 2 in second hidden layer> <etc.> <edge weight connecting from neuron 2 in first hidden layer to neuron 1 in second hidden layer> <edge weight connecting from neuron 2 in first hidden layer to neuron 2 in second hidden layer> <etc.>
 <etc.>
