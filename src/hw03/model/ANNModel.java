@@ -337,7 +337,7 @@ public class ANNModel {
         for (int i = 0; i < netValues.get(2).size(); i++) {
             nodeTextProp.get(2).get(i).setValue("Current =\n"
                                                 + String.format("%5f",
-                                                                netValues.get(1).get(
+                                                                netValues.get(2).get(
                                                                         i))
                                                 + "\nTarget =\n"
                                                 + String.format("%5f",
