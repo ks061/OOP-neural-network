@@ -9,56 +9,43 @@
 * Project: csci205_proj_hw
 * Package: hw03.view
 * File: EdgeLine
-* Description:
-*
+* Description: This file contains EdgeLine, which is a graphical component of
+*              the GUI representing an edge in the artificial neural network.
 * ****************************************
  */
 package hw03.view;
 
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 /**
+ * EdgeLine is a graphical component of the GUI representing an edge in the
+ * artificial neural network
  *
  * @author lts010, ks061
  */
 public class EdgeLine extends Line {
 
+    /**
+     * Weight of the the edge line representing an edge in the neural network
+     */
     private Double weight;
 
     /**
+     * Constructs an edge line with starting and ending coordinates for the line
+     * as well as the weight associated with the edge represented by the line
      *
-     * @param startX
-     * @param startY
-     * @param endX
-     * @param endY
-     * @param weight
+     * @param startX starting x coordinate for the line
+     * @param startY starting y coordinate for the line
+     * @param endX ending x coordinate for the line
+     * @param endY ending y coordinate for the line
+     * @param weight weight associated with the edge represented by the line
+     *
      * @author ks061, lts010
      */
     public EdgeLine(double startX, double startY, double endX, double endY,
                     Double weight) {
         super(startX, startY, endX, endY);
         this.weight = weight;
-        updateColor();
-    }
-
-    /**
-     * Updates the color of an edge line based on the edge weight associated
-     * with the provided edge and layer number (red for negative weights, green
-     * for positive, and blue for zero)
-     *
-     * @author lts010, ks061
-     */
-    public void updateColor() {
-        if (this.weight > 0) {
-            this.setStroke(Color.GREEN);
-        }
-        else if (this.weight == 0) {
-            this.setStroke(Color.BLUE);
-        }
-        else {
-            this.setStroke(Color.RED);
-        }
     }
 
 }

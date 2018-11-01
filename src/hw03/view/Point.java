@@ -9,42 +9,56 @@
 * Project: csci205_proj_hw
 * Package: hw03.view
 * File: Point
-* Description:
-*
+* Description: This file contains Point, which holds the x and y coordinates
+*              for a point.
 * ****************************************
  */
 package hw03.view;
 
 /**
- * This class holds the x and y coordinates for a point.
+ * Point holds the x and y coordinates for a point.
  *
  * @author lts010, ks061
  */
 public class Point {
 
+    /**
+     * X coordinate for the point
+     */
     private final double x;
+    /**
+     * Y coordinate for the point
+     */
     private final double y;
 
     /**
+     * Gets the x coordinate for the point
      *
-     * @return @author ks061, lts010
+     * @return x coordinate for the point
+     *
+     * @author ks061, lts010
      */
     public double getX() {
         return x;
     }
 
     /**
+     * Gets the y coordinate for the point
      *
-     * @return @author lts010, ks061
+     * @return y coordinate for the point
+     *
+     * @author lts010, ks061
      */
     public double getY() {
         return y;
     }
 
     /**
+     * Constructor for a point containing its x and y coordinates
      *
-     * @param x
-     * @param y
+     * @param x x coordinate for the point
+     * @param y y coordinate for the point
+     *
      * @author ks061, lts010
      */
     public Point(double x, double y) {
@@ -53,8 +67,13 @@ public class Point {
     }
 
     /**
+     * Gets a string representation of the point containing its x and y
+     * coordinates
      *
-     * @return @author lts010, ks061
+     * @return string representation of the point containing its x and y
+     * coordinates
+     *
+     * @author lts010, ks061
      */
     @Override
     public String toString() {

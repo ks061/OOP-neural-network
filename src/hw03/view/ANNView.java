@@ -17,8 +17,6 @@ package hw03.view;
 
 import hw03.model.ANNModel;
 import hw03.model.neuralnet.ANNConfig;
-import hw03.model.neuralnet.ProgramMode;
-import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -52,88 +50,147 @@ public class ANNView {
      * The model of this neural network MVC application.
      */
     private final ANNModel theModel;
+    /**
+     * Box for configuration specification input
+     */
     private final Group configGroup;
+    /**
+     * Bottom of the main screen, including neural network configuration and
+     * buttons
+     */
     private final Group networkGroup;
+    /**
+     * Display of the neural network
+     */
     private final Group networkPictureGroup;
+    /**
+     * Stage for the GUI
+     */
     private final Stage theStage;
+    /**
+     * Menu bar for the GUI
+     */
     private final ANNMenuBar aNNMenuBar;
 
+    /**
+     * Circles representing neurons in the GUI
+     */
     private ArrayList<ArrayList<NodeCircle>> nodeCircles;
+    /**
+     * Edge lines representing edges in the GUI
+     */
     private ArrayList<ArrayList<EdgeLine>> edgeLines;
-
+    /**
+     * Root of the MVC application
+     */
     private final Pane root;
+    /**
+     * Box for neural network specifications
+     */
     private final HBox optionsBox;
+    /**
+     * Box for controlling the program
+     */
     private final VBox programOptions;
+    /**
+     * Minimum spacing between GUI components
+     */
     private final int minSpacing;
-    //private int widthOfBox;
-    //private int heightOfBox;
 
+    /**
+     * Text field for user to specify an alpha value
+     */
     private final TextField alphaInput;
+    /**
+     * Current alpha value used in training by the neural network
+     */
     private final Label currentAlpha;
+    /**
+     * Text field to specify a mu value
+     */
     private final TextField muInput;
+    /**
+     * Current mu value used in training by the neural network
+     */
     private final Label currentMu;
 
+    /**
+     * Radio button to specify that the neural network use the Sigmoid
+     * activation function during the learning process
+     */
     private final RadioButton sigmoidBtn;
+    /**
+     * Radio button to specify that the neural network use the hyperbolic
+     * tangent activation function during the learning process
+     */
     private final RadioButton hyperbolicTangentBtn;
+    /**
+     * Radio button to specify that the neural network use the step activation
+     * function during the learning process
+     */
     private final RadioButton stepFunctionBtn;
 
+    /**
+     * Current sum of squared errors for the neural network
+     */
     private final Text currentSSE;
+    /**
+     * Current number of epochs the neural network has gone through
+     */
     private final Text currentEpochNum;
+    /**
+     * Informational notice regarding the status of the application at the top
+     * of the GUI
+     */
     private final Text feedbackMessage;
 
+    /**
+     * Button to have the neural network learn based on inputted data
+     */
     private final Button learnBtn;
+    /**
+     * Button to have the neural network classify based on inputted data and a
+     * configured neural network
+     */
     private final Button classifyBtn;
+    /**
+     * Button that to steps through particular iteration(s) of the neural
+     * network learn/classify functions
+     */
     private final Button stepBtn;
+    /**
+     * Button that randomizes the weights of the neural network
+     */
     private final Button randomizeBtn;
+    /**
+     * Button that runs the neural network
+     */
     private final RadioButton runRBtn;
+    /**
+     * Button that steps through an entire epoch of neural network firing (and
+     * learning if in training mode)
+     */
     private final RadioButton epochStepRBtn;
+    /**
+     * Button that steps through one input set of neural network firing (and
+     * learning if in training mode)
+     */
     private final RadioButton inputStepRBtn;
+    /**
+     * Button that stops the firing (and learning if in training mode) processes
+     * of the neural network
+     */
     private final RadioButton terminateRBtn;
 
-    private void initThetas(ArrayList<ArrayList<Double>> thetas) {
-        thetas.add(new ArrayList<>());
-        thetas.add(new ArrayList<>());
-        thetas.get(1).add(0.1);
-        thetas.get(1).add(0.1);
-        thetas.get(1).add(0.1);
-        thetas.add(new ArrayList<>());
-        thetas.get(2).add(0.1);
-    }
-
-    private void initWeights(ArrayList<ArrayList<Double>> weights) {
-        weights.add(new ArrayList<>());
-        weights.get(0).add(-0.3);
-        weights.get(0).add(0.2);
-        weights.get(0).add(0.1);
-        weights.get(0).add(-0.2);
-        weights.get(0).add(-0.1);
-        weights.get(0).add(-0.5);
-        weights.add(new ArrayList<>());
-        weights.get(1).add(-0.1);
-        weights.get(1).add(-0.5);
-        weights.get(1).add(0.0);
-    }
-//TODO  Delete makeConfig, initThetas, initWeights Use config the user inputs
-
-    public final ANNConfig makeConfig() {
-        // TODO figure out how to phase out use of test theta values here
-        ArrayList<ArrayList<Double>> thetas = new ArrayList<>();
-
-        initThetas(thetas);
-
-        // TODO figure out how to phase out use of test weight values here
-        ArrayList<ArrayList<Double>> weights = new ArrayList<>();
-
-        initWeights(weights);
-
-        ANNConfig config = new ANNConfig(2, 1, 1, 3, 0.1, 5000, 0.2, 0.5,
-                                         weights,
-                                         thetas, ProgramMode.TRAINING,
-                                         new SigmoidActivationFunction());
-        double[][] data = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}};
-        return config;
-    }
-
+    /**
+     * Constructor that sets references to the model and stage for the neural
+     * network MVC application
+     *
+     * @param theModel model of the neural network MVC application
+     * @param theStage stage of the neural network MVC application
+     *
+     * @author ks061, lts010
+     */
     public ANNView(ANNModel theModel, Stage theStage) {
         this.theStage = theStage;
         this.root = new Pane();
@@ -157,10 +214,10 @@ public class ANNView {
         HBox feedbackBox = new HBox();
         feedbackBox.setLayoutX(150);
         feedbackBox.setLayoutY(5);
-        feedbackMessage = new Text("Here is some text message");
+        feedbackMessage = new Text("");
         feedbackMessage.setLayoutX(170);
         feedbackMessage.setLayoutY(20);
-        feedbackMessage.setFont(Font.font ("Verdana", 12));
+        feedbackMessage.setFont(Font.font("Verdana", 12));
         feedbackBox.getChildren().add(feedbackMessage);
         root.getChildren().add(feedbackBox);
         root.getChildren().add(this.networkGroup);
@@ -168,11 +225,6 @@ public class ANNView {
         root.setMinSize(725, 600);
         this.theModel = theModel;
 
-//TODO delete the following four lines
-        //double[][] data = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}};
-        //ANNConfig testConfig = makeConfig();
-        //theModel.createNeuralNetwork(testConfig);
-        //theModel.getNeuralNetwork().setData(data);
         VBox learningRateBox = new VBox(this.minSpacing); //set up the learning rate box
         learningRateBox.setAlignment(Pos.CENTER);
 
@@ -239,14 +291,6 @@ public class ANNView {
         Label averageSSE = new Label("Average SSE"); //tells the user what this box is for
         averageSSE.setAlignment(Pos.CENTER);
         currentSSE = new Text();
-//        currentSSE = new Label(); //tells the user what the current SSE is
-//        currentSSE.setPrefWidth(75);
-//        currentSSE.setPrefHeight(25);
-//        currentSSE.setAlignment(Pos.CENTER);
-//        currentSSE.setBorder(new Border(
-//                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
-//                                 4),
-//                                 BorderWidths.DEFAULT)));
         averageSSEBox.getChildren().add(averageSSE);
         averageSSEBox.getChildren().add(currentSSE);
         optionsBox.getChildren().add(averageSSEBox);
@@ -254,15 +298,7 @@ public class ANNView {
         VBox epochBox = new VBox(this.minSpacing); //set up the number of epochs box
         Label numEpochs = new Label("Number of epochs"); //tells the user what the box is for
         numEpochs.setAlignment(Pos.CENTER);
-       currentEpochNum = new Text();
-//        currentEpochNum = new Label(); //tells the current number of epochs box
-//        currentEpochNum.setPrefWidth(75);
-//        currentEpochNum.setPrefHeight(25);
-//        currentEpochNum.setAlignment(Pos.CENTER);
-//        currentEpochNum.setBorder(new Border(
-//                new BorderStroke(null, BorderStrokeStyle.SOLID, new CornerRadii(
-//                                 4),
-//                                 BorderWidths.DEFAULT)));
+        currentEpochNum = new Text();
         epochBox.getChildren().add(numEpochs);
         epochBox.getChildren().add(currentEpochNum);
         optionsBox.getChildren().add(epochBox);
@@ -297,26 +333,24 @@ public class ANNView {
         programOptions.getChildren().add(terminateRBtn);
         programOptions.setVisible(false);
         networkGroup.getChildren().add(programOptions);
-
-//TODO delete the following line
-        // MakeNetworkGraphic(testConfig);
-//TODO remove this, get binding to work
-//        for (ArrayList<EdgeLine> lineList : this.edgeLines) {
-//            for (EdgeLine edgeLine : lineList) {
-//                edgeLine.updateColor();
-//            }
-//        }
-//
-//    }
     }
 
+    /**
+     * Gets the neural network menu bar
+     *
+     * @return neural network menu bar
+     *
+     * @author ks061, lts010
+     */
     public ANNMenuBar getANNMenuBar() {
         return aNNMenuBar;
     }
 
     /**
-     * Creates the edgelines
-     * @param centers
+     * Creates the edge lines within the GUI
+     *
+     * @param centers centers of the edge lines within the GUI
+     *
      * @author lts010, ks061
      */
     public void createEdgeLines(ArrayList<ArrayList<Point>> centers) {
@@ -361,10 +395,18 @@ public class ANNView {
         }
     }
 
+    /**
+     * Creates circle objects representing neurons within the GUI
+     *
+     * @param centers centers of the circles representing neurons within the GUI
+     * @param radius radius of the circles representing neurons within the GUI
+     *
+     * @author ks061, lts010
+     */
     public void createNodeCircles(ArrayList<ArrayList<Point>> centers,
                                   double radius) {
 
-        //add the three layers (input, hidden, output
+        // Adds the three layers (input, hidden, output)
         this.nodeCircles.add(new ArrayList<>());
         this.nodeCircles.add(new ArrayList<>());
         this.nodeCircles.add(new ArrayList<>());
@@ -390,119 +432,317 @@ public class ANNView {
         }
     }
 
+    /**
+     * Gets the edge lines
+     *
+     * @return edges lines
+     *
+     * @author ks061, lts010
+     */
     public ArrayList<ArrayList<EdgeLine>> getEdgeLines() {
         return edgeLines;
     }
 
+    /**
+     * Gets the root node of the GUI
+     *
+     * @return root node of the GUI
+     *
+     * @author ks061, lts010
+     */
     public Pane getRootNode() {
         return root;
     }
 
+    /**
+     * Gets the stage of the GUI
+     *
+     * @return stage of the GUI
+     *
+     * @author ks061, lts010
+     */
     public Stage getTheStage() {
         return theStage;
     }
 
+    /**
+     * Gets the model of the neural network MVC application
+     *
+     * @return model of the neural network MVC application
+     *
+     * @author ks061, lts010
+     */
     public ANNModel getTheModel() {
         return theModel;
     }
 
+    /**
+     * Gets the group of components in the neural network graphical display
+     *
+     * @return group of components in the neural network graphical display
+     *
+     * @author ks061, lts010
+     */
     public Group getNetworkPictureGroup() {
         return networkPictureGroup;
     }
 
+    /**
+     * Gets the text field for the user to specify the alpha value the neural
+     * network should use in its learning
+     *
+     * @return text field for the user to specify the alpha value the neural
+     * network should use in its learning
+     *
+     * @author ks061, lts010
+     */
     public TextField getAlphaInput() {
         return alphaInput;
     }
 
+    /**
+     * Gets a label display of the alpha value currently used by the neural
+     * network
+     *
+     * @return label display of the alpha value currently used by the neural
+     * network
+     *
+     * @author ks061, lts010
+     */
     public Label getCurrentAlpha() {
         return currentAlpha;
     }
 
+    /**
+     * Gets a text field for the user to specify the mu value the neural network
+     * should use in its learning
+     *
+     * @return text field for the user to specify the mu value the neural
+     * network should use in its learning
+     *
+     * @author ks061, lts010
+     */
     public TextField getMuInput() {
         return muInput;
     }
 
+    /**
+     * Gets a label display of the mu value currently used by the neural network
+     *
+     * @return label display of the mu value currently used by the neural
+     * network
+     *
+     * @author ks061, lts010
+     */
     public Label getCurrentMu() {
         return currentMu;
     }
 
+    /**
+     * Gets a radio button for the user to select the neural network to use the
+     * Sigmoid activation function whilst calculating its output values
+     *
+     * @return radio button for the user to select the neural network to use the
+     * Sigmoid activation function whilst calculating its output values
+     *
+     * @author ks061, lts010
+     */
     public RadioButton getSigmoidBtn() {
         return sigmoidBtn;
     }
 
+    /**
+     * Gets the radio button for the user to select the neural network to use
+     * the hyperbolic tangent activation function whilst calculating its output
+     * values
+     *
+     * @return radio button for the user to select the neural network to use the
+     * hyperbolic tangent activation function whilst calculating its output
+     * values
+     *
+     * @author ks061, lts010
+     */
     public RadioButton getHyperbolicTangentBtn() {
         return hyperbolicTangentBtn;
     }
 
+    /**
+     * Gets the radio button for the user to select the neural network to use
+     * the step activation function whilst calculating its output values
+     *
+     * @return radio button for the user to select the neural network to use the
+     * step activation function whilst calculating its output values
+     *
+     * @author ks061, lts010
+     */
     public RadioButton getStepFunctionBtn() {
         return stepFunctionBtn;
     }
 
+    /**
+     * Gets the circles representing neurons in the GUI
+     *
+     * @return circles representing neurons in the GUI
+     *
+     * @author ks061, lts010
+     */
     public ArrayList<ArrayList<NodeCircle>> getNodeCircles() {
         return nodeCircles;
     }
 
+    /**
+     * Gets the current sum of squared errors of the neural network
+     *
+     * @return sum of squared errors of the neural network
+     *
+     * @author ks061, lts010
+     */
     public Text getCurrentSSE() {
         return currentSSE;
     }
 
+    /**
+     * Gets the current number of epochs that the neural network has run through
+     *
+     * @return current number of epochs that the neural network has run through
+     *
+     * @author ks061, lts010
+     */
     public Text getCurrentEpochNum() {
         return currentEpochNum;
     }
 
+    /**
+     * Gets the informational notice regarding the status of the application at
+     * the top of the GUI
+     *
+     * @return informational notice regarding the status of the application at
+     * the top of the GUI
+     *
+     * @author ks061, lts010
+     */
     public Text getFeedbackMessage() {
         return feedbackMessage;
     }
 
+    /**
+     * Gets the radio button to allow the user to select running the program
+     *
+     * @return radio button to allow the user to select running the program
+     *
+     * @author ks061, lts010
+     */
     public RadioButton getRunRBtn() {
         return runRBtn;
     }
 
+    /**
+     * Gets the radio button to allow the user to select having the neural
+     * network run through a complete set of data once
+     *
+     * @return radio button to allow the user to select having the neural
+     * network run through a complete set of data once
+     *
+     * @author ks061, lts010
+     */
     public RadioButton getEpochStepRBtn() {
         return epochStepRBtn;
     }
 
+    /**
+     * Gets the radio button to allow the user to select having the neural
+     * network run through one set of data
+     *
+     * @return radio button to allow the user to select having the neural
+     * network run through one set of data
+     *
+     * @author ks061, lts010
+     */
     public RadioButton getInputStepRBtn() {
         return inputStepRBtn;
     }
 
+    /**
+     * Gets a radio button that allows the user to terminate the program
+     *
+     * @return radio button that allows the user to terminate the program
+     *
+     * @author ks061, lts010
+     */
     public RadioButton getTerminateRBtn() {
         return terminateRBtn;
     }
 
+    /**
+     * Gets a button that, when clicked, runs the neural network in classify
+     * mode
+     *
+     * @return button that, when clicked, runs the neural network in classify
+     * mode
+     *
+     * @author ks061, lts010
+     */
     public Button getClassifyBtn() {
         return classifyBtn;
     }
 
+    /**
+     * Gets a button that, when clicked, runs the neural network in training
+     * mode
+     *
+     * @return button that, when clicked, runs the neural network in training
+     * mode
+     *
+     * @author ks061, lts010
+     */
     public Button getLearnBtn() {
         return learnBtn;
     }
 
+    /**
+     * Gets a button that allows the user to select stepping through the
+     * firing/learn process in the neural network
+     *
+     * @return button that allows the user to select stepping through the
+     * firing/learn process in the neural network
+     *
+     * @author ks061, lts010
+     */
     public Button getStepBtn() {
         return stepBtn;
     }
 
+    /**
+     * Gets a button that, when clicked, randomizes the weights of the neural
+     * network
+     *
+     * @return button that, when clicked, randomizes the weights of the neural
+     * network
+     *
+     * @author ks061, lts010
+     */
     public Button getRandomizeBtn() {
         return randomizeBtn;
     }
 
-    public void MakeNetworkGraphic(ANNConfig config) {
+    /**
+     * Makes the neural network GUI representation
+     *
+     * @param config configuration for the neural network
+     *
+     * @author ks061, lts010
+     */
+    public void makeNetworkGraphic(ANNConfig config) {
 
         int numInputs = config.getNumInputs();
         int numHiddenNodes = config.getNumNeuronsPerHiddenLayer();
         int numOutputs = config.getNumOutputs();
         this.networkPictureGroup.getChildren().clear();
-        //TODO make sure NeuralNet is initialize in the Model and get info from there?
-        //TODO Note the controller calls this method so currently the config comes from there
 
-        //int numInputs = theModel.getNeuralNetwork().getConfiguration().getNumInputs();
-        //int numHiddenNodes = theModel.getNeuralNetwork().getConfiguration().getNumNeuronsPerHiddenLayer();
-        //int numOutputs = theModel.getNeuralNetwork().getConfiguration().getNumOutputs();
         int spacingBetweenLayers = 100;
         int radius = 50;
         double widthOfBox;
         double heightOfBox;
-        Point upperLeftOfBox = new Point(100.0, 100.0);
 
         this.edgeLines = new ArrayList<>();
         this.nodeCircles = new ArrayList<>();
@@ -517,7 +757,7 @@ public class ANNView {
 
         widthOfBox = (6 * radius + 2 * spacingBetweenLayers) + 2 * this.minSpacing;
         heightOfBox = ((2 * maxNodes * radius) + (1 + maxNodes) * this.minSpacing);
-        theStage.setMinHeight(heightOfBox +200);
+        theStage.setMinHeight(heightOfBox + 200);
         this.optionsBox.setTranslateY(heightOfBox);
         this.programOptions.setTranslateX(widthOfBox);
 
@@ -563,14 +803,25 @@ public class ANNView {
         this.programOptions.setVisible(true);
         this.optionsBox.setVisible(true);
         makeNetworkGroupVisible();
-
     }
 
+    /**
+     * Makes the main program view with the neural network visible; hides the
+     * configuration specification view
+     *
+     * @author ks061, lts010
+     */
     public void makeNetworkGroupVisible() {
         this.configGroup.setVisible(false);
         this.networkGroup.setVisible(true);
     }
 
+    /**
+     * Makes the configuration specification view visible; hides the main
+     * program view with the neural network
+     *
+     * @author ks061, lts010
+     */
     public void makeConfigGroupVisible() {
         this.networkGroup.setVisible(false);
         this.configGroup.setVisible(true);

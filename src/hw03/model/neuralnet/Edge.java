@@ -212,24 +212,29 @@ public class Edge {
      * Gets the momentum constant of this edge
      *
      * @return the momentum constant of this edge
-     * @author lts010
+     *
+     * @author lts010, ks061
      */
     public double getMu() {
         return mu;
     }
+
     /**
      * Sets the weight of this edge
-     *e
-     * @author lts010
+     *
+     * @param weight weight of this edge
+     *
+     * @author lts010, ks061
      */
-    public void setWeight(Double weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
     /**
      * Sets the momentum constant of this edge
      *
-     * @param mu - the new momentum constant of this edge
+     * @param mu the new momentum constant of this edge
+     *
      * @author lts010, ks061
      */
     public void setMu(double mu) {

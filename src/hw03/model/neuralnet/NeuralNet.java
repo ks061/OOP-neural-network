@@ -26,8 +26,6 @@ import hw03.utility.ANNUtility;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * NeuralNet represents an artificial neural network.
@@ -130,7 +128,8 @@ public class NeuralNet implements Serializable {
         if (data.length == 0) {
             throw new NeuralNetConstructionException(
                     "No data has been provided.");
-        } else if (data[0].length == 0) {
+        }
+        else if (data[0].length == 0) {
             throw new NeuralNetConstructionException(
                     "No data has been provided.");
         }
@@ -166,9 +165,9 @@ public class NeuralNet implements Serializable {
     public void initializeLayers() {
         layers = new ArrayList<>();
         InputLayer inputLayer = new InputLayer(this.configuration.getNumInputs(),
-                "I1-",
-                0,
-                this);
+                                               "I1-",
+                                               0,
+                                               this);
         layers.add(inputLayer);
 
         for (int i = 1; i < this.configuration.getNumHiddenLayers() + 1; i++) {
@@ -227,16 +226,16 @@ public class NeuralNet implements Serializable {
         int numEpoch = 0;
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
         OutputLayer outputLayer = ((OutputLayer) this.layers.get(
-                this.layers.size() - 1));
+                                   this.layers.size() - 1));
         do {
             sseEpochTotal = 0;
             for (double[] inputOutputSet : this.data) {
                 inputs = Arrays.copyOfRange(inputOutputSet, 0,
-                        this.configuration.getNumInputs());
+                                            this.configuration.getNumInputs());
                 inputLayer.setInputs(inputs);
                 targetOutputs = Arrays.copyOfRange(inputOutputSet,
-                        this.configuration.getNumInputs(),
-                        inputOutputSet.length);
+                                                   this.configuration.getNumInputs(),
+                                                   inputOutputSet.length);
                 outputLayer.setTargetOutputs(targetOutputs);
                 inputLayer.fireNeurons();
                 sseEpochTotal += outputLayer.calculateSumOfSquaredErrors();
@@ -246,9 +245,9 @@ public class NeuralNet implements Serializable {
 
                 if (theModel.getStepInput().getValue() || theModel.getTerminate().getValue()) {
                     theModel.updateProperties(this.configuration.getWeights(),
-                            getNetVals(),
-                            targetOutputs,
-                            (sseTotal / numEpoch), numEpoch);
+                                              getNetVals(),
+                                              targetOutputs,
+                                              (sseTotal / numEpoch), numEpoch);
                 }
                 checkRunMode(theModel.getStepInput().getValue());
                 if (theModel.getTerminate().getValue()) {
@@ -260,11 +259,11 @@ public class NeuralNet implements Serializable {
             System.out.println("\nsseEpochTotal = " + sseEpochTotal);
 
             if (theModel.getStepEpoch().getValue() || theModel.getTerminate().getValue()
-                    || (numEpoch % numEpochsBeforeUpdate) == 0) {
+                || (numEpoch % numEpochsBeforeUpdate) == 0) {
                 theModel.updateProperties(this.configuration.getWeights(),
-                        getNetVals(),
-                        targetOutputs, (sseTotal / numEpoch),
-                        numEpoch);
+                                          getNetVals(),
+                                          targetOutputs, (sseTotal / numEpoch),
+                                          numEpoch);
             }
             if (theModel.getStepEpoch().getValue()) {
                 System.out.println("in Step Epoch mode");
@@ -276,8 +275,8 @@ public class NeuralNet implements Serializable {
 
         } while (sseEpochTotal > this.configuration.getHighestSSE() && numEpoch <= maxEpochs);
         theModel.updateProperties(this.configuration.getWeights(),
-                getNetVals(),
-                targetOutputs, (sseTotal / numEpoch), numEpoch);
+                                  getNetVals(),
+                                  targetOutputs, (sseTotal / numEpoch), numEpoch);
         if (numEpoch > maxEpochs) {
             System.out.println(
                     "\nUnable to train neural network in " + maxEpochs + " iterations.\n");
@@ -289,7 +288,8 @@ public class NeuralNet implements Serializable {
         this.trainingFinalSSE = sseEpochTotal;
         this.trainingAverageSSE = sseTotal / numEpoch;
         this.trainingNumberOfEpochs = numEpoch;
-        theModel.updateMessage("Learning Complete, save the config to use the trained network later");
+        theModel.updateMessage(
+                "Learning Complete, save the config to use the trained network later");
         System.out.println("Neural network has been trained successfully");
         System.out.println("with the following perfomance peramenters:");
         System.out.println(
@@ -326,13 +326,14 @@ public class NeuralNet implements Serializable {
     public ArrayList<ArrayList<Double>> classify() throws FileNotFoundException {
         InputLayer inputLayer = ((InputLayer) this.layers.get(0));
         OutputLayer outputLayer = ((OutputLayer) this.layers.get(
-                this.layers.size() - 1));
+                                   this.layers.size() - 1));
 
         boolean shouldTestData = false;
         double sse = 0;
         if (data[0].length == this.configuration.getNumInputs() + this.configuration.getNumOutputs()) {
             shouldTestData = true;
-        } else {
+        }
+        else {
             outputLayer.setTargetOutputs(new double[0]);
         }
 
@@ -341,7 +342,7 @@ public class NeuralNet implements Serializable {
         for (double[] inputOutputSet : this.data) {
             inputLayer.setInputs(
                     Arrays.copyOfRange(inputOutputSet, 0,
-                            this.configuration.getNumInputs()));
+                                       this.configuration.getNumInputs()));
             if (shouldTestData) {
                 outputLayer.setTargetOutputs(
                         Arrays.copyOfRange(
@@ -352,7 +353,7 @@ public class NeuralNet implements Serializable {
             inputLayer.fireNeurons();
             System.out.println("For the set of inputs " + Arrays.toString(
                     Arrays.copyOfRange(inputOutputSet, 0,
-                            this.configuration.getNumInputs())) + ", the set of outputs is: " + Arrays.toString(
+                                       this.configuration.getNumInputs())) + ", the set of outputs is: " + Arrays.toString(
                     getSetOfPredictedOutputs(outputLayer).toArray()));
             setsOfPredictedOutputs.add(getSetOfPredictedOutputs(outputLayer));
 
@@ -392,10 +393,13 @@ public class NeuralNet implements Serializable {
             }
         }
     }
+
     /**
-     * Updates weights in the edges
+     * Updates weights in each edge within the neural network
      *
-     * @author lts010
+     * @param weights weights in each edge within the neural network
+     *
+     * @author lts010, ks061
      */
     public void updateWeights(ArrayList<ArrayList<Double>> weights) {
         this.pause = true;
@@ -412,14 +416,17 @@ public class NeuralNet implements Serializable {
         theModel.updateWeightProperties(weights);
         theModel.updateMessage("New weights have been loaded");
     }
+
     /**
-     * Gets the current values for each neuron 
+     * Gets the current values for each neuron in the neural network
      *
-     * @author lts010
+     * @return current values for each neuron in the neural network
+     *
+     * @author lts010, ks061
      */
     public ArrayList<ArrayList<Double>> getNetVals() {
         ArrayList<ArrayList<Double>> netVals = new ArrayList<>();
-        for (int i = 0; i < layers.size() ; i++) {
+        for (int i = 0; i < layers.size(); i++) {
             netVals.add(new ArrayList<>());
             netVals.get(i).addAll(layers.get(i).getNetVals());
         }

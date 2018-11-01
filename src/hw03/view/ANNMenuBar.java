@@ -15,12 +15,9 @@
  */
 package hw03.view;
 
-import hw03.model.neuralnet.ANNConfig;
-import java.util.ArrayList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -38,33 +35,96 @@ import javafx.stage.Stage;
  */
 public class ANNMenuBar {
 
+    /**
+     * Menu of the GUI
+     */
     private Group menu;
+    /**
+     * Components of the configuration view
+     */
     private Group configGroup;
-    private ArrayList<Node> workSpaceChildren;
+    /**
+     * Stage of the GUI
+     */
     private Stage theStage;
-    private ANNConfig theConfig;
+    /**
+     * Menu bar of the GUI
+     */
     private MenuBar menuBar;
 
+    /**
+     * Text field for user to specify number of inputs for the neural network
+     */
     private TextField numInputsTextField;
+    /**
+     * Text field for user to specify number of outputs for the neural network
+     */
     private TextField numOutTextField;
+    /**
+     * Text field for user to specify number of hidden neurons in the neural
+     * network
+     */
     private TextField numHiddenTextField;
+    /**
+     * Text field for user to specify the maximum sum of squared errors for the
+     * neural network
+     */
     private TextField maxSSETextField;
+    /**
+     * Text field for user to specify the maximum number of epochs for the
+     * neural network
+     */
     private TextField maxEpochTextField;
-    double[][] theData;
 
+    /**
+     * Menu item for loading a configuration for the neural network
+     */
     private MenuItem loadConfigFileMI;
+    /**
+     * Menu item for loading a configuration for saving the configuration of the
+     * current neural network to a file
+     */
     private MenuItem saveConfigFileMI;
+    /**
+     * Menu item for loading data to train the neural net
+     */
     private MenuItem loadTrainingFileMI;
+    /**
+     * Menu item for loading data that the neural network will make predictions
+     * in its output values based off
+     */
     private MenuItem loadTestFileMI;
-    private MenuItem configMI;
+    /**
+     * Menu item for exiting out of the application
+     */
     private MenuItem exitMI;
+
+    /**
+     * Menu item for the user to open a view that allows them to input
+     * configuration options for creating neural network
+     */
+    private MenuItem configMI;
+    /**
+     * Menu item for submitting the data within the configuration view
+     */
     private Button submitBtn;
+    /**
+     * Menu item for quitting out of the configuration view without submitting
+     * any of the data in said view
+     */
     private Button cancelBtn;
 
+    /**
+     * Constructs with pointers to the stage and
+     *
+     * @param theStage stage of the GUI
+     * @param workSpaceGroup
+     *
+     * @author ks061, lts010
+     */
     public ANNMenuBar(Stage theStage, Group workSpaceGroup) {
         this.theStage = theStage;
         this.configGroup = workSpaceGroup;
-        this.workSpaceChildren = new ArrayList<Node>();
 
         Menu menuFile = new Menu("File");
         this.loadConfigFileMI = new MenuItem("Load Config File");
@@ -89,58 +149,178 @@ public class ANNMenuBar {
 
     }
 
+    /**
+     * Gets the menu item in the GUI to load a configuration file for the neural
+     * network
+     *
+     * @return menu item in the GUI to load a configuration file for the neural
+     * network
+     *
+     * @author ks061, lts010
+     */
     public MenuItem getLoadConfigFileMI() {
         return loadConfigFileMI;
     }
 
+    /**
+     * Gets the menu item in the GUI to save the configuration of the current
+     * neural network to a file
+     *
+     * @return menu item in the GUI to save the configuration of the current
+     * neural network to a file
+     *
+     * @author ks061, lts010
+     */
     public MenuItem getSaveConfigFileMI() {
         return saveConfigFileMI;
     }
 
+    /**
+     * Gets the menu item in the GUI to load the data for training the neural
+     * network
+     *
+     * @return menu item in the GUI to load the data for training the neural
+     * network
+     *
+     * @author ks061, lts010
+     */
     public MenuItem getLoadTrainingFileMI() {
         return loadTrainingFileMI;
     }
 
+    /**
+     * Gets the menu item in the GUI to load the test file for classifying the
+     * neural network
+     *
+     * @return menu item in the GUI to load the test file for classifying the
+     * neural network
+     *
+     * @author ks061, lts010
+     */
     public MenuItem getLoadTestFileMI() {
         return loadTestFileMI;
     }
 
+    /**
+     * Gets the menu item in the GUI to specify a configuration for the neural
+     * network of the application
+     *
+     * @return menu item in the GUI to specify a configuration for the neural
+     * network of the applications
+     *
+     * @author ks061, lts010
+     */
     public MenuItem getConfigMI() {
         return configMI;
     }
 
+    /**
+     * Gets the menu item in the GUI to exit the program
+     *
+     * @return menu item in the GUI to exit the program
+     *
+     * @author ks061, lts010
+     */
     public MenuItem getExitMI() {
         return exitMI;
     }
 
+    /**
+     * Gets the menu bar of the GUI
+     *
+     * @return menu bar of the GUI
+     *
+     * @author ks061, lts010
+     */
     public MenuBar getMenuBar() {
         return menuBar;
     }
 
+    /**
+     * Gets the submit button in the GUI of the application when the program
+     * asks the user to specify a configuration for the neural network
+     *
+     * @return submit button in the GUI of the application
+     *
+     * @author ks061, lts010
+     */
     public Button getSubmitBtn() {
         return submitBtn;
     }
 
+    /**
+     * Gets the cancel button in the GUI of the application when the program
+     * asks the user to specify a configuration for the neural network
+     *
+     * @return cancel button in the GUI of the application
+     *
+     * @author ks061, lts010
+     */
     public Button getCancelBtn() {
         return cancelBtn;
     }
 
+    /**
+     * Gets the text field for the user to enter a number of inputs for the
+     * neural network
+     *
+     * @return text field for the user to enter a number of inputs for the
+     * neural network
+     *
+     * @author ks061, lts010
+     */
     public TextField getNumInputsTextField() {
         return numInputsTextField;
     }
 
+    /**
+     * Gets the text field for the user to enter a number of outputs for the
+     * neural network
+     *
+     * @return text field for the user to enter the number of outputs for the
+     * neural network
+     *
+     * @author ks061, lts010
+     */
     public TextField getNumOutTextField() {
         return numOutTextField;
     }
 
+    /**
+     * Gets the text field for the user to enter a the number of hidden neurons
+     * to create in the hidden layer within the neural network
+     *
+     * @return text field for the user to enter a the number of hidden neurons
+     * to create in the hidden layer within the neural network
+     *
+     * @author ks061, lts010
+     */
     public TextField getNumHiddenTextField() {
         return numHiddenTextField;
     }
 
+    /**
+     * Gets the text field for the user to specify the maximum sum of squared
+     * errors value to use whilst training the neural network
+     *
+     * @return text field for the user to specify the maximum sum of squared
+     * errors value to use whilst training the neural network
+     *
+     * @author ks061, lts010
+     */
     public TextField getMaxSSETextField() {
         return maxSSETextField;
     }
 
+    /**
+     * Gets the text field for the user to specify the maximum allowed epochs
+     * for the neural network to run through during training
+     *
+     * @return text field for the user to specify the maximum allowed epochs for
+     * the neural network to run through during training
+     *
+     * @author ks061, lts010
+     */
     public TextField getMaxEpochTextField() {
         return maxEpochTextField;
     }
