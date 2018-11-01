@@ -16,10 +16,6 @@
 package hw03.model.neuralnet;
 
 import hw03.model.ANNModel;
-import hw03.model.neuralnet.ANNConfig;
-import hw03.model.neuralnet.NeuralNet;
-import hw03.model.neuralnet.NeuralNetConstructionException;
-import hw03.model.neuralnet.ProgramMode;
 import hw03.model.neuralnet.activationfunction.SigmoidActivationFunction;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -114,12 +110,12 @@ public class NeuralNetTest extends TestCase {
         System.out.println("classify");
         double[][] data = {{1, 1, 1}}; //give the neural net good data to use
         ANNModel theModel = new ANNModel();
-        myNet = new NeuralNet(config, theModel); //construct the neural net
-        myNet.setData(data);
-        System.out.println(myNet.classify());
+        theModel.setTheConfig(config);
+        theModel.createNeuralNetwork();
+        theModel.getNeuralNetwork().setData(data);
         ArrayList<ArrayList<Double>> expResult = new ArrayList<>(); //create the result we expect
         expResult.add(new ArrayList<>());
         expResult.get(0).add(0.4061109414848104);
-        assertEquals(expResult, myNet.classify());
+        assertEquals(expResult, theModel.getNeuralNetwork().classify());
     }
 }
